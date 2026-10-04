@@ -1,15 +1,18 @@
-# v0.1 검증 기록 — 2026-10-04
+# v0.2 verification — 2026-10-05 KST
 
-- Production build: `npm run build` 성공, 독립 정적 HTML 10개 + 404.
-- `npm test`: 7/7 통과. 전체 카드×스프레드×방향 해석, 200개 덱 중복 검사, 보안 난수 편향 제거, 날짜별 저장/손상/차단 처리, 맥락 분리, YES/NO 혼합 신호, 독립 SEO 메타데이터.
-- 실제 Chromium 브라우저: 홈 → 재회운 → 5장 선택 → 다섯 포지션/종합/추천 출력 확인.
-- 홈 → 이별운 → 5장 선택 → 이별 전용 포지션 출력 확인.
-- 홈 → 상대방 속마음 → 4장 선택 → 속마음 전용 포지션 출력 확인.
-- YES/NO: 질문 입력 → 3장 선택 → 방향성과 카드 근거 출력 확인.
-- 오늘의 카드: 선택 후 새로고침 → 운명의 수레바퀴 정방향 동일 유지 확인.
-- 연애운, 연락운, 재회 시기, YES/NO, 오늘의 타로 직접 URL 진입 확인. 나머지 경로는 홈에서 링크 진입 및 HTTP 응답 검사.
-- 390px/320px iframe viewport에서 모바일 홈/질문/5장 결과 확인. 320px 결과에서 문서 clientWidth=305, scrollWidth=305 (스크롤바 제외), 가로 넘침 없음.
-- 앱 실행 오류 없음. 브라우저 확장의 메타데이터 오류는 앱과 무관.
-- WebMCP는 선택적 feature detection으로 등록. 테스트 브라우저에서 해당 document API를 제공하지 않아 실제 호출 검증 불가. 기본 사용자 기능에는 영향 없음.
+- Production build: 20 static pages plus 404, sitemap, robots. `npm run build` passes.
+- `npm test`: 11 tests pass. 78 unique cards (22 major + four suits ×14), every position and orientation, 200 complete shuffles, unbiased random rejection, daily persistence/corruption/date expiry, same-topic position variation, middle-card synthesis variation, unique SEO, every internal static link and all five artwork mappings.
+- Browser: home → reunion → five picks → result → related feelings → four picks → result.
+- Browser direct routes: love (5), breakup (5), contact (3), reunion timing (3), YES/NO (1,2,3), today (1) completed. Today remained Cups Page upright after reload.
+- Guide hub → reunion guide → reunion reading navigated successfully. Missing URL displayed custom 404 page.
+- Desktop home, deck and report visually inspected.
+- 390px iframe production-component fixture tested all five prototype images, flip, summary, and detail. 320px home also inspected. Document scrollWidth = clientWidth (375 and 305 after scrollbar). Card summaries intentionally scroll horizontally inside their own region.
+- Local deterministic artwork fixture changes only shuffled order for QA; removed by final clean build, never part of production source.
+- Final engine changes rechecked in browser reunion result. App-origin error logs empty. Browser-extension metadata errors excluded.
+- Shell HTTP probing was unavailable from execution workspace; browser direct navigation and generated route/link validation were used. Custom 404 UI verified, production HTTP status not independently measured.
+- Five-asset contact sheet inspected: consistent palette, denser Moon/Sun detail at small size. 73 further generated illustrations intentionally not produced; see ARTWORK.md.
+- WebP assets have explicit dimensions, responsive 192/384 variants, lazy loading. No images in initial home download or unrevealed deck. No third-party fonts/framework/runtime AI scripts.
 
-남은 검증: 실제 iOS Safari/Android 기기, 보조기술 실기기, 검색 엔진 색인 및 광고 승인. 현재 테스트는 검색 순위/광고 수익을 검증하지 않음.
+## Limits
+
+No physical-device or screen-reader testing, no Lighthouse/CWV field data, and no 78-illustration completeness claim. Semantic summaries are deterministic templates; ongoing human editorial review can improve variation. Optional existing WebMCP hook is feature-detected; browser did not expose it.

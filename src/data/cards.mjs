@@ -1,3 +1,4 @@
+import {minorCards} from './minor.mjs';
 // Add Minor Arcana records with the same schema. Text is authored, never AI-generated at runtime.
 const rows = [
 ['The Fool','바보','시작,자유,호기심','익숙한 기준을 내려놓고 새로운 경험에 마음을 여는 때','기대가 앞서 확인해야 할 현실을 놓치기 쉬운 때','새로운 만남을 가볍게 시작하되 서로의 관계 기대치를 확인해 보세요.','예전 관계를 그대로 복원하기보다 처음 만난 사람처럼 다시 알아가는 접근이 어울립니다.','자유를 원하는 마음과 함께하고 싶은 마음이 엇갈리는지 살펴보세요.','호기심은 있지만 감정에 이름을 붙이거나 책임을 약속할 준비는 덜 되었을 수 있습니다.','부담 없는 안부가 대화의 문을 열 수 있지만 즉흥적인 연락을 약속으로 해석하지 마세요.','일상의 변화나 새로운 활동이 시작될 때 관계도 움직일 여지가 있습니다.','작은 시도 하나를 하되 나의 안전한 경계는 남겨 두세요.',1],
@@ -23,4 +24,7 @@ const rows = [
 ['Judgement','심판','재평가,응답,깨달음','지난 선택을 돌아보고 새로운 판단을 내릴 때','과거에 대한 죄책감이나 반복적인 평가에 갇히기 쉬운 때','과거 경험에서 배운 기준으로 지금의 관계를 다시 바라보세요.','재연결의 상징으로 읽을 수 있으나 변화에 대한 두 사람의 동의가 필요합니다.','그동안 미뤄둔 대화를 통해 관계를 이어갈 조건을 다시 평가할 때입니다.','과거의 일을 되짚고 관계의 의미를 다시 판단하는 모습의 상징입니다.','지난 대화에 답하거나 미뤄둔 이야기를 꺼낼 계기가 될 수 있습니다.','지난 문제에 대한 정리와 명확한 응답이 나오는 때를 상징합니다.','과거를 벌주는 대신 이번에 다르게 할 행동을 하나 정해보세요.',0],
 ['The World','세계','완성,통합,다음장','한 과정을 정리하고 다음 단계로 향하는 때','마무리를 미루거나 완벽한 결론을 기다리기 쉬운 때','내 삶과 연애가 함께 건강하게 자리 잡을 수 있는지를 살펴보세요.','관계를 잘 마무리하는 것과 다시 시작하는 것 모두 가능한 선택으로 두세요.','관계의 의미를 인정하면서 다음 단계에 필요한 기준을 세워보세요.','한 시기를 정리하거나 관계의 전체 모습을 받아들이는 태도의 상징입니다.','대화를 마무리하거나 다음 단계의 약속을 명확히 하는 흐름이 어울립니다.','하나의 과정이 충분히 끝나고 다음 장으로 넘어갈 때를 가리킵니다.','잘 마친 일은 인정하고 다음에 가져갈 것만 골라보세요.',1]
 ];
-export const cards = rows.map((r,number)=>({id:`major-${number}`,name:r[0],koreanName:r[1],arcana:'major',number,keywords:r[2].split(','),upright:r[3],reversed:r[4],love:r[5],reunion:r[6],breakup:r[7],feelings:r[8],contact:r[9],timing:r[10],advice:r[11],yesNo:r[12]}));
+const majorCards = rows.map((r,number)=>({id:`major-${number}`,name:r[0],koreanName:r[1],arcana:'major',number,keywords:r[2].split(','),upright:r[3],reversed:r[4],love:r[5],reunion:r[6],breakup:r[7],feelings:r[8],contact:r[9],timing:r[10],advice:r[11],yesNo:r[12]}));
+
+const majorTags=['movement','communication','reflection','healing','decision','decision','attraction','movement','healing','distance','renewal','decision','waiting','closure','healing','blocked','conflict','healing','blocked','communication','renewal','closure'];
+export const cards=[...majorCards.map((c,i)=>({...c,suit:null,rank:null,tags:[majorTags[i]],reversedTags:['blocked','reflection']})),...minorCards];
