@@ -1,6 +1,6 @@
 # pick a card — 무료 타로 v0.1
 
-공개 웹사이트: https://pickacard.spicy-dace-8806.chatgpt.site
+공개 웹사이트: https://pickacard.jijiminseo.chatgpt.site
 
 Node.js 20+ 기반의 의존성 없는 정적 사이트 생성기와 브라우저 ES modules. 생성형 AI API, API key, 서버 데이터베이스가 필요하지 않습니다.
 

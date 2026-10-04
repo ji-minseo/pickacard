@@ -1,6 +1,6 @@
 import {mkdir,writeFile,cp,rm} from 'node:fs/promises';
 import {readings,primary,secondary,disclaimer} from '../src/data/readings.mjs';
-const origin=process.env.SITE_URL||'https://pickacard.spicy-dace-8806.chatgpt.site';
+const origin=process.env.SITE_URL||'https://pickacard.jijiminseo.chatgpt.site';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const faq=items=>`<div class="faq">${items.map(([q,a])=>`<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div>`;
 const tile=(slug,small=false)=>{const r=readings[slug];return `<a class="reading-tile ${r.color} ${small?'small':''}" href="/tarot/${slug}/"><span class="tile-top"><span>${r.name}</span><span class="pill">${slug==='yes-no'?'1–3':r.positions.length} CARDS</span></span><span class="tile-art" aria-hidden="true"><span>${r.mark}</span></span><span class="tile-bottom">${r.tagline}<span aria-hidden="true">＋</span></span></a>`};
