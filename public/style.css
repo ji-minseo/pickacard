@@ -4383,6 +4383,10 @@ header nav a[aria-current="page"]{
   from{opacity:0;transform:translateY(10px)}
   to{opacity:1;transform:translateY(0)}
 }
+@keyframes heroContentIn{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
 @keyframes detailReveal{
   from{opacity:0;transform:translateY(-4px)}
   to{opacity:1;transform:translateY(0)}
@@ -4392,14 +4396,24 @@ header nav a[aria-current="page"]{
   will-change:transform,opacity;
 }
 .hero-card-back{
-  animation:heroBackIn .52s cubic-bezier(.2,.72,.25,1) .04s both;
+  animation:heroBackIn .72s cubic-bezier(.2,.72,.25,1) .08s both;
 }
 .hero-card-sun{
-  animation:heroSunIn .56s cubic-bezier(.2,.72,.25,1) .13s both;
+  animation:heroSunIn .78s cubic-bezier(.2,.72,.25,1) .18s both;
 }
 .hero-card-lovers{
-  animation:heroLoversIn .58s cubic-bezier(.2,.72,.25,1) .22s both;
+  animation:heroLoversIn .82s cubic-bezier(.2,.72,.25,1) .28s both;
 }
+.home-intro .hero-copy .kicker,
+.home-intro .hero-copy h1,
+.home-intro .hero-copy>p,
+.home-intro .hero-copy .quiet-label{
+  animation:heroContentIn .72s cubic-bezier(.2,.72,.25,1) both;
+}
+.home-intro .hero-copy .kicker{animation-delay:.04s}
+.home-intro .hero-copy h1{animation-delay:.13s}
+.home-intro .hero-copy>p{animation-delay:.22s}
+.home-intro .hero-copy .quiet-label{animation-delay:.31s}
 
 .reading-tile,
 .tile-card-thumb,
@@ -4451,8 +4465,8 @@ button:active{
 }
 
 #reading-app.results-entering>*{
-  animation:resultRise .42s cubic-bezier(.2,.72,.25,1) both;
-  animation-delay:calc(var(--result-order,0) * 45ms);
+  animation:resultRise .62s cubic-bezier(.2,.72,.25,1) both;
+  animation-delay:calc(var(--result-order,0) * 70ms);
 }
 details[open]>p{
   animation:detailReveal .2s ease both;
@@ -4488,6 +4502,10 @@ details[open]>p{
   .hero-card-back,
   .hero-card-sun,
   .hero-card-lovers,
+  .home-intro .hero-copy .kicker,
+  .home-intro .hero-copy h1,
+  .home-intro .hero-copy>p,
+  .home-intro .hero-copy .quiet-label,
   .card-button.is-selected,
   #reading-app.results-entering>*,
   details[open]>p{
@@ -4668,11 +4686,11 @@ details[open]>p{
 }
 .about-card-pair img:first-child{
   left:4px;
-  top:-10px;
+  top:-7px;
 }
 .about-card-pair .about-card-reversed{
   right:9px;
-  bottom:17px;
+  bottom:14px;
 }
 @media(max-width:760px){
   .about-card-pair{
@@ -4685,11 +4703,11 @@ details[open]>p{
   }
   .about-card-pair img:first-child{
     left:3px;
-    top:-10px;
+    top:-7px;
   }
   .about-card-pair .about-card-reversed{
     right:8px;
-    bottom:16px;
+    bottom:13px;
   }
 }
 
@@ -4698,7 +4716,7 @@ details[open]>p{
 .scroll-reveal{
   opacity:0;
   translate:0 14px;
-  transition:opacity .48s cubic-bezier(.2,.72,.25,1),translate .48s cubic-bezier(.2,.72,.25,1);
+  transition:opacity .76s cubic-bezier(.2,.72,.25,1),translate .76s cubic-bezier(.2,.72,.25,1);
   transition-delay:var(--reveal-delay,0ms);
 }
 .scroll-reveal.is-visible{
