@@ -5310,3 +5310,150 @@ details[open]>p{
     transition:none!important;
   }
 }
+
+
+/* Question-first tarot table: the prompt sits above the physical card space. */
+.question-session-stage{
+  display:grid;
+  width:100%;
+  min-height:620px;
+  margin-top:18px;
+  isolation:isolate;
+}
+.question-session-stage>.question-table-preview,
+.question-session-stage>.question-modal-layer{
+  grid-area:1/1;
+}
+.question-table-preview{
+  min-width:0;
+  pointer-events:none;
+  opacity:.58;
+  filter:saturate(.82) blur(1.2px);
+  transform:scale(.985);
+  transform-origin:center;
+  transition:opacity .62s cubic-bezier(.2,.72,.25,1),filter .62s ease,transform .62s cubic-bezier(.2,.72,.25,1);
+}
+.question-table-preview .tarot-table{
+  height:100%;
+  margin:0;
+}
+.question-table-preview .tarot-table-surface{
+  min-height:620px;
+}
+.preview-shuffle{
+  display:inline-flex;
+  align-items:center;
+  min-height:34px;
+  padding:7px 10px;
+  border:1px solid #d8c2b4;
+  border-radius:999px;
+  background:rgba(255,255,255,.48);
+  color:#8b6e66;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.preview-deck{
+  display:grid;
+  grid-template-columns:repeat(13,minmax(0,1fr));
+  gap:6px;
+  padding:13px;
+  border:1px solid rgba(119,82,70,.11);
+  border-radius:18px;
+  background:rgba(255,255,255,.32);
+  box-shadow:inset 0 8px 22px rgba(80,55,45,.03);
+}
+.preview-card{
+  display:block;
+  width:100%;
+  aspect-ratio:2/3;
+  border:1px solid #632b3b;
+  border-radius:7px;
+  background:#632b3b url('/artwork/card-back.svg') center/100% 100% no-repeat;
+  box-shadow:0 4px 8px rgba(58,35,31,.08);
+}
+.preview-card:nth-child(4n+1){transform:translateY(2px) rotate(-.4deg)}
+.preview-card:nth-child(4n+2){transform:translateY(-1px) rotate(.35deg)}
+.preview-card:nth-child(4n+3){transform:translateY(1px) rotate(-.2deg)}
+.question-modal-layer{
+  z-index:3;
+  display:grid;
+  place-items:center;
+  padding:34px;
+  background:radial-gradient(circle at center,rgba(247,242,232,.2) 0%,rgba(247,242,232,.04) 48%,transparent 72%);
+  transition:opacity .52s ease,transform .62s cubic-bezier(.2,.72,.25,1);
+}
+.question-modal-panel{
+  width:min(620px,100%);
+  margin:0;
+  border-color:#eadbd5;
+  background:rgba(255,255,255,.965);
+  box-shadow:0 28px 70px rgba(55,39,31,.18),0 0 0 1px rgba(255,255,255,.74) inset;
+  -webkit-backdrop-filter:blur(16px);
+  backdrop-filter:blur(16px);
+}
+.question-session-stage.is-opening .question-modal-layer{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-16px) scale(.985);
+}
+.question-session-stage.is-opening .question-table-preview{
+  opacity:1;
+  filter:none;
+  transform:scale(1);
+}
+
+/* The moving card is already spread-size, so artwork and type never stretch in flight. */
+.table-flying-card{
+  transform-origin:center center;
+}
+.table-flying-card .mini-card{
+  width:100%;
+  height:100%;
+  min-height:0;
+  padding:6px 5px;
+  border-radius:7px;
+}
+.table-flying-card .mini-card strong,
+.table-flying-card .mini-card .roman{
+  font-size:8px;
+}
+.table-flying-card .artwork-holder{
+  width:100%;
+}
+
+@media(max-width:900px){
+  .preview-deck{grid-template-columns:repeat(10,minmax(0,1fr))}
+}
+
+@media(max-width:650px){
+  .question-session-stage{
+    min-height:650px;
+    margin-top:14px;
+  }
+  .question-table-preview .tarot-table-surface{
+    min-height:650px;
+  }
+  .question-modal-layer{
+    align-items:start;
+    padding:26px 12px;
+  }
+  .question-modal-panel{
+    width:100%;
+    padding:20px;
+    border-radius:20px;
+  }
+  .preview-deck{
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:5px;
+    padding:9px;
+    border-radius:15px;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .question-table-preview,
+  .question-modal-layer{
+    transition:none!important;
+  }
+}
