@@ -4651,3 +4651,44 @@ details[open]>p{
   .about-card-pair:hover img:first-child{transform:rotate(-7deg)}
   .about-card-pair:hover .about-card-reversed{transform:rotate(173deg)}
 }
+
+
+/* Keep the paired upright/reversed cards safely inside the About stat tile. */
+.about-grid article{
+  overflow:hidden;
+}
+.about-card-pair{
+  width:50px;
+  height:50px;
+  justify-self:center;
+}
+.about-card-pair img{
+  width:27px;
+  height:41px;
+}
+.about-card-pair img:first-child{
+  left:8px;
+  top:4px;
+}
+.about-card-pair .about-card-reversed{
+  right:5px;
+  bottom:3px;
+}
+@media(max-width:760px){
+  .about-card-pair{
+    width:46px;
+    height:46px;
+  }
+  .about-card-pair img{
+    width:25px;
+    height:38px;
+  }
+  .about-card-pair img:first-child{
+    left:7px;
+    top:4px;
+  }
+  .about-card-pair .about-card-reversed{
+    right:4px;
+    bottom:3px;
+  }
+}
