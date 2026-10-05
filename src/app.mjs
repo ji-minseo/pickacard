@@ -8,10 +8,10 @@ const root=document.querySelector('[data-reading]');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 const revealSelector=[
- '.section-heading','.reading-tile','.how','.about','.guide-teaser','main>.faq-section',
- '.reading-intro','.question-panel','.spread-info','.card-library-hero','.card-library-group',
+ '.section-heading','.reading-tile','.how','.about','.about-grid article','.guide-teaser','main>.faq-section',
+ '.reading-intro','.question-panel','.spread-info','.card-library-hero','.card-library-group','.card-library-tile',
  '.card-dictionary-hero','.card-meaning-overview','.card-topic-section','.guide-hero',
- '.guide-visual','.guide-article>section','.guide-next','.saved-readings-hero',
+ '.guide-visual','.guide-article>section','.guide-list>a','.guide-next','.saved-readings-hero',
  '.saved-reading-item','.saved-reading-empty','.results-heading','.reading-answer',
  '.reading-context-answer','.reading-insights','.card-summary','.result-position',
  '.combination-reading','.synthesis','.related','.result-actions','.result-tools-foot'
@@ -39,7 +39,14 @@ function prepareScrollReveal(scope=document){
  }
  fresh.forEach((node,index)=>{
   node.classList.add('scroll-reveal');
-  node.style.setProperty('--reveal-delay',String(Math.min(index%4,3)*35)+'ms');
+  let delay=Math.min(index%4,3)*55;
+  const parent=node.parentElement;
+  if(parent&&node.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.saved-reading-item')){
+   const siblings=[...parent.children].filter(item=>item.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.saved-reading-item'));
+   const siblingIndex=siblings.indexOf(node);
+   if(siblingIndex>=0)delay=Math.min(siblingIndex,9)*115;
+  }
+  node.style.setProperty('--reveal-delay',String(delay)+'ms');
   scrollRevealObserver.observe(node);
  });
 }
