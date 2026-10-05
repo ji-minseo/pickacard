@@ -36,9 +36,9 @@ async function shareReadingImage(payload,button,status){
  const original=button.textContent;button.disabled=true;button.textContent='이미지 만드는 중…';
  try{
   const blob=await createShareImage(payload);if(!blob)throw new Error('image');
-  const file=new File([blob],'pick-a-card-reading.png',{type:'image/png'});
-  if(navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Pick a Card · '+payload.readingName});if(status)status.textContent='공유 메뉴를 열었어요.';}
-  else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);if(status)status.textContent='결과 이미지를 저장했어요.';}
+  const file=typeof File==='function'?new File([blob],'pick-a-card-reading.png',{type:'image/png'}):null;
+  if(file&&navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Pick a Card · '+payload.readingName});if(status)status.textContent='공유 메뉴를 열었어요.';}
+  else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='pick-a-card-reading.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);if(status)status.textContent='결과 이미지를 저장했어요.';}
  }catch(error){if(error?.name!=='AbortError'&&status)status.textContent='이미지를 만들지 못했어요. 잠시 후 다시 시도해 주세요.';}
  finally{button.disabled=false;button.textContent=original;}
 }
