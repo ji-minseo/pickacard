@@ -118,6 +118,24 @@ test('hero content uses slower entrance motion and paired about cards are lowere
  assert.ok(css.includes('top:-7px;'));
  assert.ok(css.includes('bottom:14px;'));
 });
+test('tarot table session keeps shuffle, draw placement and sticky spread continuous',async()=>{
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(app.includes('class="tarot-table" id="tarot-table"'));
+ assert.ok(app.includes('id="shuffle-deck"'));
+ assert.ok(app.includes('function placePickInSpread'));
+ assert.ok(app.includes("deck=shuffleDeck();deckEl.innerHTML=deckButtonsHTML()"));
+ assert.ok(app.includes('data-slot-index='));
+ assert.ok(app.includes('function wireResultSession'));
+ assert.ok(app.includes('data-summary-index='));
+ assert.ok(app.includes('data-position-index='));
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('.tarot-table-surface{'));
+ assert.ok(css.includes('@keyframes tableShuffle'));
+ assert.ok(css.includes('.table-flying-card{'));
+ assert.ok(css.includes('.session-spread-shell{'));
+ assert.ok(css.includes('position:sticky;'));
+ assert.ok(css.includes('.reading-session-spread .summary-item.is-active'));
+});
 test('sitewide hover feedback and scroll reveal interactions are wired',async()=>{
  const app=await readFile('dist/src/app.mjs','utf8');
  assert.ok(app.includes('function prepareScrollReveal(scope=document)'));
