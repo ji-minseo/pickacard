@@ -2211,3 +2211,69 @@ textarea{
     padding-right:12px;
   }
 }
+
+
+/* Mobile guide index cards — match the site's white-card / red-accent language. */
+@media(max-width:720px){
+  .guide-list{
+    display:grid;
+    gap:10px;
+    margin-top:24px;
+  }
+  .guide-list>a{
+    position:relative;
+    display:grid;
+    grid-template-columns:38px minmax(0,1fr) 18px;
+    gap:12px;
+    align-items:start;
+    padding:14px;
+    border:1px solid #eeeeee;
+    border-radius:16px;
+    background:#fff;
+    box-shadow:0 7px 18px rgba(0,0,0,.025);
+  }
+  .guide-list>a>span{
+    width:36px;
+    height:36px;
+    display:grid;
+    place-items:center;
+    margin:0;
+    border-radius:11px;
+    background:#fff1f0;
+    color:#c94141;
+    font-family:Inter,Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Arial,sans-serif!important;
+    font-size:11px;
+    font-weight:900;
+    line-height:1;
+  }
+  .guide-list>a::after{
+    content:'→';
+    align-self:center;
+    color:#c94141;
+    font-size:16px;
+    font-weight:800;
+    line-height:1;
+  }
+  .guide-list h2{
+    margin:0 0 5px;
+    color:var(--ink);
+    font-size:17px;
+    line-height:1.35;
+    letter-spacing:-.03em;
+    font-weight:900;
+    word-break:keep-all;
+  }
+  .guide-list p{
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.58;
+    word-break:keep-all;
+  }
+  .guide-list>a:hover,
+  .guide-list>a:focus-visible{
+    border-color:#ebb9b5;
+    background:#fff;
+    box-shadow:0 8px 20px rgba(217,73,73,.05);
+  }
+}
