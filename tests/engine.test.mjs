@@ -118,6 +118,23 @@ test('hero content uses slower entrance motion and paired about cards are lowere
  assert.ok(css.includes('top:-7px;'));
  assert.ok(css.includes('bottom:14px;'));
 });
+test('question panel overlays the table and flying cards keep fixed typography and size',async()=>{
+ const love=await readFile('dist/tarot/love/index.html','utf8');
+ assert.ok(love.includes('class="question-session-stage"'));
+ assert.ok(love.includes('class="question-table-preview"'));
+ assert.ok(love.includes('class="question-modal-layer"'));
+ assert.ok(love.includes('class="question-panel question-modal-panel"'));
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(app.includes("stage.classList.add('is-opening')"));
+ assert.ok(app.includes('width:`${to.width}px`'));
+ assert.ok(app.includes("transform:'translate3d(0,0,0)'"));
+ assert.ok(!app.includes('scale(${sx},${sy})'));
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('.question-session-stage{'));
+ assert.ok(css.includes('.question-session-stage.is-opening .question-modal-layer'));
+ assert.ok(css.includes('.question-session-stage.is-opening .question-table-preview'));
+ assert.ok(css.includes('.table-flying-card .mini-card strong'));
+});
 test('tarot table session keeps shuffle, draw placement and sticky spread continuous',async()=>{
  const app=await readFile('dist/src/app.mjs','utf8');
  assert.ok(app.includes('class="tarot-table" id="tarot-table"'));
