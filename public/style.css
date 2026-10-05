@@ -1989,3 +1989,11 @@ textarea{
 @media(max-width:650px){
   .panel-heading .step-label{margin-bottom:12px}
 }
+
+
+/* Reading-page FAQ alignment — reuse the home FAQ component at reading width. */
+[data-reading]>.reading-faq{
+  width:min(900px,100%);
+  max-width:900px;
+  margin:34px auto 0;
+}
