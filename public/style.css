@@ -4194,11 +4194,13 @@ header nav a[aria-current="page"]{
   text-align:center;
 }
 .suit-visual img{
+  display:block;
   width:100%;
   max-width:92px;
+  height:auto;
   margin:0 auto;
-  aspect-ratio:2/3;
-  object-fit:cover;
+  aspect-ratio:auto;
+  object-fit:contain;
   border-radius:8px;
   box-shadow:0 8px 20px rgba(48,43,43,.08);
 }
@@ -4567,12 +4569,16 @@ details[open]>p{
 .saved-mini-card .mini-card,
 .daily-card-preview,
 .card-dictionary-art,
-.orientation-visual img,
 .suit-visual img,
 .about-card-icon img,
 .about-card-pair img{
   transition:transform .22s cubic-bezier(.2,.72,.25,1),box-shadow .22s ease,border-color .22s ease;
   transform-origin:center 78%;
+}
+.orientation-visual img{
+  transition:transform .22s cubic-bezier(.2,.72,.25,1),box-shadow .22s ease,border-color .22s ease;
+  transform-origin:50% 50%;
+  transform-box:border-box;
 }
 
 @media(hover:hover) and (pointer:fine){
