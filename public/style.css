@@ -4668,11 +4668,11 @@ details[open]>p{
 }
 .about-card-pair img:first-child{
   left:4px;
-  top:-7px;
+  top:-10px;
 }
 .about-card-pair .about-card-reversed{
   right:9px;
-  bottom:14px;
+  bottom:17px;
 }
 @media(max-width:760px){
   .about-card-pair{
@@ -4685,10 +4685,10 @@ details[open]>p{
   }
   .about-card-pair img:first-child{
     left:3px;
-    top:-7px;
+    top:-10px;
   }
   .about-card-pair .about-card-reversed{
     right:8px;
-    bottom:13px;
+    bottom:16px;
   }
 }
