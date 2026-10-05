@@ -50,6 +50,19 @@ test('result copy omits success-probability hedge and uses spaced action colon',
  assert.ok(engine.includes('지금 할 일은 이거예요 : '));
  assert.ok(!engine.includes('지금 할 일은 이거예요: '));
 });
+test('share image uses a featured card and desktop PNG download path',async()=>{
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(app.includes('CORE CARD'));
+ assert.ok(app.includes('keyCardIndex'));
+ assert.ok(app.includes("a.download='pick-a-card-reading.png'"));
+ assert.ok(app.includes("isPhoneShareTarget()?\'결과 이미지 공유\':\'결과 PNG 저장\'")||app.includes("isPhoneShareTarget()?'결과 이미지 공유':'결과 PNG 저장'"));
+ assert.ok(app.includes('phone&&typeof File'));
+});
+test('visible Korean labels place a space before colons',async()=>{
+ const files=['dist/src/app.mjs','dist/src/engine.mjs','dist/src/data/readings.mjs'];
+ for(const path of files){const source=await readFile(path,'utf8');assert.ok(!/[가-힣]:/.test(source),path);}
+ assert.ok((await readFile('dist/src/engine.mjs','utf8')).includes('지금은 이 부분을 먼저 보세요 : '));
+});
 test('yes-no page avoids vague hedge copy in visible result language',async()=>{
  const html=await readFile('dist/tarot/yes-no/index.html','utf8');
  assert.ok(!html.includes('원하는 답과 이 상징의 차이를 생각해보세요.'));
