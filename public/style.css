@@ -4692,3 +4692,96 @@ details[open]>p{
     bottom:16px;
   }
 }
+
+
+/* Sitewide hover + scroll reveal polish. */
+.scroll-reveal{
+  opacity:0;
+  translate:0 14px;
+  transition:opacity .48s cubic-bezier(.2,.72,.25,1),translate .48s cubic-bezier(.2,.72,.25,1);
+  transition-delay:var(--reveal-delay,0ms);
+}
+.scroll-reveal.is-visible{
+  opacity:1;
+  translate:0 0;
+}
+
+@media(hover:hover) and (pointer:fine){
+  a[href]:not(.button):not(.reading-tile):not(.card-library-tile){
+    transition:color .16s ease,opacity .16s ease,text-decoration-color .16s ease;
+  }
+  a[href]:not(.button):not(.reading-tile):not(.card-library-tile):hover{
+    color:#c94141;
+  }
+
+  .button:not(:disabled):hover{
+    transform:translateY(-1px);
+    box-shadow:0 8px 18px rgba(48,43,43,.07);
+  }
+  .button.primary:not(:disabled):hover{
+    background:#343434;
+  }
+  .button.secondary:not(:disabled):hover{
+    border-color:#e6b8b4;
+    background:#fff7f6;
+  }
+
+  button:not(:disabled):not(.card-button):not(.button):hover{
+    filter:brightness(.985);
+  }
+
+  summary:hover{
+    color:#c94141;
+  }
+
+  .count-options label:hover span,
+  .situation-options label:hover span{
+    border-color:#e3aaa6;
+    background:#fff7f6;
+  }
+
+  .card-library-jump a:hover{
+    border-color:#e5aaa6;
+    background:#fff5f4;
+  }
+
+  .card-library-tile:hover{
+    border-color:#e6b9b5;
+    box-shadow:0 10px 24px rgba(48,43,43,.055);
+  }
+
+  .guide-list>a:hover,
+  .related a:hover,
+  .card-prev-next a:hover{
+    background:#fff8f7;
+  }
+
+  .saved-reading-again:hover,
+  .about-link:hover,
+  .back-link:hover,
+  .text-link:hover,
+  .result-tools-foot a:hover{
+    text-decoration:underline;
+    text-underline-offset:4px;
+  }
+
+  input[type="search"]:hover,
+  textarea:hover{
+    border-color:#e3b1ad;
+  }
+
+  .button:active,
+  button:active:not(:disabled){
+    transform:translateY(1px) scale(.985);
+    box-shadow:none;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .scroll-reveal,
+  .scroll-reveal.is-visible{
+    opacity:1!important;
+    translate:none!important;
+    transition:none!important;
+  }
+}
