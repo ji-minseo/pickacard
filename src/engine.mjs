@@ -351,7 +351,8 @@ export function synthesis(slug,picks){
   const difficult=tags.filter(t=>['blocked','conflict','distance','closure'].includes(t)).length;
   const active=tags.some(t=>['movement','communication','renewal','decision'].includes(t));
   const tone=difficult>=Math.ceil(tags.length/2)?'이번 배열에서는 빠르게 밀어붙이기보다 부담을 줄이고 기본 조건을 정리하는 흐름이 더 두드러집니다.':difficult&&active?'움직일 힘과 현실적인 제약이 함께 보여요. 할 수 있는 일과 지금은 보류할 일을 나누어 보는 편이 좋습니다.':active?'생각을 실제 행동으로 옮길 수 있는 주제가 이어집니다. 큰 결론보다 다음 한 단계에 집중해보세요.':'빠른 결과보다 정리와 준비가 중심이 되는 배열입니다. 지금의 리듬을 점검하고 반복 가능한 방식을 만드는 데 의미가 있어요.';
-  return [`${tone} 가장 반복되는 주제는 ‘${themes[strongest]}’입니다. ${generalAdvice(focusCard,focusPick.reversed)}`,`특히 ‘${focusText}’ 위치는 ‘${themes[tags[Math.min(focusIndex,tags.length-1)]]}’로 읽힙니다. 카드의 상징을 실제 일정, 숫자, 경험과 함께 비교해보세요.`,readings[slug].summary];
+  const focusTag=tags[Math.min(focusIndex,tags.length-1)],plainTone=tone.replace('이번 배열에서는 ','');
+  return ['결론부터 말하면, '+plainTone,'특히 ‘'+focusText+'’ 자리의 '+focusCard.koreanName+' 때문에 ‘'+themes[focusTag]+'’을 먼저 봐야 해요. '+focusCard.advice,'지금 할 일은 이거예요: '+generalAdvice(focusCard,focusPick.reversed)];
  }
  const signals=spreadSignals(slug,picks);
  const tags=signals.positions.map(p=>p.tags[0]);
@@ -364,7 +365,8 @@ export function synthesis(slug,picks){
  const focus={reunion:'다시 만나는 데 걸리는 조건',breakup:'갈등을 다룰 때의 핵심',love:'기대 속에서 놓치기 쉬운 부분',feelings:'확인되지 않은 채 남아 있는 주제',contact:'소통을 어렵게 하는 조건','reunion-timing':'달력보다 먼저 달라져야 할 조건','yes-no':'선택 전에 점검할 조건',today:'오늘 기억할 태도'}[slug];
  const strongest=signals.ranked[0][0],support=signals.ranked[1]?.[0];
  const combined=strongest===support||!support?signalNotes[strongest]:`${signalNotes[strongest]} 함께 나타난 ‘${themes[support]}’ 주제도 이 과정을 서두르지 않도록 돌아보게 합니다.`;
- return ['결론부터 말하면, '+tone,'카드 전체에서 가장 강한 주제는 ‘'+themes[strongest]+'’이고, 특히 ‘'+focus+'’에는 ‘'+themes[obstacle]+'’이 걸려 있어요. '+cards.find(c=>c.id===picks[Math.min(obstacleIndex,picks.length-1)].id).advice,bridge+' '+combined];
+ const dominantIndex=Math.max(0,tags.findIndex(t=>t===strongest)),dominantCard=cards.find(c=>c.id===picks[dominantIndex].id),obstaclePick=picks[Math.min(obstacleIndex,picks.length-1)],obstacleCard=cards.find(c=>c.id===obstaclePick.id),plainTone=tone.replace('이번 배열에서는 ','');
+ return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’이 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’이 보여서예요.','지금은 이 부분을 먼저 보세요: '+obstacleCard.advice];
 }
 // Future premium adapters may accept this DTO. No remote provider or API client in v0.1.
 export function readingSnapshot(slug,picks,question=''){return {version:2,locale:'ko',readingType:slug,question,selectedCards:picks.map(p=>({...p})),positions:readings[slug].positions.slice(0,picks.length).map(p=>p.label),interpretations:picks.map((p,i)=>interpret(slug,p,i)),summary:synthesis(slug,picks)};}
