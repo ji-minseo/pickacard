@@ -10,13 +10,119 @@ export function dateKey(date=new Date()){return `${date.getFullYear()}-${String(
 export const storageKey='pickacard:daily:v1';
 export function loadDaily(storage,date=dateKey()){try{const d=JSON.parse(storage.getItem(storageKey));if(d?.date===date&&cards.some(c=>c.id===d.card?.id)&&typeof d.card.reversed==='boolean')return d.card;}catch{}return null;}
 export function saveDaily(storage,card,date=dateKey()){try{storage.setItem(storageKey,JSON.stringify({date,card}));return true;}catch{return false;}}
+const concreteScenes={
+ love:{
+  movement:'소개나 만남 제안이 늘거나, 먼저 대화를 이어가고 싶어지는 식으로 관계가 실제 행동으로 움직일 수 있어요.',
+  communication:'연락 텀이 줄고 대화가 자연스럽게 이어지는 등 말이 오가는 흐름으로 나타날 수 있어요.',
+  attraction:'눈길이 가는 사람이 생기거나, 이미 아는 사람에게 설렘이 커지는 식으로 나타날 수 있어요.',
+  healing:'연애보다 내 컨디션과 감정 회복이 먼저 좋아지면서 사람을 보는 기준도 차분해질 수 있어요.',
+  decision:'썸을 이어갈지, 관계를 분명히 할지처럼 애매함을 정리해야 하는 장면이 생길 수 있어요.',
+  waiting:'연락은 오가지만 관계가 쉽게 정의되지 않거나, 서로의 타이밍이 엇갈리는 식으로 나타날 수 있어요.',
+  reflection:'새 사람을 만나기 전 과거 연애 패턴이나 내가 원하는 관계를 다시 생각하게 될 수 있어요.',
+  distance:'호감은 있어도 연락·만남이 뜸하거나, 한쪽이 감정적으로 거리를 두는 모습으로 나타날 수 있어요.',
+  renewal:'기존 취향과 다른 사람에게 끌리거나, 예전과 다른 방식으로 연애를 시작해볼 수 있어요.',
+  closure:'미련 남은 관계나 애매한 썸을 정리해야 새 흐름이 들어오는 장면으로 나타날 수 있어요.',
+  blocked:'호감은 있어도 일정·자신감·상대 상황 같은 현실 조건 때문에 진전이 막힐 수 있어요.',
+  conflict:'좋아하는 마음은 있어도 연락 방식이나 관계 기대치가 달라 부딪히는 식으로 나타날 수 있어요.'
+ },
+ reunion:{
+  movement:'누군가 먼저 안부를 묻거나 만남을 제안하는 식으로 멈췄던 관계가 다시 움직일 수 있어요.',
+  communication:'짧은 안부, 답장 재개, 미뤄둔 대화처럼 끊겼던 소통이 다시 이어지는 장면으로 나타날 수 있어요.',
+  attraction:'그리움이나 미련은 남아 있어 다시 보고 싶다는 마음이 커질 수 있지만, 그것만으로 재회가 결정되지는 않아요.',
+  healing:'감정이 가라앉고 서로를 덜 방어적으로 볼 수 있게 되면서 대화 가능성이 생길 수 있어요.',
+  decision:'다시 만날지 완전히 정리할지, 한쪽 또는 양쪽이 관계의 결론을 정하려는 흐름으로 나타날 수 있어요.',
+  waiting:'서로 생각은 있지만 먼저 연락하지 않거나, 답장과 행동이 늦어지는 식으로 정체될 수 있어요.',
+  reflection:'과거 대화나 헤어진 이유를 반복해서 되짚지만 실제 행동은 아직 없는 상태일 수 있어요.',
+  distance:'연락 단절, 차단, SNS만 확인하는 식으로 마음보다 거리가 더 크게 느껴질 수 있어요.',
+  renewal:'사과, 연락 방식 변경, 이전 갈등에 대한 새로운 약속처럼 예전과 다른 방식이 생겨야 움직일 수 있어요.',
+  closure:'상대나 내가 관계를 정리하려는 행동을 하고 있을 수 있어요. 이 경우 재회보다 마무리 쪽이 더 강합니다.',
+  blocked:'자존심, 새로운 상대, 일정, 반복된 상처 같은 현실적인 걸림돌이 재접근을 막고 있을 수 있어요.',
+  conflict:'연락해도 같은 싸움이나 신뢰 문제로 다시 부딪힐 가능성이 커, 감정보다 문제 해결이 먼저인 흐름이에요.'
+ },
+ job:{
+  movement:'이력서 수정, 지원 시작, 면접 준비처럼 멈춰 있던 취준이 실제 행동으로 넘어가는 흐름이에요.',
+  communication:'면접·과제·리크루터 연락처럼 내 경험을 말로 설명하고 보여주는 과정이 중요해질 수 있어요.',
+  reflection:'지원 수를 늘리기보다 포트폴리오와 경험을 다시 정리하면서 방향을 잡는 시간이 필요해 보여요.',
+  healing:'취준 피로가 누적됐다면 잠깐 회복해야 오히려 준비 효율이 올라가는 흐름이에요.',
+  decision:'직무, 회사 규모, 연봉·근무조건 중 무엇을 우선할지 기준을 정해야 지원이 선명해질 수 있어요.',
+  attraction:'회사 이름이나 직무 이미지에 끌리기보다 실제 업무와 내가 원하는 경험이 맞는지 확인할 필요가 있어요.',
+  distance:'원하는 직무와 현재 경험 사이 간격이 느껴질 수 있어, 한 단계 현실적인 지원 전략이 필요해 보여요.',
+  renewal:'지원 방식, 포트폴리오 구성, 자소서 문장처럼 기존 방식을 바꾸면 흐름이 살아날 수 있어요.',
+  waiting:'지원 결과만 기다리기보다 다음 지원을 준비하는 편이 유리한 흐름이에요.',
+  closure:'맞지 않는 직무나 준비 방식을 접고, 더 가능성 있는 방향에 시간을 몰아줄 때일 수 있어요.',
+  blocked:'포트폴리오 미완성, 경험 정리 부족, 지원 미루기처럼 한 가지 막힘이 전체 진행을 늦추고 있을 수 있어요.',
+  conflict:'하고 싶은 일과 현실 조건이 충돌해 지원 자체가 흔들릴 수 있어요. 우선순위를 정해야 해요.'
+ },
+ money:{
+  movement:'새 수입원을 찾거나 고정비를 줄이는 등 돈의 흐름을 실제로 바꾸는 행동이 필요한 때예요.',
+  communication:'정산, 계약, 급여, 비용 분담처럼 돈 이야기를 명확히 확인해야 손해를 줄일 수 있어요.',
+  reflection:'이번 달 지출 내역을 다시 보면서 왜 썼는지까지 확인하면 새는 돈이 보일 수 있어요.',
+  healing:'스트레스 소비나 보상 소비가 있다면 먼저 생활 리듬을 안정시키는 게 돈 관리에도 도움이 돼요.',
+  decision:'살지 말지, 유지할지 줄일지처럼 지출 기준을 명확히 정해야 흐름이 잡혀요.',
+  attraction:'예뻐서, 갖고 싶어서, 놓치기 싫어서 쓰는 돈이 커질 수 있어 충동 지출을 특히 조심해야 해요.',
+  distance:'당장 쓰지 않아도 되는 돈을 분리해 두거나, 카드·쇼핑앱과 거리를 두는 방식이 효과적일 수 있어요.',
+  renewal:'예산 방식이나 저축 구조를 바꾸면 관리가 훨씬 쉬워질 수 있어요.',
+  waiting:'큰 구매나 투자 판단은 서두르기보다 며칠 두고 다시 보는 편이 나은 흐름이에요.',
+  closure:'안 쓰는 구독, 반복되는 소액 결제, 필요 없는 고정비를 정리할 타이밍이에요.',
+  blocked:'예상치 못한 지출이나 고정비 부담 때문에 여유 자금이 묶일 수 있어요.',
+  conflict:'쓰고 싶은 마음과 모아야 한다는 압박이 충돌해, 기준 없이 왔다 갔다 할 수 있어요.'
+ },
+ work:{
+  movement:'새 업무를 맡거나 이직 준비를 시작하는 등 커리어가 정체에서 행동으로 넘어갈 수 있어요.',
+  communication:'상사·동료와 역할, 일정, 기대치를 명확히 말하는 것이 문제 해결의 핵심이 될 수 있어요.',
+  reflection:'지금 힘든 게 회사 전체 때문인지 특정 업무·사람 때문인지 구분해보는 시간이 필요해요.',
+  healing:'번아웃이나 피로가 누적됐다면 성과보다 회복과 업무량 조정이 먼저일 수 있어요.',
+  decision:'남을지 옮길지보다 어떤 조건이면 남고 어떤 조건이면 떠날지 기준을 정해야 해요.',
+  attraction:'새 회사나 새로운 역할이 매력적으로 보여도 실제 업무 강도와 보상 조건을 함께 봐야 해요.',
+  distance:'업무와 감정을 분리하거나, 불필요한 인간관계 갈등에서 한 발 물러나는 게 도움이 될 수 있어요.',
+  renewal:'업무 방식, 역할 분담, 이직 준비처럼 지금과 다른 방식을 시도해야 흐름이 바뀔 수 있어요.',
+  waiting:'승진·이직 결과만 기다리기보다 지금 경력에 남길 성과를 하나 더 만드는 편이 좋아요.',
+  closure:'끝낼 프로젝트, 내려놓을 역할, 정리할 관계를 분명히 해야 다음 단계로 갈 수 있어요.',
+  blocked:'권한 부족, 애매한 역할, 과도한 업무량 같은 구조적 문제가 발목을 잡고 있을 수 있어요.',
+  conflict:'업무 방식이나 책임 범위를 두고 반복적으로 부딪히는 상황이 이어질 수 있어요.'
+ },
+ study:{
+  movement:'계획만 세우던 상태에서 실제 문제 풀이, 복습, 모의고사처럼 손을 움직이는 공부가 필요한 때예요.',
+  communication:'선생님·스터디·질문 게시판처럼 모르는 부분을 바로 묻고 피드백 받는 방식이 효율을 높일 수 있어요.',
+  reflection:'공부 시간을 늘리기보다 틀린 문제와 집중이 깨지는 패턴을 먼저 분석하는 편이 좋아요.',
+  healing:'수면 부족과 피로가 심하면 공부량을 늘리는 것보다 컨디션을 회복하는 게 점수에도 도움이 돼요.',
+  decision:'과목별 우선순위, 시험 범위, 목표 점수처럼 무엇을 먼저 잡을지 기준을 정해야 해요.',
+  attraction:'새 교재나 공부법을 계속 찾기보다 지금 가진 자료를 끝까지 쓰는 편이 더 효과적일 수 있어요.',
+  distance:'휴대폰, 게임, SNS처럼 집중을 끊는 환경과 물리적으로 거리를 두는 게 필요할 수 있어요.',
+  renewal:'시간표나 복습 방식이 안 맞았다면 공부 루틴 자체를 바꿔야 흐름이 살아날 수 있어요.',
+  waiting:'결과를 걱정하며 멈춰 있기보다 오늘 할 분량을 끝내는 편이 불안을 줄여줘요.',
+  closure:'효율이 떨어지는 공부법이나 끝없이 미뤄온 범위를 정리하고 새 계획으로 넘어갈 때예요.',
+  blocked:'완벽하게 해야 한다는 압박, 피로, 계획 과다 때문에 시작 자체가 늦어질 수 있어요.',
+  conflict:'해야 할 공부와 하고 싶은 일이 계속 충돌해 집중이 흔들릴 수 있어요. 시간 경계를 분명히 잡아야 해요.'
+ }
+};
+export function situationExample(slug,pick,index){
+ const card=cards.find(c=>c.id===pick.id);if(!card||!readings[slug]?.positions[index])return null;
+ const tag=(pick.reversed?card.reversedTags:card.tags)[0];
+ return concreteScenes[slug]?.[tag]||null;
+}
+export function readingHeadline(slug,picks){
+ if(!Array.isArray(picks)||!picks.length)return null;
+ const supported=['love','reunion','job','money','work','study'];if(!supported.includes(slug))return null;
+ const tags=picks.map(p=>{const card=cards.find(c=>c.id===p.id);return (p.reversed?card.reversedTags:card.tags)[0];});
+ const difficult=tags.filter(t=>['blocked','conflict','distance','closure'].includes(t)).length;
+ const active=tags.filter(t=>['movement','communication','attraction','renewal'].includes(t)).length;
+ const mostlyDifficult=difficult>=Math.ceil(tags.length/2),moving=active>=Math.ceil(tags.length/3);
+ if(slug==='love')return mostlyDifficult?'지금 연애 흐름은 새로운 시작보다 관계 기준과 경계를 정리하는 쪽이 더 강합니다.':moving&&difficult===0?'연애 흐름은 꽤 열려 있습니다. 만남이나 대화가 실제로 움직일 가능성이 있는 배열이에요.':moving?'호감과 기회는 있는데, 애매한 관계나 현실 조건이 발목을 잡을 수 있어요.':'빠른 진전보다 사람을 천천히 보고 내 기준을 세우는 흐름입니다.';
+ if(slug==='reunion')return mostlyDifficult?'현재 흐름만 보면 재회를 밀어붙이기보다 정리와 거리두기 쪽이 더 강합니다.':moving&&difficult===0?'재회 가능성은 닫혀 있지 않습니다. 실제 대화나 재접촉으로 이어질 여지가 있는 배열이에요.':moving?'마음이나 연결의 여지는 남아 있지만, 지금 그대로 다시 만나면 같은 문제가 반복될 가능성이 큽니다.':'그리움은 남아 있어도 실제 재접촉으로 이어질 힘은 아직 약한 편입니다.';
+ if(slug==='job')return mostlyDifficult?'지금은 지원 수를 늘리기보다 준비의 구멍을 먼저 메우는 쪽이 유리합니다.':moving&&difficult===0?'지금은 준비만 더 하기보다 실제 지원으로 넘어가도 좋은 흐름입니다.':moving?'기회는 열려 있지만, 한 가지 보완점이 결과를 크게 좌우할 수 있어요.':'서두르기보다 방향을 정리한 뒤 지원하는 편이 유리합니다.';
+ if(slug==='money')return mostlyDifficult?'지금 금전 흐름은 늘리기보다 새는 돈을 막는 쪽이 우선입니다.':moving&&difficult===0?'돈의 흐름을 바꿀 여지는 있습니다. 다만 들어오는 돈만큼 관리 기준도 같이 세워야 해요.':moving?'들어오는 것과 나가는 것이 함께 커질 수 있어 관리가 핵심입니다.':'큰 변화보다 예산을 정리하고 지키는 쪽이 맞는 흐름입니다.';
+ if(slug==='work')return mostlyDifficult?'지금 직장에서는 버티는 힘보다 구조적인 부담을 줄이는 게 먼저입니다.':moving&&difficult===0?'업무나 커리어를 실제로 움직여볼 만한 흐름입니다. 역할 변화나 이직 준비도 현실적으로 검토해볼 수 있어요.':moving?'변화의 기회는 있지만, 현재의 부담을 그대로 안고 움직이면 피로가 반복될 수 있어요.':'큰 결정보다 내가 원하는 업무 조건부터 선명하게 만드는 게 먼저입니다.';
+ return mostlyDifficult?'지금은 공부량을 더 늘리기보다 집중을 깨는 원인부터 줄이는 게 우선입니다.':moving&&difficult===0?'공부 흐름은 살아 있습니다. 계획보다 실제 문제 풀이와 복습으로 밀어붙여도 좋은 때예요.':moving?'의욕은 있는데 집중을 끊는 요소가 함께 보여요. 루틴 하나만 바로잡아도 체감이 달라질 수 있어요.':'새 계획을 늘리기보다 지금 방식이 왜 안 굴러가는지 먼저 점검하는 편이 좋아요.';
+}
 export function interpret(slug,pick,index){
  const card=cards.find(c=>c.id===pick.id),position=readings[slug]?.positions[index];
  if(!card||!position)throw new Error('Unknown card or position');
  const [opening,closing]=positionVoices[slug][index];
  const meaning=`${opening} ‘${card.keywords.join(' · ')}’입니다. ${pick.reversed?card.reversed:card.upright}로 읽을 수 있어요.`;
  const context=slug==='yes-no'?`${generalAdvice(card,pick.reversed)} ${closing}`:pick.reversed?`${card.advice} ${closing}`:`${card[position.field]} ${closing}`;
- return {card,position,meaning,context,lens:position.lens,caution:null};
+ const example=situationExample(slug,pick,index);
+ return {card,position,meaning,context,example,lens:position.lens,caution:null};
 }
 const everydayAdvice={
  movement:'시작하기 전에 목적과 감당할 수 있는 속도를 정해보세요.',
