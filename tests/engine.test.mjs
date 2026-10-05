@@ -16,6 +16,12 @@ test('optional situation context changes interpretation without being required',
  for(const [slug,config] of Object.entries(readingContexts)){const picks=readings[slug].positions.map((_,i)=>({id:['major-19','major-1','major-7','major-12','major-17'][i%5],reversed:false}));const note=contextualInsight(slug,config.options[0][0],picks);assert.ok(note?.label);assert.ok(note?.text.length>25);assert.equal(contextualInsight(slug,'',picks),null);}
 });
 test('card combination engine reads exact and semantic pairs with position context',()=>{const exact=combinationInsights('reunion',[{id:'major-6',reversed:false},{id:'major-15',reversed:false},{id:'major-17',reversed:false},{id:'cups-2',reversed:false},{id:'major-20',reversed:false}]);assert.ok(exact.length>=1);assert.ok(exact[0].title.includes('연인')&&exact[0].title.includes('악마'));assert.ok(exact[0].text.includes(readings.reunion.positions[0].label));const semantic=combinationInsights('job',[{id:'wands-1',reversed:false},{id:'swords-5',reversed:false},{id:'pentacles-1',reversed:false},{id:'major-10',reversed:false}]);assert.ok(semantic.length>=1);assert.ok(semantic.some(x=>x.text.includes('실제')||x.text.includes('조건')||x.text.includes('행동')));assert.deepEqual(combinationInsights('today',[{id:'major-6',reversed:false},{id:'major-15',reversed:false}]),[]);});
+test('job examples vary by spread position even when semantic tag repeats',()=>{
+ const pick={id:'major-1',reversed:false};
+ const examples=readings.job.positions.map((_,i)=>situationExample('job',pick,i));
+ assert.equal(new Set(examples).size,readings.job.positions.length);
+ assert.ok(examples.every(text=>text&&text.length>30));
+});
 test('feelings and yes-no results stay concrete and decisive',()=>{
  const feelingsPicks=readings.feelings.positions.map((_,i)=>({id:['major-6','cups-2','major-12','wands-8'][i],reversed:false}));
  const feelingsHeadline=readingHeadline('feelings',feelingsPicks),feelingsSummary=synthesis('feelings',feelingsPicks);
@@ -37,6 +43,13 @@ test('saved readings stay local, capped, removable and clearable',()=>{
  assert.equal(clearSavedReadings(storage),true);assert.deepEqual(loadSavedReadings(storage),[]);
 });
 test('mixed directions do not present decisive yes/no',()=>{assert.equal(verdict([{id:'major-19',reversed:false},{id:'major-16',reversed:false}]),'조금 더 지켜볼 필요가 있음');assert.equal(verdict([{id:'major-19',reversed:false}]),'YES에 가까움');assert.equal(verdict([{id:'major-16',reversed:false}]),'NO에 가까움');});
+test('yes-no page avoids vague hedge copy in visible result language',async()=>{
+ const html=await readFile('dist/tarot/yes-no/index.html','utf8');
+ assert.ok(!html.includes('원하는 답과 이 상징의 차이를 생각해보세요.'));
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(!app.includes('아래 카드의 상징과 방향을 종합한 참고 메시지입니다.'));
+ assert.ok(app.includes('YES / 보류 / NO 중 하나로 정리했어요.'));
+});
 test('every SEO route has unique title, description, H1 and deep static content',async()=>{const titles=new Set(),descriptions=new Set();for(const slug of Object.keys(readings)){const html=await readFile(`dist/tarot/${slug}/index.html`,'utf8');titles.add(html.match(/<title>(.*?)<\/title>/)[1]);descriptions.add(html.match(/name="description" content="(.*?)"/)[1]);assert.equal((html.match(/<h1>/g)||[]).length,1);assert.ok(html.includes('FAQPage'));assert.ok(html.includes(readings[slug].explanation));if(readingContexts[slug])assert.ok(html.includes('name="situation"'));assert.ok(html.includes('조금 더 깊게 읽기'));for(const [heading] of readingDepth[slug])assert.ok(html.includes(heading));}assert.equal(titles.size,Object.keys(readings).length);assert.equal(descriptions.size,Object.keys(readings).length);});
 import {synthesis,readingSnapshot} from '../src/engine.mjs';
 import {artwork} from '../src/card-view.mjs';
