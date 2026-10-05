@@ -446,7 +446,7 @@ export function synthesis(slug,picks){
  const strongest=signals.ranked[0][0],support=signals.ranked[1]?.[0];
  const combined=strongest===support||!support?signalNotes[strongest]:`${signalNotes[strongest]} 함께 나타난 ‘${themes[support]}’ 주제도 이 과정을 서두르지 않도록 돌아보게 합니다.`;
  const dominantIndex=Math.max(0,tags.findIndex(t=>t===strongest)),dominantCard=cards.find(c=>c.id===picks[dominantIndex].id),obstaclePick=picks[Math.min(obstacleIndex,picks.length-1)],obstacleCard=cards.find(c=>c.id===obstaclePick.id),plainTone=tone.replace('이번 배열에서는 ','');
- return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’이 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’이 보여서예요.',support&&support!==strongest?'여기에 ‘'+themes[support]+'’도 같이 잡혀 있어서, 마음이 움직이는 것과 실제 관계가 움직이는 속도가 다를 수 있어요.':bridge,'지금은 이 부분을 먼저 보세요: '+obstacleCard.advice];
+ return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’이 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’이 보여서예요.',support&&support!==strongest?'여기에 ‘'+themes[support]+'’도 같이 잡혀 있어서, 마음이 움직이는 것과 실제 관계가 움직이는 속도가 다를 수 있어요.':bridge,'지금은 이 부분을 먼저 보세요 : '+obstacleCard.advice];
 }
 // Future premium adapters may accept this DTO. No remote provider or API client in v0.1.
 export function readingSnapshot(slug,picks,question=''){return {version:2,locale:'ko',readingType:slug,question,selectedCards:picks.map(p=>({...p})),positions:readings[slug].positions.slice(0,picks.length).map(p=>p.label),interpretations:picks.map((p,i)=>interpret(slug,p,i)),summary:synthesis(slug,picks)};}
