@@ -2545,3 +2545,65 @@ textarea{
     font-size:13px;
   }
 }
+
+
+/* Timing flow + next action cards. */
+.reading-insights{
+  width:min(900px,100%);
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin:0 auto 24px;
+}
+.insight-card{
+  min-width:0;
+  padding:18px 19px;
+  border:1px solid #eeeeee;
+  border-radius:17px;
+  background:#fff;
+}
+.insight-card.timing-card{
+  border-color:#f0d7d5;
+  background:#fff8f7;
+}
+.insight-label{
+  display:block;
+  margin-bottom:7px;
+  color:#c94141;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.05em;
+}
+.insight-card>strong{
+  display:block;
+  margin-bottom:8px;
+  color:var(--ink);
+  font-size:21px;
+  line-height:1.3;
+  letter-spacing:-.03em;
+  font-weight:900;
+}
+.insight-card>p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.7;
+}
+@media(max-width:650px){
+  .reading-insights{
+    grid-template-columns:1fr;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .insight-card{
+    padding:14px;
+    border-radius:15px;
+  }
+  .insight-card>strong{
+    font-size:19px;
+  }
+  .insight-card>p{
+    font-size:13px;
+    line-height:1.65;
+  }
+}
