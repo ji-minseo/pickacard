@@ -115,6 +115,89 @@ export function readingHeadline(slug,picks){
  if(slug==='work')return mostlyDifficult?'지금 직장에서는 버티는 힘보다 구조적인 부담을 줄이는 게 먼저입니다.':moving&&difficult===0?'업무나 커리어를 실제로 움직여볼 만한 흐름입니다. 역할 변화나 이직 준비도 현실적으로 검토해볼 수 있어요.':moving?'변화의 기회는 있지만, 현재의 부담을 그대로 안고 움직이면 피로가 반복될 수 있어요.':'큰 결정보다 내가 원하는 업무 조건부터 선명하게 만드는 게 먼저입니다.';
  return mostlyDifficult?'지금은 공부량을 더 늘리기보다 집중을 깨는 원인부터 줄이는 게 우선입니다.':moving&&difficult===0?'공부 흐름은 살아 있습니다. 계획보다 실제 문제 풀이와 복습으로 밀어붙여도 좋은 때예요.':moving?'의욕은 있는데 집중을 끊는 요소가 함께 보여요. 루틴 하나만 바로잡아도 체감이 달라질 수 있어요.':'새 계획을 늘리기보다 지금 방식이 왜 안 굴러가는지 먼저 점검하는 편이 좋아요.';
 }
+const timingScores={movement:3,communication:3,attraction:2,renewal:2,decision:1,healing:1,reflection:0,conflict:-1,waiting:-2,distance:-2,closure:-2,blocked:-3};
+function primaryTags(picks){return picks.map(p=>{const card=cards.find(c=>c.id===p.id);return (p.reversed?card.reversedTags:card.tags)[0];});}
+export function timingInsight(slug,picks){
+ const supported=['love','reunion','contact','reunion-timing','job','money','work','study'];
+ if(!supported.includes(slug)||!Array.isArray(picks)||!picks.length)return null;
+ const tags=primaryTags(picks),score=tags.reduce((sum,t)=>sum+(timingScores[t]??0),0)/tags.length;
+ const pace=score>=1.5?'fast':score>=.25?'medium':score>=-1?'slow':'stalled';
+ const ranges={
+  love:{fast:'2~6주',medium:'1~3개월',slow:'3~6개월',stalled:'당분간 정체'},
+  reunion:{fast:'2~6주',medium:'1~3개월',slow:'3~6개월',stalled:'당분간 정체'},
+  contact:{fast:'1~4주',medium:'1~2개월',slow:'2~4개월',stalled:'당분간 정체'},
+  'reunion-timing':{fast:'2~6주',medium:'1~3개월',slow:'3~6개월',stalled:'당분간 정체'},
+  job:{fast:'2~8주',medium:'1~3개월',slow:'3~6개월',stalled:'준비 정리가 먼저'},
+  money:{fast:'2~6주',medium:'1~3개월',slow:'3~6개월',stalled:'지출 정리가 먼저'},
+  work:{fast:'2~8주',medium:'1~3개월',slow:'3~6개월',stalled:'조건 정리가 먼저'},
+  study:{fast:'1~3주',medium:'3~8주',slow:'2~4개월',stalled:'루틴 정리가 먼저'}
+ };
+ const labels={fast:'빠른 편',medium:'보통',slow:'천천히',stalled:'정체'};
+ const copy={
+  love:{
+   fast:'소개, 연락, 만남 제안처럼 작은 계기가 먼저 들어오기 쉬운 흐름이에요. 관계가 실제로 자리 잡는 건 첫 계기보다 조금 더 시간을 두고 보는 편이 맞습니다.',
+   medium:'갑자기 확 들어오기보다 대화나 지인 연결처럼 가벼운 접점이 쌓이면서 연애 흐름이 열리는 쪽에 가깝습니다.',
+   slow:'사람이 들어오는 것보다 내 기준과 생활이 먼저 정리되는 흐름이에요. 서두르기보다 몇 달 단위로 보는 편이 자연스럽습니다.',
+   stalled:'지금은 새로운 관계를 밀어붙이는 시기라기보다 애매한 관계와 내 기준을 정리하는 쪽이 더 강합니다.'
+  },
+  reunion:{
+   fast:'연락, 답장 재개, 우연한 접점 같은 첫 움직임은 비교적 빨리 나타날 수 있어요. 실제 재회로 자리 잡는지는 그 뒤의 행동과 대화를 더 봐야 합니다.',
+   medium:'생각은 남아 있어도 바로 행동으로 옮겨지기보다 한두 번의 접점을 거쳐 관계가 움직이는 흐름에 가깝습니다.',
+   slow:'재접촉보다 감정 정리와 현실 조건 변화가 먼저 필요한 배열이에요. 몇 달 안에 조건이 달라지는지를 보는 편이 맞습니다.',
+   stalled:'현재는 연락 시기보다 막고 있는 문제를 푸는 게 먼저예요. 같은 상태라면 기다림만 길어질 가능성이 큽니다.'
+  },
+  contact:{
+   fast:'짧은 안부나 답장처럼 작은 연락 신호가 먼저 나타나기 쉬운 속도예요.',
+   medium:'바로 연락이 오기보다 생각과 상황이 정리된 뒤 대화가 다시 열리는 흐름에 가깝습니다.',
+   slow:'연락 자체보다 서로의 거리와 상황 변화가 먼저 필요한 흐름입니다.',
+   stalled:'연락 시기를 기다리기보다 지금 대화가 막힌 이유를 먼저 보는 편이 맞습니다.'
+  },
+  'reunion-timing':{
+   fast:'관계가 다시 움직인다면 연락이나 우연한 접점 같은 작은 계기가 먼저 보이기 쉬운 속도예요.',
+   medium:'한 번의 계기보다 상황이 정리된 뒤 서서히 대화가 열리는 흐름에 가깝습니다.',
+   slow:'감정이나 현실 조건이 충분히 달라진 뒤에야 움직일 수 있는 흐름이에요.',
+   stalled:'날짜를 세기보다 지금 재회를 막는 조건이 실제로 바뀌는지를 먼저 확인해야 하는 배열입니다.'
+  },
+  job:{
+   fast:'지원, 면접, 연락처럼 눈에 보이는 움직임을 만들기 좋은 속도예요. 준비만 더 하기보다 실제 지원을 병행하는 편이 맞습니다.',
+   medium:'한두 번의 지원보다 포트폴리오와 면접 준비를 다듬으면서 기회가 연결되는 흐름입니다.',
+   slow:'방향이나 준비물을 다시 정리한 뒤 움직이는 편이 유리해요. 몇 달 단위로 전략을 보는 흐름입니다.',
+   stalled:'지원 숫자를 늘리기 전에 지금 막히는 준비 한 가지를 먼저 해결해야 속도가 붙습니다.'
+  },
+  money:{
+   fast:'정산, 급여, 추가 수입처럼 돈의 움직임이 비교적 빨리 보일 수 있어요. 다만 들어오는 흐름과 지출 증가가 함께 오는지도 봐야 합니다.',
+   medium:'한 번의 큰돈보다 수입 구조나 지출 습관이 몇 달에 걸쳐 서서히 달라지는 흐름에 가깝습니다.',
+   slow:'금전 상황이 갑자기 뒤집히기보다 고정비와 소비 구조를 정리하면서 천천히 체감이 나아지는 흐름입니다.',
+   stalled:'돈이 들어오기를 기다리기보다 새는 돈과 묶인 비용을 먼저 정리해야 흐름이 바뀌는 배열입니다.'
+  },
+  work:{
+   fast:'역할 변화, 면담, 이직 준비처럼 커리어를 움직이는 계기가 비교적 빨리 생길 수 있어요.',
+   medium:'당장 퇴사나 이동보다 성과와 준비를 쌓으면서 선택지가 넓어지는 흐름입니다.',
+   slow:'업무 구조와 내 조건을 몇 달에 걸쳐 정리한 뒤 변화가 현실화되는 쪽에 가깝습니다.',
+   stalled:'움직이기 전에 현재 직장에서 무엇이 문제인지부터 분명히 해야 합니다.'
+  },
+  study:{
+   fast:'공부법을 바꾸면 몇 주 안에도 집중도나 문제 풀이 체감이 달라질 수 있는 흐름이에요.',
+   medium:'한두 번의 몰입보다 몇 주간 루틴을 유지했을 때 결과가 따라오는 흐름입니다.',
+   slow:'기초나 생활 리듬을 다시 만드는 시간이 필요해 보여요. 단기간 성과보다 누적을 보는 편이 맞습니다.',
+   stalled:'공부량을 늘리기 전에 집중을 깨는 환경이나 피로부터 정리해야 흐름이 살아납니다.'
+  }
+ };
+ return {label:labels[pace],range:ranges[slug][pace],text:copy[slug][pace],pace};
+}
+const actionScenes={
+ love:{movement:'마음에 드는 사람이 있다면 기다리기만 하지 말고 가벼운 대화나 한 번의 만남 제안을 만들어보세요.',communication:'애매한 연락을 해석하기보다 내가 궁금한 것을 하나만 명확하게 물어보세요.',attraction:'설렘이 큰 만큼 실제로 편안한 사람인지 한 번 더 확인해보세요.',renewal:'평소와 다른 모임이나 동선 하나를 추가해 새로운 접점을 만들어보세요.',decision:'내가 원하는 관계의 기준 세 가지를 적고, 지금 관계가 거기에 맞는지 보세요.',healing:'새 사람을 찾기 전에 내 컨디션과 일상을 회복하는 약속 하나를 먼저 잡아보세요.',reflection:'과거 연애에서 반복된 패턴 하나를 적고 이번에는 어떻게 다르게 할지 정해보세요.',waiting:'연락을 기다리는 시간을 정해두고 그 밖의 시간은 내 일정으로 채워보세요.',distance:'상대의 반응이 계속 희미하다면 내가 먼저 쫓아가는 횟수를 줄여보세요.',closure:'끝난 관계나 애매한 썸을 붙잡게 하는 행동 하나를 멈춰보세요.',blocked:'지금 막는 현실 조건이 무엇인지 하나만 특정해서 해결 가능 여부를 확인해보세요.',conflict:'호감보다 서로 원하는 관계 방식이 같은지 먼저 확인해보세요.'},
+ reunion:{movement:'연락을 한다면 감정 확인보다 가볍고 답하기 쉬운 안부 한 번으로 시작하세요.',communication:'하고 싶은 말을 길게 보내기보다 꼭 확인할 한 가지를 짧게 말해보세요.',attraction:'그리움과 다시 만나도 괜찮은 관계인지를 분리해서 생각해보세요.',renewal:'예전과 달라진 행동을 하나 만들지 못한다면 연락보다 준비가 먼저예요.',decision:'다시 만날 조건과 다시 만나지 않을 조건을 각각 두 가지씩 적어보세요.',healing:'감정이 올라올 때 바로 연락하지 말고 하루 정도 두고 다시 읽어보세요.',reflection:'헤어진 이유를 한 문장으로 정리하고 지금 그 문제가 실제로 달라졌는지 확인해보세요.',waiting:'언제까지 기다릴지 내 쪽의 기한을 정해 무기한 대기를 막아보세요.',distance:'차단이나 명확한 거절이 있다면 추가 접촉을 멈추고 거리를 존중하세요.',closure:'재회를 원해서가 아니라 외로워서 붙잡는 부분이 있는지 확인해보세요.',blocked:'재회를 막는 가장 현실적인 문제 하나를 해결할 수 있는지부터 보세요.',conflict:'같은 싸움이 반복됐다면 연락 전에 해결 방식부터 바꿀 수 있는지 생각해보세요.'},
+ job:{movement:'오늘 안에 지원할 공고 하나를 정하고 이력서를 실제로 제출해보세요.',communication:'면접에서 말할 대표 경험 하나를 1분 답변으로 만들어 소리 내어 연습해보세요.',reflection:'지원 직무에 맞지 않는 경험은 덜고 핵심 경험 세 개만 남겨보세요.',healing:'하루 정도 취준 시간을 줄이고 수면과 컨디션을 회복해 다음 지원 효율을 높여보세요.',decision:'직무, 연봉, 근무방식 중 포기 못할 기준 두 개를 정해보세요.',attraction:'회사 이름보다 채용공고의 실제 업무 세 줄을 기준으로 지원 여부를 보세요.',distance:'지금 역량과 너무 먼 공고만 보고 있다면 한 단계 현실적인 포지션도 함께 넣어보세요.',renewal:'포트폴리오 첫 화면이나 이력서 첫 세 줄을 새로 써보세요.',waiting:'결과를 기다리는 동안 다음 지원 두 곳을 준비해 흐름을 끊지 마세요.',closure:'효율이 낮은 준비 하나를 과감히 접고 그 시간을 핵심 준비에 몰아주세요.',blocked:'가장 미완성인 준비물 하나를 오늘 끝낼 단위로 쪼개보세요.',conflict:'하고 싶은 직무와 현실 조건을 표로 나눠 우선순위를 정해보세요.'},
+ money:{movement:'이번 주 안에 고정비 하나를 줄이거나 추가 수입 가능성 하나를 실제로 알아보세요.',communication:'돈이 얽힌 약속이나 정산은 금액과 날짜를 문자로 명확히 확인해두세요.',reflection:'최근 한 달 결제 내역에서 없어도 됐던 지출 세 개를 표시해보세요.',healing:'스트레스 받을 때 쓰는 소비가 있다면 그 상황을 대신할 행동 하나를 정해보세요.',decision:'구매 전 24시간 보류 규칙이나 월 자유지출 상한선을 하나 정해보세요.',attraction:'지금 사고 싶은 물건은 장바구니에만 두고 이틀 뒤 다시 판단해보세요.',distance:'저축·생활비 계좌를 분리해 쓸 수 있는 돈의 경계를 눈에 보이게 만들어보세요.',renewal:'예산 방식을 새로 짜되 항목을 너무 많이 만들지 말고 세 덩어리로 단순화해보세요.',waiting:'큰 구매나 투자 판단은 며칠 미루고 실제 숫자를 다시 확인해보세요.',closure:'안 쓰는 구독이나 자동결제 하나를 오늘 해지해보세요.',blocked:'당장 줄일 수 없는 고정비와 줄일 수 있는 지출을 따로 적어보세요.',conflict:'사고 싶은 것과 모아야 할 목표를 같은 화면에 적고 우선순위를 정해보세요.'},
+ work:{movement:'이번 주 안에 역할 조정, 면담, 이직 준비 중 하나를 실제 일정에 넣어보세요.',communication:'상사나 동료에게 애매한 업무 하나의 책임 범위와 마감일을 명확히 확인해보세요.',reflection:'회사 전체가 싫은지 특정 업무나 사람 때문에 힘든지 항목을 나눠 적어보세요.',healing:'퇴근 후 업무 알림을 끄는 시간대를 정해 회복 시간을 먼저 확보해보세요.',decision:'남을 조건과 떠날 조건을 각각 세 가지로 써보세요.',attraction:'새 회사의 이미지보다 실제 업무량, 연봉, 출퇴근 조건을 비교해보세요.',distance:'불필요한 갈등에는 바로 반응하지 말고 업무 사실만 남기는 방식으로 거리를 두세요.',renewal:'지금 업무에서 자동화하거나 넘길 수 있는 일 하나를 찾아보세요.',waiting:'이직 결과를 기다리는 동안 현재 경력에 남길 성과 하나를 완성해보세요.',closure:'내가 계속 떠안고 있는 불필요한 역할 하나를 정리할 방법을 찾아보세요.',blocked:'가장 크게 막는 구조적 문제를 한 문장으로 쓰고 내가 바꿀 수 있는 범위를 나눠보세요.',conflict:'반복되는 충돌은 사람 평가 대신 업무 기준과 책임 범위로 다시 이야기해보세요.'},
+ study:{movement:'오늘 공부를 시작할 시간을 정하고 문제 10개나 복습 30분처럼 바로 끝낼 단위를 잡아보세요.',communication:'모르는 문제 하나를 오늘 바로 질문하거나 해설을 찾아 해결해보세요.',reflection:'틀린 문제를 다시 보며 지식 부족인지 실수인지 이유를 표시해보세요.',healing:'수면이 부족하다면 오늘 공부 한 시간을 줄이고 잠을 먼저 확보해보세요.',decision:'이번 주 가장 중요한 과목 하나를 정하고 공부 시간의 절반을 먼저 배정해보세요.',attraction:'새 교재를 사기 전에 지금 쓰는 교재에서 끝낼 범위를 먼저 정해보세요.',distance:'공부 시간에는 휴대폰을 다른 방에 두거나 앱 차단을 켜보세요.',renewal:'기존 시간표가 안 굴러갔다면 분량 기준으로 루틴을 다시 짜보세요.',waiting:'결과 걱정 대신 오늘 끝낼 분량 하나만 체크해보세요.',closure:'효율이 낮은 공부법 하나를 그만두고 문제풀이·복습 중 하나로 바꿔보세요.',blocked:'완벽하게 시작하려는 마음을 내려놓고 20분짜리 첫 세션부터 열어보세요.',conflict:'놀고 싶은 시간과 공부 시간을 미리 나눠 둘 다 지킬 수 있게 해보세요.'}
+};
+export function nextAction(slug,picks){
+ const supported=Object.keys(actionScenes);if(!supported.includes(slug)||!Array.isArray(picks)||!picks.length)return null;
+ const signals=spreadSignals(slug,picks),tag=signals.ranked[0]?.[0];
+ return actionScenes[slug][tag]||generalAdvice(cards.find(c=>c.id===picks[0].id),picks[0].reversed);
+}
 export function interpret(slug,pick,index){
  const card=cards.find(c=>c.id===pick.id),position=readings[slug]?.positions[index];
  if(!card||!position)throw new Error('Unknown card or position');
