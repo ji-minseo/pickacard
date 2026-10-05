@@ -1,6 +1,7 @@
 import {positionVoices,themes} from './data/narratives.mjs';
 import {cards} from './data/cards.mjs';
 import {readings} from './data/readings.mjs';
+import {readingContexts,contextProfiles} from './data/reading-contexts.mjs';
 export function randomInt(max,cryptoSource=globalThis.crypto){
  if(!Number.isSafeInteger(max)||max<1)throw new Error('Invalid random range');
  const limit=Math.floor(4294967296/max)*max;const a=new Uint32Array(1);do{cryptoSource.getRandomValues(a);}while(a[0]>=limit);return a[0]%max;
@@ -124,6 +125,13 @@ const concreteScenes={
   conflict:'해야 할 공부와 하고 싶은 일이 계속 충돌해 집중이 흔들릴 수 있어요. 시간 경계를 분명히 잡아야 해요.'
  }
 };
+export function contextualInsight(slug,contextKey,picks){
+ if(!contextKey||!readingContexts[slug]||!contextProfiles[slug]?.[contextKey]||!Array.isArray(picks)||!picks.length)return null;
+ const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]);
+ const difficult=tags.filter(t=>['blocked','conflict','distance','closure'].includes(t)).length>=Math.ceil(tags.length/2);
+ const strongest=signals.ranked[0]?.[0],option=readingContexts[slug].options.find(([key])=>key===contextKey),profile=contextProfiles[slug][contextKey];
+ return {label:option?.[1]||contextKey,text:(difficult?profile.difficult:profile.active)+' 이번 배열에서는 특히 ‘'+themes[strongest]+'’을 같이 봐야 해요.'};
+}
 export function situationExample(slug,pick,index){
  const card=cards.find(c=>c.id===pick.id);if(!card||!readings[slug]?.positions[index])return null;
  const tag=(pick.reversed?card.reversedTags:card.tags)[0];
