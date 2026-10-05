@@ -132,9 +132,68 @@ export function contextualInsight(slug,contextKey,picks){
  const strongest=signals.ranked[0]?.[0],option=readingContexts[slug].options.find(([key])=>key===contextKey),profile=contextProfiles[slug][contextKey];
  return {label:option?.[1]||contextKey,text:(difficult?profile.difficult:profile.active)+' 이번 배열에서는 특히 ‘'+themes[strongest]+'’을 같이 봐야 해요.'};
 }
+const jobPositionScenes=[
+ {
+  movement:'준비 상태 자리에서 움직임 카드가 나왔어요. 이력서나 포트폴리오를 손보는 데서 멈추지 말고 실제 지원 한 곳까지 이어가는 게 좋아 보여요.',
+  communication:'준비 상태를 보면 면접에서 말할 경험이 정리돼 있는지가 중요해요. 대표 경험 하나를 1분 답변으로 만들어보는 게 도움이 됩니다.',
+  reflection:'현재 준비는 양보다 정리가 먼저예요. 지원 직무와 상관없는 경험은 덜고, 보여줄 핵심 경험을 다시 묶어보세요.',
+  healing:'지금은 준비 부족보다 피로가 효율을 깎고 있을 수 있어요. 하루 쉬거나 준비 시간을 줄여도 전체 흐름에는 오히려 도움이 될 수 있습니다.',
+  decision:'준비 단계부터 지원 기준이 흔들리는 모습이에요. 직무·연봉·근무방식 중 두 가지는 미리 우선순위를 정해두는 게 좋아요.',
+  attraction:'회사 이름이나 멋있어 보이는 직무에 끌려 준비가 분산될 수 있어요. 실제로 하고 싶은 업무가 무엇인지 먼저 좁혀보세요.',
+  distance:'원하는 직무와 현재 경험 사이 간격이 보여요. 바로 최종 목표만 보지 말고 한 단계 가까운 포지션도 같이 넣는 편이 현실적입니다.',
+  renewal:'기존 준비 방식이 잘 안 먹혔다면 첫 화면, 자기소개, 포트폴리오 순서를 새로 바꿔볼 때예요.',
+  waiting:'아직 지원보다 준비를 더 해야 한다는 생각이 길어질 수 있어요. 완성도 100%를 기다리기보다 제출 가능한 기준을 정해보세요.',
+  closure:'지금 준비에서 오래 끌고 있지만 효과가 낮은 부분 하나는 접는 게 좋아요. 남길 것과 버릴 것을 정리해야 속도가 붙습니다.',
+  blocked:'준비 상태에서 병목이 분명해 보여요. 포트폴리오 미완성, 자소서 미정리, 지원 미루기 중 가장 큰 하나를 먼저 끝내세요.',
+  conflict:'하고 싶은 일과 현실 조건이 충돌해 준비 방향이 자꾸 바뀔 수 있어요. 이번 지원에서 무엇을 포기하지 않을지 먼저 정해보세요.'
+ },
+ {
+  movement:'강점 자리에서 행동력이 잡혔어요. 말만 잘하는 것보다 실제로 만든 것, 개선한 것, 끝낸 경험을 앞에 내세우는 게 좋습니다.',
+  communication:'강점은 설명력과 전달력 쪽에 있어요. 경험을 길게 늘이기보다 문제–행동–결과 순서로 말하면 훨씬 강하게 보여요.',
+  reflection:'생각을 깊게 정리하고 구조화하는 능력이 강점으로 읽혀요. 분석하거나 문제를 정리한 경험을 사례로 보여주세요.',
+  healing:'조율하고 안정시키는 힘이 강점이에요. 팀에서 갈등을 줄였거나 꾸준히 운영한 경험이 있다면 좋은 사례가 될 수 있어요.',
+  decision:'판단 기준을 세우고 우선순위를 정하는 능력이 강점으로 보여요. 선택이 필요했던 프로젝트 경험을 앞세워보세요.',
+  attraction:'사람의 시선을 끄는 결과물이나 감각이 강점일 수 있어요. 포트폴리오라면 첫 화면에서 바로 보이게 배치해보세요.',
+  distance:'객관적으로 선을 긋고 문제를 분리해서 보는 능력이 강점이에요. 복잡한 상황을 정리한 경험이 있다면 살려보세요.',
+  renewal:'새로운 방식으로 바꾸고 개선한 경험이 강점이에요. 기존 프로세스를 바꿔 성과를 낸 사례가 있다면 꼭 넣으세요.',
+  waiting:'성급하게 결론 내리지 않고 꾸준히 버티는 힘이 장점이에요. 장기 프로젝트나 반복 운영 경험을 보여주기 좋아요.',
+  closure:'마무리 능력이 강점으로 읽혀요. 시작보다 끝까지 완수한 프로젝트를 중심으로 이야기하는 게 유리합니다.',
+  blocked:'오히려 어려운 상황에서 버텨낸 경험이 강점이 될 수 있어요. 막힌 상황을 어떻게 풀었는지 구체적으로 설명해보세요.',
+  conflict:'의견 차이가 있을 때 기준을 세우고 해결한 경험이 강점이 될 수 있어요. 갈등 자체보다 해결 과정을 보여주세요.'
+ },
+ {
+  movement:'보완점은 준비 속도예요. 생각보다 실행이 늦어질 수 있으니 이번 주 안에 제출할 지원 한 곳을 정해두는 게 좋아요.',
+  communication:'보완점은 면접에서 경험을 구체적으로 말하는 부분일 수 있어요. “열심히 했다”보다 숫자와 결과를 붙여보세요.',
+  reflection:'보완점은 준비를 계속 되돌아보느라 제출이 늦어지는 부분이에요. 수정 횟수에 한계를 두고 실제 지원으로 넘어가세요.',
+  healing:'보완점은 체력과 집중력 관리예요. 준비 시간을 늘리는 것보다 수면과 일정부터 안정시키는 편이 효율적입니다.',
+  decision:'보완점은 지원 기준이 자꾸 바뀌는 점이에요. 공고를 볼 때 같은 기준표로 판단하도록 세 가지 조건을 정해두세요.',
+  attraction:'보완점은 회사 이미지나 직무명에 끌려 실제 업무를 놓치는 부분이에요. 공고의 업무 내용을 세 줄로 요약해보고 결정하세요.',
+  distance:'보완점은 목표 직무와 현재 경험 사이 간격이에요. 부족한 경험을 한 번에 메우려 하기보다 가장 가까운 한 단계부터 채우세요.',
+  renewal:'보완점은 기존 자료를 계속 재사용하는 부분이에요. 지원 직무에 맞춰 첫 문단이나 대표 프로젝트를 새로 맞춰보세요.',
+  waiting:'보완점은 결과를 기다리는 동안 흐름이 끊기는 점이에요. 한 곳 기다릴 때 다음 두 곳을 동시에 준비해두세요.',
+  closure:'보완점은 맞지 않는 준비를 오래 붙잡는 점이에요. 효과 없는 자격증이나 자료 수정은 과감히 줄여도 됩니다.',
+  blocked:'보완점이 가장 직접적으로 드러나는 자리예요. 지금 전체 취준을 막는 한 가지 미완성 준비물을 먼저 끝내는 게 핵심입니다.',
+  conflict:'보완점은 하고 싶은 일과 조건 사이에서 계속 흔들리는 부분이에요. 우선순위를 한 번 정하고 최소 한 달은 유지해보세요.'
+ },
+ {
+  movement:'다음 흐름은 실제 지원과 면접으로 넘어가는 쪽이에요. 준비만 더 하기보다 지원 수를 만들면서 보완해가는 편이 좋습니다.',
+  communication:'다음 단계에서는 면접·과제·리크루터 연락처럼 소통이 중요해질 수 있어요. 답변 템플릿과 포트폴리오 설명을 미리 준비해두세요.',
+  reflection:'다음 행동은 무작정 지원 수를 늘리는 게 아니라 방향을 한 번 정리하는 거예요. 최근 탈락이나 피드백에서 반복되는 점을 찾아보세요.',
+  healing:'다음 단계에서는 잠깐 속도를 낮추고 회복하는 게 오히려 유리할 수 있어요. 지친 상태로 지원을 반복하지 않는 게 중요합니다.',
+  decision:'다음 행동은 지원 기준을 확정하는 거예요. 갈 회사와 안 갈 회사의 조건을 미리 정해두면 선택이 빨라집니다.',
+  attraction:'다음 흐름에서는 끌리는 회사가 생길 수 있어요. 지원은 해보되 브랜드보다 실제 업무와 조건을 마지막에 다시 확인하세요.',
+  distance:'다음 단계는 목표와 현실 사이 간격을 줄이는 거예요. 필요한 경험 하나를 채울 프로젝트나 포지션을 먼저 선택해보세요.',
+  renewal:'다음 행동은 지원 방식 자체를 바꾸는 거예요. 이력서 문장, 포트폴리오 순서, 지원 채널 중 하나는 새로 시도해보세요.',
+  waiting:'다음 흐름은 바로 결과가 나오기보다 기다림이 섞일 수 있어요. 기다리는 동안 지원을 멈추지 않는 게 중요합니다.',
+  closure:'다음 행동은 정리예요. 맞지 않는 지원 방향 하나를 접고 가능성이 높은 쪽에 시간을 몰아주는 게 좋습니다.',
+  blocked:'다음 단계로 가기 전에 병목 하나를 반드시 풀어야 해요. 그게 해결되면 지원 속도가 눈에 띄게 빨라질 수 있습니다.',
+  conflict:'다음 행동은 기준 충돌을 정리하는 거예요. 하고 싶은 것과 현실 조건을 표로 나눠 우선순위를 먼저 확정해보세요.'
+ }
+];
 export function situationExample(slug,pick,index){
  const card=cards.find(c=>c.id===pick.id);if(!card||!readings[slug]?.positions[index])return null;
  const tag=(pick.reversed?card.reversedTags:card.tags)[0];
+ if(slug==='job')return jobPositionScenes[index]?.[tag]||concreteScenes.job?.[tag]||null;
  return concreteScenes[slug]?.[tag]||null;
 }
 export function readingHeadline(slug,picks){
@@ -349,7 +408,8 @@ export function synthesis(slug,picks){
   const first=direction==='YES에 가까움'?'지금 질문에는 해보는 쪽이 더 강하게 나옵니다. 다만 ‘'+condition+'’을 무시하고 밀어붙이라는 뜻은 아니에요.':direction==='NO에 가까움'?'지금은 진행하지 않거나 한 번 더 멈춰 보는 쪽이 더 강합니다. 특히 ‘'+condition+'’이 해결되지 않은 상태에서 서두르는 건 추천하지 않아요.':'지금은 YES나 NO를 바로 정하기보다 보류하는 쪽이 맞습니다. 카드들이 한 방향으로 모이지 않아 조건을 하나 더 확인할 필요가 있어요.';
   const cardLine=items.map(({card,value})=>card.koreanName+'는 '+(value>0?'진행 쪽':value<0?'보류·재검토 쪽':'중립·조건 확인 쪽')).join(', ');
   const focus=items.find(x=>x.tag===strongest)||items[0];
-  return [first,'카드별 방향은 '+cardLine+'으로 읽혀요. 그래서 답 자체보다 ‘'+condition+'’이 이번 선택의 핵심 조건입니다.',generalAdvice(focus.card,focus.pick.reversed)];
+  const concrete=concreteScenes['yes-no']?.[focus.tag]||generalAdvice(focus.card,focus.pick.reversed);const support=items.find(x=>x!==focus&&x.value!==focus.value)||items[1];
+  return [first,'카드별 방향은 '+cardLine+'으로 읽혀요. 가장 크게 작용하는 조건은 ‘'+condition+'’입니다.',concrete,support?'추가로 '+support.card.koreanName+'이 '+(support.value>0?'진행 쪽 힘을 보태고 있어요.':support.value<0?'속도를 늦추는 쪽으로 작용해요.':'결정을 조금 더 확인하게 만드는 카드예요.'):''];
  }
  if(slug==='feelings'){
   const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]);
@@ -359,7 +419,8 @@ export function synthesis(slug,picks){
   const futureTag=tags[Math.min(3,tags.length-1)];
   const futureMap={movement:'앞으로는 먼저 말을 걸거나 실제 행동으로 옮길 가능성이 있습니다.',communication:'앞으로는 대화를 이어가거나 표현이 조금 더 분명해질 수 있어요.',attraction:'호감은 이어질 수 있지만 관계를 확정하는 행동까지는 더 지켜봐야 해요.',healing:'강한 진전보다 편안하게 관계를 유지하려는 태도가 나타날 가능성이 큽니다.',renewal:'관계를 예전과 다르게 보거나 새로운 방식으로 접근할 수 있어요.',decision:'관계를 이어갈지 선을 그을지 스스로 결론을 내리려는 태도가 나올 수 있어요.',reflection:'당분간은 행동보다 혼자 생각하고 정리하는 시간이 더 길 수 있어요.',waiting:'먼저 움직이기보다 상대 반응과 상황을 지켜보는 태도가 이어질 수 있어요.',distance:'가까워지기보다 자기 공간을 지키며 거리를 유지하려는 태도가 더 강할 수 있어요.',closure:'현재 흐름이 이어지면 관계를 정리하거나 선을 분명히 하려는 쪽으로 갈 수 있어요.',blocked:'마음이 있어도 현실적인 부담 때문에 표현이나 행동이 계속 늦어질 수 있어요.',conflict:'태도가 가까워졌다 멀어졌다 하며 일관되지 않게 보일 수 있어요.'};
   const strongest=signals.ranked[0]?.[0];
-  return ['결론부터 말하면, 카드 흐름상 상대는 '+current+'으로 읽힙니다.',futureMap[futureTag]||signalNotes[futureTag],'특히 반복되는 핵심은 ‘'+themes[strongest]+'’이에요. 상대가 실제로 보이는 행동이 이 해석과 맞는지 확인해보는 게 가장 중요합니다.'];
+  const strongestIndex=Math.max(0,tags.findIndex(t=>t===strongest)),strongCard=cards.find(c=>c.id===picks[strongestIndex].id),futureCard=cards.find(c=>c.id===picks[Math.min(3,picks.length-1)].id);
+  return ['결론부터 말하면, 카드 흐름상 상대는 '+current+'으로 읽힙니다.',futureMap[futureTag]||signalNotes[futureTag],'이렇게 읽는 가장 큰 근거는 '+strongCard.koreanName+'에서 ‘'+themes[strongest]+'’이 반복되기 때문이에요. 마지막 흐름의 '+futureCard.koreanName+'도 앞으로의 태도를 '+themes[futureTag]+' 쪽으로 보여줍니다.','즉 마음의 유무만 보기보다 지금 실제로 연락·만남·거리두기 중 어떤 행동을 하고 있는지 함께 보면 이 리딩이 더 선명해져요.'];
  }
  const practical=['job','money','work','study'];
  if(practical.includes(slug)){
@@ -370,7 +431,8 @@ export function synthesis(slug,picks){
   const active=tags.some(t=>['movement','communication','renewal','decision'].includes(t));
   const tone=difficult>=Math.ceil(tags.length/2)?'이번 배열에서는 빠르게 밀어붙이기보다 부담을 줄이고 기본 조건을 정리하는 흐름이 더 두드러집니다.':difficult&&active?'움직일 힘과 현실적인 제약이 함께 보여요. 할 수 있는 일과 지금은 보류할 일을 나누어 보는 편이 좋습니다.':active?'생각을 실제 행동으로 옮길 수 있는 주제가 이어집니다. 큰 결론보다 다음 한 단계에 집중해보세요.':'빠른 결과보다 정리와 준비가 중심이 되는 배열입니다. 지금의 리듬을 점검하고 반복 가능한 방식을 만드는 데 의미가 있어요.';
   const focusTag=tags[Math.min(focusIndex,tags.length-1)],plainTone=tone.replace('이번 배열에서는 ','');
-  return ['결론부터 말하면, '+plainTone,'특히 ‘'+focusText+'’ 자리의 '+focusCard.koreanName+' 때문에 ‘'+themes[focusTag]+'’을 먼저 봐야 해요. '+focusCard.advice,'지금 할 일은 이거예요: '+generalAdvice(focusCard,focusPick.reversed)];
+  const support=signals.ranked[1]?.[0],supportIndex=Math.max(0,tags.findIndex(t=>t===support)),supportCard=cards.find(c=>c.id===picks[supportIndex].id);
+  return ['결론부터 말하면, '+plainTone,'특히 ‘'+focusText+'’ 자리의 '+focusCard.koreanName+' 때문에 ‘'+themes[focusTag]+'’을 먼저 봐야 해요. '+focusCard.advice,support&&supportCard?'여기에 '+supportCard.koreanName+'의 ‘'+themes[support]+'’도 같이 잡혀 있어서, 한 가지 문제만 고치기보다 두 조건을 같이 조정하는 편이 흐름이 더 빨리 바뀔 수 있어요.':'카드 흐름이 한 방향으로 모여 있어 지금 보이는 핵심을 먼저 움직이는 게 좋아요.','지금 할 일은 이거예요: '+generalAdvice(focusCard,focusPick.reversed)];
  }
  const signals=spreadSignals(slug,picks);
  const tags=signals.positions.map(p=>p.tags[0]);
@@ -384,7 +446,7 @@ export function synthesis(slug,picks){
  const strongest=signals.ranked[0][0],support=signals.ranked[1]?.[0];
  const combined=strongest===support||!support?signalNotes[strongest]:`${signalNotes[strongest]} 함께 나타난 ‘${themes[support]}’ 주제도 이 과정을 서두르지 않도록 돌아보게 합니다.`;
  const dominantIndex=Math.max(0,tags.findIndex(t=>t===strongest)),dominantCard=cards.find(c=>c.id===picks[dominantIndex].id),obstaclePick=picks[Math.min(obstacleIndex,picks.length-1)],obstacleCard=cards.find(c=>c.id===obstaclePick.id),plainTone=tone.replace('이번 배열에서는 ','');
- return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’이 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’이 보여서예요.','지금은 이 부분을 먼저 보세요: '+obstacleCard.advice];
+ return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’이 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’이 보여서예요.',support&&support!==strongest?'여기에 ‘'+themes[support]+'’도 같이 잡혀 있어서, 마음이 움직이는 것과 실제 관계가 움직이는 속도가 다를 수 있어요.':bridge),'지금은 이 부분을 먼저 보세요: '+obstacleCard.advice];
 }
 // Future premium adapters may accept this DTO. No remote provider or API client in v0.1.
 export function readingSnapshot(slug,picks,question=''){return {version:2,locale:'ko',readingType:slug,question,selectedCards:picks.map(p=>({...p})),positions:readings[slug].positions.slice(0,picks.length).map(p=>p.label),interpretations:picks.map((p,i)=>interpret(slug,p,i)),summary:synthesis(slug,picks)};}
