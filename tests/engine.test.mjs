@@ -50,12 +50,18 @@ test('result copy omits success-probability hedge and uses spaced action colon',
  assert.ok(engine.includes('지금 할 일은 이거예요 : '));
  assert.ok(!engine.includes('지금 할 일은 이거예요: '));
 });
-test('share image uses a featured card and desktop PNG download path',async()=>{
+test('share image uses a featured card, the full drawn spread, and desktop PNG download path',async()=>{
  const app=await readFile('dist/src/app.mjs','utf8');
- assert.ok(app.includes('CORE CARD'));
- assert.ok(app.includes('keyCardIndex'));
+ const shareBlock=app.slice(app.indexOf('async function createShareImage'),app.indexOf('async function shareReadingImage'));
+ assert.ok(shareBlock.includes('CORE CARD'));
+ assert.ok(shareBlock.includes('keyCardIndex'));
+ assert.ok(shareBlock.includes('chosen.forEach'));
+ assert.ok(!shareBlock.includes('이번 리딩의 핵심'));
+ assert.ok(!shareBlock.includes('시기 흐름'));
+ assert.ok(!shareBlock.includes('지금 할 일'));
+ assert.ok(!shareBlock.includes('pickacard.everytinytool.com'));
  assert.ok(app.includes("a.download='pick-a-card-reading.png'"));
- assert.ok(app.includes("isPhoneShareTarget()?\'결과 이미지 공유\':\'결과 PNG 저장\'")||app.includes("isPhoneShareTarget()?'결과 이미지 공유':'결과 PNG 저장'"));
+ assert.ok(app.includes("isPhoneShareTarget()?'결과 이미지 공유':'결과 PNG 저장'"));
  assert.ok(app.includes('phone&&typeof File'));
 });
 test('visible Korean labels place a space before colons',async()=>{
