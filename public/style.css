@@ -3211,3 +3211,43 @@ textarea{
   }
   .card-dictionary-art{max-width:96px}
 }
+
+
+/* Card dictionary nav rhythm + YES/NO verdict spacing. */
+/* Keep the label, Korean card name, and English name visibly separated. */
+.card-prev-next a{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+.card-prev-next small,
+.card-prev-next strong,
+.card-prev-next span{
+  margin:0;
+}
+.card-prev-next small{
+  line-height:1.2;
+}
+.card-prev-next strong{
+  line-height:1.35;
+}
+.card-prev-next span{
+  line-height:1.35;
+}
+
+/* Match the spacing rhythm used by the other result capsules. */
+.verdict .step-label{
+  margin-bottom:14px;
+}
+.verdict h3{
+  margin-top:0;
+}
+
+@media(max-width:650px){
+  .card-prev-next a{
+    gap:4px;
+  }
+  .verdict .step-label{
+    margin-bottom:12px;
+  }
+}
