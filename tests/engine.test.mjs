@@ -55,7 +55,11 @@ test('share image uses a featured card, the full drawn spread, and desktop PNG d
  const shareBlock=app.slice(app.indexOf('async function createShareImage'),app.indexOf('async function shareReadingImage'));
  assert.ok(shareBlock.includes('CORE CARD'));
  assert.ok(shareBlock.includes('keyCardIndex'));
+ assert.ok(shareBlock.includes('canvas.width=720'));
+ assert.ok(shareBlock.includes('canvas.height=690'));
  assert.ok(shareBlock.includes('chosen.forEach'));
+ assert.ok(!shareBlock.includes("ctx.strokeStyle='#f0dfdc'"));
+ assert.ok(!shareBlock.includes("roundedRect(ctx,36,36"));
  assert.ok(!shareBlock.includes('이번 리딩의 핵심'));
  assert.ok(!shareBlock.includes('시기 흐름'));
  assert.ok(!shareBlock.includes('지금 할 일'));
