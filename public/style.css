@@ -5593,7 +5593,7 @@ details[open]>p{
   height:28px;
   display:flex;
   align-items:center;
-  justify-content:center;
+  justify-content:safe center;
   gap:0;
   margin:0;
   padding:0;
