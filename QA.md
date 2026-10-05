@@ -1,18 +1,16 @@
-# v0.2 verification — 2026-10-05 KST
+# v0.2 release verification — 2026-10-05
 
-- Production build: 20 static pages plus 404, sitemap, robots. `npm run build` passes.
-- `npm test`: 11 tests pass. 78 unique cards (22 major + four suits ×14), every position and orientation, 200 complete shuffles, unbiased random rejection, daily persistence/corruption/date expiry, same-topic position variation, middle-card synthesis variation, unique SEO, every internal static link and all five artwork mappings.
-- Browser: home → reunion → five picks → result → related feelings → four picks → result.
-- Browser direct routes: love (5), breakup (5), contact (3), reunion timing (3), YES/NO (1,2,3), today (1) completed. Today remained Cups Page upright after reload.
-- Guide hub → reunion guide → reunion reading navigated successfully. Missing URL displayed custom 404 page.
-- Desktop home, deck and report visually inspected.
-- 390px iframe production-component fixture tested all five prototype images, flip, summary, and detail. 320px home also inspected. Document scrollWidth = clientWidth (375 and 305 after scrollbar). Card summaries intentionally scroll horizontally inside their own region.
-- Local deterministic artwork fixture changes only shuffled order for QA; removed by final clean build, never part of production source.
-- Final engine changes rechecked in browser reunion result. App-origin error logs empty. Browser-extension metadata errors excluded.
-- Shell HTTP probing was unavailable from execution workspace; browser direct navigation and generated route/link validation were used. Custom 404 UI verified, production HTTP status not independently measured.
-- Five-asset contact sheet inspected: consistent palette, denser Moon/Sun detail at small size. 73 further generated illustrations intentionally not produced; see ARTWORK.md.
-- WebP assets have explicit dimensions, responsive 192/384 variants, lazy loading. No images in initial home download or unrevealed deck. No third-party fonts/framework/runtime AI scripts.
+- Approved brand, navigation, reading types, spreads, routes, Guide/About/FAQ preserved.
+- 78 distinct data cards: Major 22 + Minor 56. 500 five-card draws cover all 78 and all 16 courts; no duplicate physical cards. Upright/reversed interpretation and position variation tested.
+- Fifteen automated checks: data, shuffle/rejection sampling, orientation, daily persistence/corruption/date expiry, Star position/context variation, YES/NO linkage, all-spread synthesis including secondary tags, SEO uniqueness/internal links and all 156 artwork paths.
+- All eight reading flows completed in preview. YES/NO 1/2/3-card choices; daily card persisted after reload. Guide hub/article/related reading, About/FAQ and custom 404 checked. Service copy uses 78 while educational Major 22 remains.
+- Prototype artwork gate passed, specification frozen, remaining 73 generated, full 78 reviewed at 50px and 100px contact sheets. King of Swords weapon geometry corrected once.
+- 320/390px actual production-component fixtures: five anchors and mixed Page/Knight/Queen/King/Major results, flip, 93px summary artwork, 74px position artwork. Document widths 305/375 after scrollbar equal scroll widths; card summary has intentional contained horizontal scrolling.
+- Every WebP decoded successfully. Responsive/lazy loading, reserved dimensions and missing-image fallback verified. Below-fold artwork remains lazy until approached. No artwork download on initial home or unrevealed deck.
+- Reversed primary meaning tags authored; varied position voices and reversed context reduce repeated generic text. General advice for daily/YESNO avoids romance assumptions. Summary weighs every card and its primary/secondary semantic signals; Korean particle issues corrected.
+- Twenty static indexable pages have unique metadata/H1/canonical and complete sitemap/internal links; robots and noindex custom 404 checked. Fingerprints protect against stale code/artwork after redeploy. Local qa-* fixtures removed by final build.
+- No observed app-origin blocking console errors. Browser extension metadata errors excluded. Temporary browser approval service capacity error recovered without changing safeguards.
 
 ## Limits
 
-No physical-device or screen-reader testing, no Lighthouse/CWV field data, and no 78-illustration completeness claim. Semantic summaries are deterministic templates; ongoing human editorial review can improve variation. Optional existing WebMCP hook is feature-detected; browser did not expose it.
+No physical-device or screen-reader QA, Lighthouse or CWV field data. Browser preview/custom 404 UI was checked; production HTTP status independently unmeasured. Reading remains a deterministic editorial rule engine, not question semantic analysis or verified predictions about people/future.
