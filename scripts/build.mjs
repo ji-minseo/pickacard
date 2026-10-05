@@ -3,7 +3,9 @@ import {cards} from '../src/data/cards.mjs';
 import {guides} from '../src/data/guides.mjs';
 import {mkdir,writeFile,cp,rm,readFile,readdir} from 'node:fs/promises';
 import {readings,primary,secondary,disclaimer} from '../src/data/readings.mjs';
-const origin=process.env.SITE_URL||'https://pickacard.jijiminseo.chatgpt.site';
+const origin=(process.env.SITE_URL||'https://pickacard.jijiminseo.chatgpt.site').replace(/\/$/,'');
+const basePath=(process.env.BASE_PATH||'').trim().replace(/^\/+|\/+$/g,'');
+const publicBase=basePath?`/${basePath}`:'';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const faq=items=>`<div class="faq">${items.map(([q,a])=>`<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div>`;
 const tile=(slug,small=false)=>{const r=readings[slug],i=Object.keys(readings).indexOf(slug)+1;return `<a class="reading-tile ${small?'small':''}" href="/tarot/${slug}/"><span class="tile-index">${String(i).padStart(2,'0')} / ${slug==='yes-no'?'1–3':r.positions.length} CARDS</span><span class="tile-top">${r.name}</span><span class="tile-bottom">${r.tagline}</span><span class="tile-link">리딩 펼치기</span></a>`};
@@ -30,4 +32,23 @@ const assetVersion=digest.digest('hex').slice(0,12);
 for(const path of await filesUnder('dist')){
  if(path.endsWith('.mjs')){let source=await readFile(path,'utf8');source=source.replace(/from (['"])(\.\.?\/[^'"?]+\.mjs)\1/g,(_,quote,url)=>`from ${quote}${url}?v=${assetVersion}${quote}`);if(path.endsWith('/card-view.mjs'))source=source.replaceAll('.webp','.webp?v='+assetVersion);await writeFile(path,source);}
  else if(path.endsWith('.html')){const source=await readFile(path,'utf8');await writeFile(path,source.replaceAll('/style.css"',`/style.css?v=${assetVersion}"`).replaceAll('/src/app.mjs"',`/src/app.mjs?v=${assetVersion}"`));}
+}
+
+
+// GitHub Pages project-site base path support. Keep source templates root-based for local/dev builds,
+// then prefix only root-relative browser references in the built artifact.
+if(publicBase){
+ const prefixBuiltReferences=source=>source
+  .replaceAll('href="/',`href="${publicBase}/`)
+  .replaceAll('src="/',`src="${publicBase}/`)
+  .replaceAll('srcset="/',`srcset="${publicBase}/`)
+  .replaceAll(', /artwork/',`, ${publicBase}/artwork/`)
+  .replaceAll("url('/",`url('${publicBase}/`)
+  .replaceAll('url("/',`url("${publicBase}/`);
+ for(const path of await filesUnder('dist')){
+  if(/\.(html|mjs|css)$/.test(path)){
+   const source=await readFile(path,'utf8');
+   await writeFile(path,prefixBuiltReferences(source));
+  }
+ }
 }
