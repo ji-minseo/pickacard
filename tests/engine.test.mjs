@@ -135,6 +135,18 @@ test('question panel overlays the table and flying cards keep fixed typography a
  assert.ok(css.includes('.question-session-stage.is-opening .question-table-preview'));
  assert.ok(css.includes('.table-flying-card .mini-card strong'));
 });
+test('compact sticky spread becomes a one-line text rail and question preview has three card rows',async()=>{
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(app.includes('class="session-card-name"'));
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('/* Compact sticky spread v2 — text-only rail while stuck. */'));
+ assert.ok(css.includes('.session-spread-shell.is-stuck:not(.is-expanded) .session-position'));
+ assert.ok(css.includes('.session-spread-shell.is-stuck:not(.is-expanded) .summary-item .mini-card'));
+ assert.ok(css.includes('.session-spread-shell.is-stuck:not(.is-expanded) .session-card-name'));
+ assert.ok(css.includes('grid-template-columns:repeat(13,minmax(0,1fr));'));
+ const love=await readFile('dist/tarot/love/index.html','utf8');
+ assert.equal((love.match(/class="preview-card"/g)||[]).length,39);
+});
 test('selection heading has breathing room and reading intro aligns to the session width',async()=>{
  const css=await readFile('dist/style.css','utf8');
  assert.ok(css.includes('.selection-heading .step-label{'));
@@ -268,6 +280,31 @@ import {synthesis,readingSnapshot} from '../src/engine.mjs';
 import {artwork} from '../src/card-view.mjs';
 test('major IDs preserved; all four minor suits contain 14 unique ranks',()=>{assert.equal(new Set(cards.map(c=>c.id)).size,78);assert.equal(cards.filter(c=>c.arcana==='major').length,22);for(const suit of ['wands','cups','swords','pentacles']){const d=cards.filter(c=>c.suit===suit);assert.equal(d.length,14);assert.equal(new Set(d.map(c=>c.rank)).size,14);}});
 test('same-topic positions and orientations change substantive interpretation',()=>{for(const c of cards){const p={id:c.id,reversed:false};assert.notEqual(interpret('reunion',p,0).context,interpret('reunion',p,2).context);assert.notEqual(interpret('feelings',p,0).context,interpret('feelings',p,1).context);assert.notEqual(interpret('reunion',p,0).context,interpret('reunion',{...p,reversed:true},0).context);}});
+test('contact headlines and feelings actions have broad pools and react to selected context',()=>{
+ const contactHeadlines=new Set(),feelingsActions=new Set();
+ for(let i=0;i<cards.length;i++){
+  const contactPicks=[0,17,31].map((offset,j)=>({id:cards[(i+offset)%cards.length].id,reversed:(i+j)%2===0}));
+  const feelingPicks=[0,13,29,47].map((offset,j)=>({id:cards[(i+offset)%cards.length].id,reversed:(i+j)%3===0}));
+  contactHeadlines.add(readingHeadline('contact',contactPicks));
+  feelingsActions.add(nextAction('feelings',feelingPicks));
+ }
+ assert.ok(contactHeadlines.size>=8,`contact headline pool too small: ${contactHeadlines.size}`);
+ assert.ok(feelingsActions.size>=8,`feelings action pool too small: ${feelingsActions.size}`);
+ const contactSample=[{id:'cups-2',reversed:false},{id:'swords-8',reversed:true},{id:'wands-8',reversed:false}];
+ assert.notEqual(readingHeadline('contact',contactSample,'recent'),readingHeadline('contact',contactSample,'long'));
+ const feelingsSample=[{id:'cups-2',reversed:false},{id:'major-18',reversed:false},{id:'swords-8',reversed:true},{id:'wands-11',reversed:false}];
+ assert.notEqual(nextAction('feelings',feelingsSample,'crush'),nextAction('feelings',feelingsSample,'ex'));
+});
+test('relationship synthesis never cites the same card as both dominant evidence and obstacle',()=>{
+ for(const slug of ['reunion','contact','love','breakup','reunion-timing']){
+  const count=readings[slug].positions.length;
+  for(let i=0;i<300;i++){
+   const line=synthesis(slug,shuffleDeck().slice(0,count))[1]||'';
+   const match=line.match(/^왜 이렇게 읽었냐면 (.+?)에서 .* 자리의 (.+?)에서는 /);
+   if(match)assert.notEqual(match[1],match[2],`${slug} duplicated ${match[1]}`);
+  }
+ }
+});
 test('synthesis responds to middle-position cards, not only endpoints',()=>{const a=[0,6,19,7,21].map(n=>({id:`major-${n}`,reversed:false}));const b=a.map(p=>({...p}));b[2]={id:'major-16',reversed:false};assert.notDeepEqual(synthesis('reunion',a),synthesis('reunion',b));assert.equal(readingSnapshot('reunion',a,'test').interpretations.length,5);});
 test('78-card dictionary has one indexable detail page per card',async()=>{const hub=await readFile('dist/cards/index.html','utf8');assert.ok(hub.includes('타로 카드 78장 의미 사전'));const slugs=new Set();for(const card of cards){const slug=cardSlug(card);assert.ok(!slugs.has(slug));slugs.add(slug);const html=await readFile(`dist/cards/${slug}/index.html`,'utf8');assert.equal((html.match(/<h1>/g)||[]).length,1);assert.ok(html.includes(card.koreanName));assert.ok(html.includes(card.name));assert.ok(html.includes(card.upright));assert.ok(html.includes(card.reversed));assert.ok(html.includes('/tarot/love/'));assert.ok(html.includes('/tarot/reunion/'));assert.ok(html.includes('현실적인 질문에서 읽으면'));assert.ok(html.includes('/tarot/job/'));assert.ok(html.includes('/tarot/money/'));assert.ok(html.includes('/tarot/study/'));}assert.equal(slugs.size,78);});
 test('all internal static links and artwork files exist',async()=>{assert.equal(Object.keys(artwork).length,78);assert.ok(cards.every(c=>artwork[c.id]));const {readdir,stat}=await import('node:fs/promises');async function scan(dir){for(const item of await readdir(dir,{withFileTypes:true})){const p=`${dir}/${item.name}`;if(item.isDirectory())await scan(p);else if(item.name.endsWith('.html')){const html=await readFile(p,'utf8');for(const match of html.matchAll(/href="(\/[^"#]*)/g)){const link=match[1].split('?')[0];if(!link)continue;await stat(`dist${link}${link.endsWith('/')?'index.html':''}`);}}}}await scan('dist');for(const [id,file] of Object.entries(artwork)){assert.ok(cards.some(c=>c.id===id));await stat(`dist/artwork/${file}.webp`);await stat(`dist/artwork/${file}-small.webp`);}});
