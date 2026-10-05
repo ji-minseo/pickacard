@@ -4098,3 +4098,161 @@ header nav a[aria-current="page"]{
     text-align:left;
   }
 }
+
+
+/* Daily draw + guide visuals — use real tarot artwork inside the existing white/red system. */
+.daily-card-preview{
+  float:right;
+  width:104px;
+  margin:-2px 4px 16px 24px;
+  transform:rotate(7deg);
+  border-radius:14px;
+  box-shadow:0 12px 28px rgba(48,43,43,.10);
+}
+.daily-card-preview img{
+  display:block;
+  width:100%;
+  height:auto;
+  border-radius:14px;
+}
+[data-reading="today"] .question-panel{
+  display:flow-root;
+}
+[data-reading="today"] .question-panel .button{
+  margin-top:22px;
+}
+
+.guide-visual{
+  width:100%;
+  margin:0 0 18px;
+  padding:20px;
+  border:1px solid #ececf0;
+  border-radius:20px;
+  background:#fff8f7;
+}
+.orientation-visual{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+}
+.orientation-visual figure{
+  display:grid;
+  grid-template-columns:88px minmax(0,1fr);
+  gap:16px;
+  align-items:center;
+  margin:0;
+  padding:16px;
+  border:1px solid #eeeeee;
+  border-radius:16px;
+  background:#fff;
+}
+.orientation-visual img{
+  width:88px;
+  height:132px;
+  object-fit:cover;
+  border-radius:8px;
+  box-shadow:0 8px 20px rgba(48,43,43,.09);
+}
+.orientation-visual .reversed-art{
+  transform:rotate(180deg);
+}
+.orientation-visual figcaption span,
+.question-comparison>div>span{
+  display:block;
+  margin-bottom:6px;
+  color:#c94141;
+  font-size:10px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+.orientation-visual figcaption strong{
+  display:block;
+  margin-bottom:5px;
+  color:var(--ink);
+  font-size:15px;
+  font-weight:900;
+}
+.orientation-visual figcaption p{
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.55;
+}
+.suit-visual{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+.suit-visual figure{
+  margin:0;
+  padding:12px;
+  border:1px solid #eeeeee;
+  border-radius:16px;
+  background:#fff;
+  text-align:center;
+}
+.suit-visual img{
+  width:100%;
+  max-width:92px;
+  margin:0 auto;
+  aspect-ratio:2/3;
+  object-fit:cover;
+  border-radius:8px;
+  box-shadow:0 8px 20px rgba(48,43,43,.08);
+}
+.suit-visual figcaption{
+  margin-top:9px;
+  color:var(--ink);
+  font-size:12px;
+  font-weight:850;
+}
+.question-comparison{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+  gap:16px;
+  align-items:center;
+}
+.question-comparison>div{
+  padding:18px;
+  border:1px solid #eeeeee;
+  border-radius:16px;
+  background:#fff;
+}
+.question-comparison p{
+  margin:0;
+  color:var(--ink);
+  font-size:15px;
+  font-weight:800;
+  line-height:1.55;
+}
+.question-arrow{
+  color:#c94141;
+  font-size:22px;
+  font-weight:900;
+}
+
+@media(max-width:720px){
+  .daily-card-preview{
+    float:none;
+    width:92px;
+    margin:0 auto 24px;
+    transform:rotate(5deg);
+  }
+  [data-reading="today"] .question-panel{
+    text-align:center;
+  }
+  .orientation-visual{
+    grid-template-columns:1fr;
+  }
+  .suit-visual{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .question-comparison{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  .question-arrow{
+    transform:rotate(90deg);
+    justify-self:center;
+  }
+}
