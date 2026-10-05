@@ -69,3 +69,21 @@ const relatedPrompts={feelings:'그 사람의 현재 마음이 궁금한가요?'
  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&slug==='today'&&phase==='result'&&!loadDaily(storage)){app.innerHTML=formHTML;phase='question';attachForm();}});
  const context=document.modelContext;if(context?.registerTool){try{Promise.resolve(context.registerTool({name:'get_tarot_reading_state',description:'Read the currently visible tarot stage and revealed cards; does not draw cards or disclose unselected cards.',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:input=>{if(!input||Object.keys(input).length)throw new Error('Expected an empty object');return {type:slug,phase,selectedCount:selected.length,requiredCount:count,cards:selected.map(({id,reversed})=>({id,reversed}))};}})).catch(()=>{});}catch{}}
 }
+
+
+const savedRoot=document.querySelector('[data-saved-readings]');
+if(savedRoot){
+ let savedStorage=null;try{savedStorage=window.localStorage;}catch{}
+ const list=savedRoot.querySelector('#saved-reading-list'),clearButton=savedRoot.querySelector('#clear-saved-readings'),empty=savedRoot.querySelector('#saved-reading-empty');
+ const formatDate=value=>{try{return new Intl.DateTimeFormat('ko-KR',{month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'}).format(new Date(value));}catch{return '';}};
+ function renderSaved(){
+  const items=loadSavedReadings(savedStorage);list.innerHTML=items.map(item=>{
+   const reading=readings[item.slug],chosen=item.cards.map(p=>({pick:p,card:cards.find(c=>c.id===p.id)})).filter(x=>x.card);
+   return `<article class="saved-reading-item" data-saved-id="${esc(item.id)}"><div class="saved-reading-head"><div><span>${esc(formatDate(item.savedAt))}</span><h2>${esc(item.readingName||reading?.name||item.slug)}</h2></div><button type="button" class="saved-delete" data-delete-reading="${esc(item.id)}" aria-label="저장한 리딩 삭제">삭제</button></div>${item.question?`<p class="saved-question">“${esc(item.question)}”</p>`:''}<div class="saved-card-row">${chosen.map(({pick,card})=>`<div class="saved-mini-card">${cardFace(card,pick.reversed)}<span>${esc(card.koreanName)}</span></div>`).join('')}</div><div class="saved-reading-copy"><span>리딩의 핵심</span><strong>${esc(item.headline||item.conclusion||'')}</strong>${item.timing?`<p><b>시기 흐름 · ${esc(item.timing.label)}</b> ${esc(item.timing.range)} · ${esc(item.timing.text)}</p>`:''}${item.action?`<p><b>지금 해볼 것</b> ${esc(item.action)}</p>`:''}</div><a class="saved-reading-again" href="/tarot/${esc(item.slug)}/">같은 주제로 다시 보기 →</a></article>`;
+  }).join('');
+  empty.hidden=items.length>0;clearButton.hidden=items.length===0;
+ }
+ savedRoot.addEventListener('click',event=>{const button=event.target.closest('[data-delete-reading]');if(!button)return;removeSavedReading(savedStorage,button.dataset.deleteReading);renderSaved();});
+ clearButton?.addEventListener('click',()=>{if(clearSavedReadings(savedStorage))renderSaved();});
+ renderSaved();
+}
