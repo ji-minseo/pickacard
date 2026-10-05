@@ -2095,3 +2095,17 @@ textarea{
     border-radius:11px;
   }
 }
+
+
+/* Mobile home reading headings — keep both section titles left aligned. */
+@media(max-width:650px){
+  .readings-section>.section-heading{
+    align-items:flex-start;
+    text-align:left;
+  }
+  .readings-section>.section-heading h2,
+  .readings-section>.section-heading>span{
+    width:100%;
+    text-align:left;
+  }
+}
