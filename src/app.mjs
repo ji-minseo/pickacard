@@ -123,3 +123,31 @@ if(savedRoot){
  clearButton?.addEventListener('click',()=>{if(clearSavedReadings(savedStorage))renderSaved();});
  renderSaved();
 }
+
+
+/* Card dictionary discovery + current-page navigation state. */
+const cardSearch=document.querySelector('#card-search');
+if(cardSearch){
+ const groups=[...document.querySelectorAll('.card-library-group')];
+ const status=document.querySelector('#card-search-status');
+ const normalize=value=>value.toLocaleLowerCase().replace(/\s+/g,'');
+ cardSearch.addEventListener('input',()=>{
+  const query=normalize(cardSearch.value.trim());let matches=0;
+  for(const group of groups){
+   let visible=0;
+   for(const tile of group.querySelectorAll('.card-library-tile')){
+    const match=normalize(tile.textContent).includes(query);
+    tile.hidden=!match;
+    if(match){visible++;matches++;}
+   }
+   group.hidden=visible===0;
+  }
+  if(status)status.textContent=query?(matches?`${matches}장의 카드를 찾았어요.`:'일치하는 카드가 없어요. 다른 이름으로 찾아보세요.'):'';
+  const jump=document.querySelector('.card-library-jump');
+  if(jump)jump.hidden=Boolean(query);
+ });
+}
+for(const link of document.querySelectorAll('header nav a')){
+ const url=new URL(link.href);
+ if(url.pathname===location.pathname&&!url.hash)link.setAttribute('aria-current','page');
+}
