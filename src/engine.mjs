@@ -432,7 +432,7 @@ export function synthesis(slug,picks){
   const tone=difficult>=Math.ceil(tags.length/2)?'이번 배열에서는 빠르게 밀어붙이기보다 부담을 줄이고 기본 조건을 정리하는 흐름이 더 두드러집니다.':difficult&&active?'움직일 힘과 현실적인 제약이 함께 보여요. 할 수 있는 일과 지금은 보류할 일을 나누어 보는 편이 좋습니다.':active?'생각을 실제 행동으로 옮길 수 있는 주제가 이어집니다. 큰 결론보다 다음 한 단계에 집중해보세요.':'빠른 결과보다 정리와 준비가 중심이 되는 배열입니다. 지금의 리듬을 점검하고 반복 가능한 방식을 만드는 데 의미가 있어요.';
   const focusTag=tags[Math.min(focusIndex,tags.length-1)],plainTone=tone.replace('이번 배열에서는 ','');
   const support=signals.ranked[1]?.[0],supportIndex=Math.max(0,tags.findIndex(t=>t===support)),supportCard=cards.find(c=>c.id===picks[supportIndex].id);
-  return ['결론부터 말하면, '+plainTone,'특히 ‘'+focusText+'’ 자리의 '+focusCard.koreanName+' 때문에 ‘'+themes[focusTag]+'’을 먼저 봐야 해요. '+focusCard.advice,support&&supportCard?'여기에 '+supportCard.koreanName+'의 ‘'+themes[support]+'’도 같이 잡혀 있어서, 한 가지 문제만 고치기보다 두 조건을 같이 조정하는 편이 흐름이 더 빨리 바뀔 수 있어요.':'카드 흐름이 한 방향으로 모여 있어 지금 보이는 핵심을 먼저 움직이는 게 좋아요.','지금 할 일은 이거예요: '+generalAdvice(focusCard,focusPick.reversed)];
+  return ['결론부터 말하면, '+plainTone,'특히 ‘'+focusText+'’ 자리의 '+focusCard.koreanName+' 때문에 ‘'+themes[focusTag]+'’을 먼저 봐야 해요. '+focusCard.advice,support&&supportCard?'여기에 '+supportCard.koreanName+'의 ‘'+themes[support]+'’도 같이 잡혀 있어서, 한 가지 문제만 고치기보다 두 조건을 같이 조정하는 편이 흐름이 더 빨리 바뀔 수 있어요.':'카드 흐름이 한 방향으로 모여 있어 지금 보이는 핵심을 먼저 움직이는 게 좋아요.','지금 할 일은 이거예요 : '+generalAdvice(focusCard,focusPick.reversed)];
  }
  const signals=spreadSignals(slug,picks);
  const tags=signals.positions.map(p=>p.tags[0]);
