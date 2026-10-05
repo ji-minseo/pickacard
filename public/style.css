@@ -4152,6 +4152,8 @@ header nav a[aria-current="page"]{
   object-fit:cover;
   border-radius:8px;
   box-shadow:0 8px 20px rgba(48,43,43,.09);
+  transform-origin:50% 50%;
+  transform-box:border-box;
 }
 .orientation-visual .reversed-art{
   transform:rotate(180deg);
@@ -4638,7 +4640,7 @@ details[open]>p{
     box-shadow:0 11px 24px rgba(48,43,43,.11);
   }
   .orientation-visual figure:hover .reversed-art{
-    transform:translateY(-3px) rotate(179.2deg);
+    transform:translateY(-3px) rotate(180deg);
     box-shadow:0 11px 24px rgba(48,43,43,.11);
   }
   .about-card-icon:hover img{
