@@ -3779,3 +3779,15 @@ textarea{
     font-size:13px;
   }
 }
+
+
+.saved-context-label{
+  display:inline-flex;
+  margin-top:12px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:#fff1f0;
+  color:#c94141;
+  font-size:10px;
+  font-weight:850;
+}
