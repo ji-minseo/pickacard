@@ -405,11 +405,11 @@ export function synthesis(slug,picks){
  if(slug==='yes-no'){
   const direction=verdict(picks),items=picks.map(p=>{const card=cards.find(c=>c.id===p.id),value=p.reversed?Math.min(0,card.yesNo):card.yesNo,tag=(p.reversed?card.reversedTags:card.tags)[0];return {card,pick:p,value,tag};});
   const strongest=spreadSignals(slug,picks).ranked[0]?.[0],condition=themes[strongest];
-  const first=direction==='YES에 가까움'?'지금 질문에는 해보는 쪽이 더 강하게 나옵니다. 다만 ‘'+condition+'’을 무시하고 밀어붙이라는 뜻은 아니에요.':direction==='NO에 가까움'?'지금은 진행하지 않거나 한 번 더 멈춰 보는 쪽이 더 강합니다. 특히 ‘'+condition+'’이 해결되지 않은 상태에서 서두르는 건 추천하지 않아요.':'지금은 YES나 NO를 바로 정하기보다 보류하는 쪽이 맞습니다. 카드들이 한 방향으로 모이지 않아 조건을 하나 더 확인할 필요가 있어요.';
+  const first=direction==='YES에 가까움'?'지금 질문에는 해보는 쪽이 더 강합니다. 핵심 조건은 ‘'+condition+'’이에요.':direction==='NO에 가까움'?'지금은 진행하기보다 멈추거나 재검토하는 쪽이 더 강합니다. 가장 크게 걸리는 건 ‘'+condition+'’이에요.':'지금은 YES나 NO를 바로 정하기보다 보류하는 쪽이 맞습니다. 카드들이 한 방향으로 모이지 않아 조건을 하나 더 확인할 필요가 있어요.';
   const cardLine=items.map(({card,value})=>card.koreanName+'는 '+(value>0?'진행 쪽':value<0?'보류·재검토 쪽':'중립·조건 확인 쪽')).join(', ');
   const focus=items.find(x=>x.tag===strongest)||items[0];
   const concrete=concreteScenes['yes-no']?.[focus.tag]||generalAdvice(focus.card,focus.pick.reversed);const support=items.find(x=>x!==focus&&x.value!==focus.value)||items[1];
-  return [first,'카드별 방향은 '+cardLine+'으로 읽혀요. 가장 크게 작용하는 조건은 ‘'+condition+'’입니다.',concrete,support?'추가로 '+support.card.koreanName+'이 '+(support.value>0?'진행 쪽 힘을 보태고 있어요.':support.value<0?'속도를 늦추는 쪽으로 작용해요.':'결정을 조금 더 확인하게 만드는 카드예요.'):''];
+  return [first,'카드별로 보면 '+cardLine+'이에요. 그래서 왜 이런 답이 나왔는지가 카드마다 분명히 갈립니다.',concrete,support?'추가로 '+support.card.koreanName+'이 '+(support.value>0?'진행 쪽 힘을 보태고 있어요.':support.value<0?'속도를 늦추는 쪽으로 작용해요.':'결정을 한 번 더 확인하게 만드는 카드예요.'):'지금은 첫 카드의 방향을 중심으로 읽으면 됩니다.'];
  }
  if(slug==='feelings'){
   const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]);
@@ -446,7 +446,7 @@ export function synthesis(slug,picks){
  const strongest=signals.ranked[0][0],support=signals.ranked[1]?.[0];
  const combined=strongest===support||!support?signalNotes[strongest]:`${signalNotes[strongest]} 함께 나타난 ‘${themes[support]}’ 주제도 이 과정을 서두르지 않도록 돌아보게 합니다.`;
  const dominantIndex=Math.max(0,tags.findIndex(t=>t===strongest)),dominantCard=cards.find(c=>c.id===picks[dominantIndex].id),obstaclePick=picks[Math.min(obstacleIndex,picks.length-1)],obstacleCard=cards.find(c=>c.id===obstaclePick.id),plainTone=tone.replace('이번 배열에서는 ','');
- return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’이 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’이 보여서예요.',support&&support!==strongest?'여기에 ‘'+themes[support]+'’도 같이 잡혀 있어서, 마음이 움직이는 것과 실제 관계가 움직이는 속도가 다를 수 있어요.':bridge),'지금은 이 부분을 먼저 보세요: '+obstacleCard.advice];
+ return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’이 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’이 보여서예요.',support&&support!==strongest?'여기에 ‘'+themes[support]+'’도 같이 잡혀 있어서, 마음이 움직이는 것과 실제 관계가 움직이는 속도가 다를 수 있어요.':bridge,'지금은 이 부분을 먼저 보세요: '+obstacleCard.advice];
 }
 // Future premium adapters may accept this DTO. No remote provider or API client in v0.1.
 export function readingSnapshot(slug,picks,question=''){return {version:2,locale:'ko',readingType:slug,question,selectedCards:picks.map(p=>({...p})),positions:readings[slug].positions.slice(0,picks.length).map(p=>p.label),interpretations:picks.map((p,i)=>interpret(slug,p,i)),summary:synthesis(slug,picks)};}
