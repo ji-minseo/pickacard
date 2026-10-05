@@ -135,6 +135,12 @@ test('question panel overlays the table and flying cards keep fixed typography a
  assert.ok(css.includes('.question-session-stage.is-opening .question-table-preview'));
  assert.ok(css.includes('.table-flying-card .mini-card strong'));
 });
+test('selection heading has breathing room and reading intro aligns to the session width',async()=>{
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('.selection-heading .step-label{'));
+ assert.ok(css.includes('margin-bottom:16px;'));
+ assert.ok(css.includes('.reading-intro{\n  max-width:900px;'));
+});
 test('sticky result spread compacts, expands on demand and restores at its origin',async()=>{
  const app=await readFile('dist/src/app.mjs','utf8');
  assert.ok(app.includes('class="session-spread-anchor"'));
