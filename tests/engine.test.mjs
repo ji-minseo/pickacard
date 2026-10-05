@@ -295,6 +295,33 @@ test('contact headlines and feelings actions have broad pools and react to selec
  const feelingsSample=[{id:'cups-2',reversed:false},{id:'major-18',reversed:false},{id:'swords-8',reversed:true},{id:'wands-11',reversed:false}];
  assert.notEqual(nextAction('feelings',feelingsSample,'crush'),nextAction('feelings',feelingsSample,'ex'));
 });
+test('love reunion and job headlines plus synthesis openings vary by dominant card meaning',()=>{
+ const semanticTags=['movement','communication','attraction','renewal','decision','healing','reflection','waiting','distance','closure','blocked','conflict'];
+ const representative=new Map();
+ for(const card of cards){
+  for(const reversed of [false,true]){
+   const tag=(reversed?card.reversedTags:card.tags)[0];
+   if(semanticTags.includes(tag)&&!representative.has(tag))representative.set(tag,{id:card.id,reversed});
+  }
+ }
+ assert.equal(representative.size,semanticTags.length);
+ for(const slug of ['love','reunion','job']){
+  const headlinePool=new Set(),openingPool=new Set(),count=readings[slug].positions.length;
+  for(const tag of semanticTags){
+   const pick=representative.get(tag),picks=Array.from({length:count},()=>({...pick}));
+   headlinePool.add(readingHeadline(slug,picks));
+   openingPool.add(synthesis(slug,picks)[0]);
+  }
+  assert.ok(headlinePool.size>=10,`${slug} headline pool too small: ${headlinePool.size}`);
+  assert.ok(openingPool.size>=10,`${slug} synthesis opening pool too small: ${openingPool.size}`);
+ }
+ const feelingsOpenings=new Set();
+ for(const tag of semanticTags){
+  const pick=representative.get(tag),picks=Array.from({length:readings.feelings.positions.length},()=>({...pick}));
+  feelingsOpenings.add(synthesis('feelings',picks)[0]);
+ }
+ assert.ok(feelingsOpenings.size>=10,`feelings synthesis opening pool too small: ${feelingsOpenings.size}`);
+});
 test('relationship synthesis never cites the same card as both dominant evidence and obstacle',()=>{
  for(const slug of ['reunion','contact','love','breakup','reunion-timing']){
   const count=readings[slug].positions.length;
