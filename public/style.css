@@ -3805,13 +3805,20 @@ textarea{
 }
 .home-intro-with-art .quiet-label{
   position:static;
-  display:block;
+  display:inline-flex;
+  width:max-content;
+  max-width:100%;
   margin-top:18px;
+  padding:6px 10px;
+  white-space:nowrap;
 }
 .hero-deck{
   position:relative;
+  justify-self:end;
+  width:100%;
   height:360px;
   min-width:320px;
+  transform:translateX(56px);
 }
 .hero-card{
   position:absolute;
@@ -3882,7 +3889,7 @@ textarea{
   .hero-deck{
     min-width:280px;
     height:320px;
-    transform:scale(.9);
+    transform:translateX(24px) scale(.9);
     transform-origin:center right;
   }
 }
@@ -3896,6 +3903,10 @@ textarea{
     height:245px;
     margin:20px auto 0;
     transform:none;
+  }
+  .home-intro-with-art .quiet-label{
+    width:max-content;
+    padding:6px 9px;
   }
   .hero-card{
     width:104px;
