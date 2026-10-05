@@ -80,11 +80,21 @@ test('yes-no page avoids vague hedge copy in visible result language',async()=>{
  assert.ok(!app.includes('아래 카드의 상징과 방향을 종합한 참고 메시지입니다.'));
  assert.ok(app.includes('YES / 보류 / NO 중 하나로 정리했어요.'));
 });
+test('navigation and grid items use longer staggered entrance motion',async()=>{
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(app.includes("Math.min(siblingIndex,9)*115"));
+ assert.ok(app.includes("'.card-library-tile'")||app.includes("'.card-library-tile',"));
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('@keyframes navContentIn'));
+ assert.ok(css.includes('header nav a:nth-child(5)'));
+ assert.ok(css.includes('transition:opacity 1.08s'));
+ assert.ok(css.includes('animation:heroContentIn 1.02s'));
+});
 test('hero content uses slower entrance motion and paired about cards are lowered together',async()=>{
  const css=await readFile('dist/style.css','utf8');
  assert.ok(css.includes('@keyframes heroContentIn'));
- assert.ok(css.includes('animation:heroContentIn .72s'));
- assert.ok(css.includes('transition:opacity .76s'));
+ assert.ok(css.includes('animation:heroContentIn 1.02s'));
+ assert.ok(css.includes('transition:opacity 1.08s'));
  assert.ok(css.includes('top:-7px;'));
  assert.ok(css.includes('bottom:14px;'));
 });
