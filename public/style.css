@@ -1110,3 +1110,405 @@ h1{line-height:1.12}
   .primary-grid,.secondary-grid{grid-template-columns:1fr}
   .reading-tile,.small{min-height:210px}
 }
+
+
+/* Theme v5 — Every Tiny Tool style, tarot content, red accent, emoji-first cards. */
+:root{
+  --ink:#111111;
+  --muted:#696969;
+  --line:#ececf0;
+  --paper:#ffffff;
+  --wine:#df4f4f;
+  --pink:#f2b8b5;
+  --red-soft:#fff5f4;
+  --red-soft-2:#fff1f0;
+  --shadow:0 16px 40px rgba(25,25,35,.06);
+}
+html,body{background:#fff;color:var(--ink)}
+body{line-height:1.55}
+header,main,footer{width:min(1100px,calc(100% - 32px));max-width:none}
+header{
+  padding:22px 0 18px;
+  height:auto;
+  min-height:0;
+  border-bottom:1px solid var(--line);
+}
+.brand{
+  font-size:20px;
+  font-weight:900;
+  letter-spacing:-.04em;
+}
+.brand small{
+  padding:0;
+  border:0;
+  background:transparent;
+  color:var(--wine);
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.08em;
+}
+nav{
+  gap:20px;
+  color:var(--muted);
+  font-size:14px;
+  font-weight:750;
+}
+nav a:hover{color:var(--ink)}
+
+h1{
+  font-size:clamp(46px,8vw,82px);
+  line-height:1.06;
+  letter-spacing:-.065em;
+  font-weight:900;
+}
+h2{
+  font-size:clamp(32px,5vw,48px);
+  line-height:1.14;
+  letter-spacing:-.05em;
+  font-weight:900;
+}
+h3{
+  letter-spacing:-.025em;
+  font-weight:850;
+}
+p{line-height:1.68}
+
+.home-intro{
+  max-width:860px;
+  padding:72px 0 48px;
+}
+.home-intro h1{
+  margin:18px 0;
+  max-width:900px;
+  font-size:clamp(46px,8vw,82px);
+  line-height:1.06;
+}
+.home-intro p{
+  max-width:760px;
+  margin:0;
+  color:var(--muted);
+  font-size:18px;
+}
+.kicker,.step-label{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin:0;
+  padding:7px 11px;
+  border-radius:999px;
+  background:var(--red-soft-2);
+  color:#c73f3f;
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:0;
+}
+.kicker:before,.step-label:before{content:none}
+.quiet-label{
+  display:inline-flex;
+  margin-top:22px;
+  padding:7px 11px;
+  border:0;
+  border-radius:999px;
+  background:#f7f7f8;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:800;
+}
+
+.section-heading{
+  align-items:flex-end;
+  margin-bottom:24px;
+}
+.section-heading h2{margin:14px 0 0}
+.section-heading>span{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.06em;
+}
+
+.primary-grid,.secondary-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:16px;
+}
+.reading-tile,.small{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  min-height:330px;
+  padding:26px;
+  overflow:hidden;
+  border:1px solid #f2dedd;
+  border-radius:26px;
+  background:var(--red-soft);
+  box-shadow:var(--shadow);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.reading-tile:nth-child(2n){background:#fff8f7}
+.reading-tile:nth-child(3n){background:#fff3f2}
+.reading-tile:hover{
+  transform:translateY(-4px);
+  border-color:#ebb9b5;
+  box-shadow:0 18px 44px rgba(25,25,35,.075);
+}
+.tile-head{
+  display:block;
+  margin:0 0 26px;
+}
+.tile-index,.small .tile-index{
+  display:block;
+  margin:0;
+  padding:0;
+  background:transparent;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.06em;
+  text-align:left;
+}
+.tile-top,.small .tile-top{
+  max-width:84%;
+  margin-bottom:9px;
+  font-size:25px;
+  line-height:1.15;
+  letter-spacing:-.04em;
+  font-weight:900;
+}
+.tile-bottom,.small .tile-bottom{
+  max-width:78%;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+}
+.tile-link,.small .tile-link{
+  display:inline-block;
+  max-width:72%;
+  margin-top:auto;
+  padding-top:24px;
+  color:#c94141;
+  font-size:13px;
+  font-weight:850;
+}
+.tile-icon,.small .tile-icon{
+  position:absolute;
+  right:20px;
+  bottom:20px;
+  width:82px;
+  height:82px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(255,255,255,.92);
+  border-radius:22px;
+  background:rgba(255,255,255,.88);
+  box-shadow:0 7px 20px rgba(0,0,0,.045);
+  color:inherit;
+  font-family:Apple Color Emoji,"Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:42px;
+  font-weight:400;
+  line-height:1;
+  pointer-events:none;
+}
+.small{
+  min-height:260px;
+  padding:23px;
+}
+.small .tile-icon{
+  right:18px;
+  bottom:18px;
+  width:72px;
+  height:72px;
+  border-radius:20px;
+  font-size:36px;
+}
+.secondary-heading{margin-top:70px}
+
+/* Every Tiny Tool-like information cards */
+.how,.about,.guide-teaser,main>.faq-section{
+  border:1px solid var(--line);
+  border-radius:28px;
+  background:#fff;
+  box-shadow:0 9px 26px rgba(0,0,0,.035);
+}
+.how{
+  grid-template-columns:1fr 1.3fr;
+  gap:28px;
+  margin-top:90px;
+  padding:34px;
+}
+.how h2{
+  margin:14px 0 0;
+  font-size:32px;
+  line-height:1.18;
+}
+.how ol{gap:14px}
+.how li{
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#fff;
+}
+.how li>span.how-icon{
+  width:48px;
+  height:48px;
+  min-width:48px;
+  border:0;
+  border-radius:16px;
+  background:var(--red-soft-2);
+  color:#c94141;
+  font-size:22px;
+}
+.about{
+  max-width:none;
+  margin-top:18px;
+  padding:34px;
+  background:#fff8f7;
+  border-color:#f1dddd;
+}
+.about h2{
+  margin:13px 0 9px;
+  font-size:32px;
+  line-height:1.2;
+}
+.about p{max-width:760px}
+.trust-line span{
+  padding:12px 14px;
+  border:1px solid #f0dedd;
+  border-radius:14px;
+  background:#fff;
+}
+.guide-teaser,main>.faq-section{
+  margin-top:18px;
+  padding:30px;
+}
+.guide-teaser h2{font-size:32px}
+.guide-teaser>a{font-weight:750}
+
+footer{
+  padding:28px 0 42px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:13px;
+}
+footer .brand{color:var(--ink)}
+
+/* Reading pages follow the same utility-card language. */
+.reading-intro{
+  max-width:860px;
+  margin:0 auto;
+  padding:62px 0 38px;
+}
+.reading-intro h1{
+  margin:18px 0 18px;
+  font-size:clamp(44px,7vw,72px);
+  line-height:1.08;
+}
+.reading-intro .lead{
+  color:var(--ink);
+  font-size:20px;
+  font-weight:800;
+}
+.reading-intro p:not(.lead){color:var(--muted)}
+.reading-meta span{
+  border:0;
+  background:#f7f7f8;
+  color:var(--muted);
+}
+.question-panel,.deck,.card-summary,.result-position,.verdict,.related,.spread-info,[data-reading]>.faq-section,.guide-list>a,.guide-next,.legal .faq{
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 9px 26px rgba(0,0,0,.035);
+}
+.question-panel{padding:26px}
+textarea{
+  border:1px solid var(--line);
+  background:#fafafa;
+}
+.primary{
+  background:#d94949;
+  color:#fff;
+}
+.count-options input:checked+span{
+  border-color:#df4f4f;
+  background:#fff1f0;
+  color:#c94141;
+}
+.selection-heading h2,.results-heading h2{line-height:1.12}
+.deck{padding:16px}
+.result-title>span{
+  background:#fff1f0;
+  color:#c94141;
+}
+.keywords span{
+  background:#fff1f0;
+  color:#bb3939;
+}
+.synthesis{
+  border:1px solid #f0d7d5;
+  border-radius:20px;
+  background:#fff6f5;
+  box-shadow:none;
+}
+.related-icon{
+  width:48px;
+  height:48px;
+  border:1px solid #f0dedd;
+  border-radius:16px;
+  background:#fff5f4;
+  font-family:Apple Color Emoji,"Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:24px;
+}
+.related a strong{color:#c94141}
+.spread-info li{
+  border:1px solid var(--line);
+  background:#fafafa;
+}
+.guide-list>a:hover{border-color:#ebb9b5}
+
+@media(max-width:900px){
+  .primary-grid,.secondary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  header,main,footer{width:min(100% - 28px,1100px)}
+  .home-intro{padding:48px 0 40px}
+  .home-intro h1{font-size:clamp(44px,13vw,62px);line-height:1.08}
+  .primary-grid,.secondary-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .reading-tile,.small{
+    min-height:240px;
+    padding:18px;
+    border-radius:22px;
+  }
+  .tile-top,.small .tile-top{
+    max-width:92%;
+    font-size:22px;
+  }
+  .tile-bottom,.small .tile-bottom{
+    max-width:90%;
+    font-size:13px;
+  }
+  .tile-link,.small .tile-link{
+    max-width:58%;
+    font-size:12px;
+  }
+  .tile-icon,.small .tile-icon{
+    right:13px;
+    bottom:13px;
+    width:62px;
+    height:62px;
+    border-radius:18px;
+    font-size:31px;
+  }
+  .how,.about,.guide-teaser,main>.faq-section{
+    padding:24px;
+    border-radius:22px;
+  }
+  .how{grid-template-columns:1fr;margin-top:60px}
+  .question-panel,.deck,.card-summary,.result-position,.verdict,.related,.spread-info,[data-reading]>.faq-section{
+    border-radius:18px;
+  }
+}
+@media(max-width:380px){
+  .primary-grid,.secondary-grid{grid-template-columns:1fr}
+}
