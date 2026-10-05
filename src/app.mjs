@@ -6,6 +6,50 @@ import {loadSavedReadings,saveReadingRecord,removeSavedReading,clearSavedReading
 document.addEventListener('error',event=>{if(event.target instanceof HTMLImageElement&&event.target.closest('.artwork-holder')){event.target.hidden=true;event.target.parentElement.classList.add('image-failed');}},true);
 const root=document.querySelector('[data-reading]');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const revealSelector=[
+ '.section-heading','.reading-tile','.how','.about','.guide-teaser','main>.faq-section',
+ '.reading-intro','.question-panel','.spread-info','.card-library-hero','.card-library-group',
+ '.card-dictionary-hero','.card-meaning-overview','.card-topic-section','.guide-hero',
+ '.guide-visual','.guide-article>section','.guide-next','.saved-readings-hero',
+ '.saved-reading-item','.saved-reading-empty','.results-heading','.reading-answer',
+ '.reading-context-answer','.reading-insights','.card-summary','.result-position',
+ '.combination-reading','.synthesis','.related','.result-actions','.result-tools-foot'
+].join(',');
+const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+let scrollRevealObserver=null;
+function prepareScrollReveal(scope=document){
+ const candidates=[];
+ if(scope instanceof Element&&scope.matches(revealSelector))candidates.push(scope);
+ if(scope.querySelectorAll)candidates.push(...scope.querySelectorAll(revealSelector));
+ const fresh=[...new Set(candidates)].filter(node=>!node.classList.contains('scroll-reveal'));
+ if(!fresh.length)return;
+ if(reducedMotion.matches||!('IntersectionObserver' in window)){
+  fresh.forEach(node=>node.classList.add('scroll-reveal','is-visible'));
+  return;
+ }
+ if(!scrollRevealObserver){
+  scrollRevealObserver=new IntersectionObserver(entries=>{
+   for(const entry of entries){
+    if(!entry.isIntersecting)continue;
+    entry.target.classList.add('is-visible');
+    scrollRevealObserver.unobserve(entry.target);
+   }
+  },{rootMargin:'0px 0px -8% 0px',threshold:.08});
+ }
+ fresh.forEach((node,index)=>{
+  node.classList.add('scroll-reveal');
+  node.style.setProperty('--reveal-delay',String(Math.min(index%4,3)*35)+'ms');
+  scrollRevealObserver.observe(node);
+ });
+}
+queueMicrotask(()=>prepareScrollReveal(document));
+const revealRoot=document.querySelector('main');
+if(revealRoot){
+ new MutationObserver(records=>{
+  for(const record of records)for(const node of record.addedNodes)if(node instanceof Element)prepareScrollReveal(node);
+ }).observe(revealRoot,{childList:true,subtree:true});
+}
 const legacyRoman=n=>['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'][n]||String(n);
 
 function canvasWrap(ctx,text,maxWidth){
