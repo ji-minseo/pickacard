@@ -11,4 +11,3 @@ export const readings={
 };
 export const primary=['love','reunion','breakup','feelings'];
 export const secondary=['contact','reunion-timing','yes-no','today'];
-export const disclaimer='타로 리딩은 오락 및 자기성찰을 위한 콘텐츠이며 중요한 의료·법률·재정 등의 결정을 대신하지 않습니다. 상대방의 실제 생각이나 확정된 미래를 알려주지 않습니다.';
