@@ -4504,3 +4504,150 @@ details[open]>p{
   button:active{transform:none}
   .progress-dots span{transform:none}
 }
+
+
+/* Interaction refinement — keep home grids still, give physical tarot cards a delicate hover. */
+.primary-grid .reading-tile:hover,
+.secondary-grid .reading-tile:hover{
+  transform:none;
+}
+.primary-grid .reading-tile:hover .tile-card-thumb,
+.secondary-grid .reading-tile:hover .tile-card-thumb{
+  transform:rotate(7deg);
+  box-shadow:0 11px 22px rgba(48,43,43,.12);
+}
+
+.hero-card-back,
+.hero-card-sun,
+.hero-card-lovers{
+  animation-fill-mode:backwards;
+}
+
+.summary-item .mini-card,
+.detail-card .mini-card,
+.saved-mini-card .mini-card,
+.daily-card-preview,
+.card-dictionary-art,
+.orientation-visual img,
+.suit-visual img,
+.about-card-icon img,
+.about-card-pair img{
+  transition:transform .22s cubic-bezier(.2,.72,.25,1),box-shadow .22s ease,border-color .22s ease;
+  transform-origin:center 78%;
+}
+
+@media(hover:hover) and (pointer:fine){
+  /* Hero cards react one at a time instead of the whole fan moving together. */
+  .hero-deck:hover .hero-card-back{
+    transform:rotate(-13deg);
+  }
+  .hero-deck:hover .hero-card-sun{
+    transform:rotate(4deg);
+  }
+  .hero-deck:hover .hero-card-lovers{
+    transform:rotate(13deg);
+  }
+  .hero-deck:hover .hero-card{
+    box-shadow:0 18px 38px rgba(48,43,43,.10);
+  }
+  .hero-deck .hero-card-back:hover{
+    z-index:5;
+    transform:translateY(-6px) rotate(-10deg) scale(1.012);
+    box-shadow:0 22px 42px rgba(48,43,43,.14);
+  }
+  .hero-deck .hero-card-sun:hover{
+    z-index:5;
+    transform:translateY(-7px) rotate(2deg) scale(1.012);
+    box-shadow:0 22px 42px rgba(48,43,43,.14);
+  }
+  .hero-deck .hero-card-lovers:hover{
+    z-index:5;
+    transform:translateY(-6px) rotate(10deg) scale(1.012);
+    box-shadow:0 22px 42px rgba(48,43,43,.14);
+  }
+
+  /* Result cards: a tiny lift, like touching a printed card. */
+  .summary-item:hover .mini-card{
+    transform:translateY(-4px) rotate(-.7deg);
+    border-color:#e6c9c6;
+    box-shadow:0 10px 22px rgba(48,43,43,.09);
+  }
+  .summary-item:nth-child(even):hover .mini-card{
+    transform:translateY(-4px) rotate(.7deg);
+  }
+  .detail-card:hover .mini-card{
+    transform:translateY(-3px) rotate(1deg);
+    border-color:#e6c9c6;
+    box-shadow:0 10px 22px rgba(48,43,43,.085);
+  }
+
+  /* Other card artwork around the service. */
+  .saved-mini-card:hover .mini-card{
+    transform:translateY(-3px) rotate(-.6deg);
+    box-shadow:0 9px 20px rgba(48,43,43,.08);
+  }
+  .daily-card-preview:hover{
+    transform:translateY(-4px) rotate(3deg);
+    box-shadow:0 16px 30px rgba(48,43,43,.13);
+  }
+  .card-dictionary-art:hover{
+    transform:translateY(-4px) rotate(-.5deg);
+    border-color:#e6c9c6;
+    box-shadow:0 18px 36px rgba(48,43,43,.09);
+  }
+  .orientation-visual figure:hover img:not(.reversed-art),
+  .suit-visual figure:hover img{
+    transform:translateY(-3px) rotate(-.8deg);
+    box-shadow:0 11px 24px rgba(48,43,43,.11);
+  }
+  .orientation-visual figure:hover .reversed-art{
+    transform:translateY(-3px) rotate(179.2deg);
+    box-shadow:0 11px 24px rgba(48,43,43,.11);
+  }
+  .about-card-icon:hover img{
+    transform:translateY(-3px) rotate(-1deg);
+    box-shadow:0 10px 20px rgba(48,43,43,.12);
+  }
+  .about-card-pair:hover img:first-child{
+    transform:translateY(-2px) rotate(-5deg);
+  }
+  .about-card-pair:hover .about-card-reversed{
+    transform:translateY(-2px) rotate(175deg);
+  }
+}
+
+@media(max-width:720px){
+  .daily-card-preview:hover{
+    transform:rotate(5deg);
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .summary-item .mini-card,
+  .detail-card .mini-card,
+  .saved-mini-card .mini-card,
+  .daily-card-preview,
+  .card-dictionary-art,
+  .orientation-visual img,
+  .suit-visual img,
+  .about-card-icon img,
+  .about-card-pair img{
+    transition:none!important;
+  }
+  .hero-deck .hero-card-back:hover{transform:rotate(-13deg)}
+  .hero-deck .hero-card-sun:hover{transform:rotate(4deg)}
+  .hero-deck .hero-card-lovers:hover{transform:rotate(13deg)}
+  .summary-item:hover .mini-card,
+  .summary-item:nth-child(even):hover .mini-card,
+  .detail-card:hover .mini-card,
+  .saved-mini-card:hover .mini-card,
+  .card-dictionary-art:hover,
+  .orientation-visual figure:hover img:not(.reversed-art),
+  .suit-visual figure:hover img,
+  .about-card-icon:hover img{
+    transform:none;
+  }
+  .orientation-visual figure:hover .reversed-art{transform:rotate(180deg)}
+  .about-card-pair:hover img:first-child{transform:rotate(-7deg)}
+  .about-card-pair:hover .about-card-reversed{transform:rotate(173deg)}
+}
