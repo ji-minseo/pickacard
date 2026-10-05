@@ -192,6 +192,12 @@ const relatedPrompts={feelings:'그 사람의 현재 마음이 궁금한가요?'
   resultObserver?.disconnect();resultObserver=null;stickyCleanup?.();stickyCleanup=null;
   const summary=[...app.querySelectorAll('[data-summary-index]')],positions=[...app.querySelectorAll('[data-position-index]')];
   const shell=app.querySelector('.session-spread-shell'),anchor=app.querySelector('.session-spread-anchor'),toggle=app.querySelector('.session-spread-toggle');
+  const centerSummaryItem=(index,behavior='smooth')=>{
+   const rail=app.querySelector('.reading-session-spread.card-summary'),active=summary[index];
+   if(!rail||!active)return;
+   const target=active.offsetLeft-(rail.clientWidth-active.offsetWidth)/2;
+   rail.scrollTo({left:Math.max(0,target),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':behavior});
+  };
   if(shell&&anchor&&toggle){
    const updateToggle=()=>{const expanded=shell.classList.contains('is-expanded');toggle.textContent=expanded?'접기':'펼쳐보기';toggle.setAttribute('aria-expanded',String(expanded));};
    const syncSticky=()=>{
@@ -200,7 +206,7 @@ const relatedPrompts={feelings:'그 사람의 현재 마음이 궁금한가요?'
     if(!stuck)shell.classList.remove('is-expanded');
     updateToggle();
    };
-   toggle.addEventListener('click',()=>{if(!shell.classList.contains('is-stuck'))return;shell.classList.toggle('is-expanded');updateToggle();});
+   toggle.addEventListener('click',()=>{if(!shell.classList.contains('is-stuck'))return;shell.classList.toggle('is-expanded');updateToggle();if(shell.classList.contains('is-expanded')&&matchMedia('(max-width:650px)').matches){const activeIndex=summary.findIndex(item=>item.classList.contains('is-active'));if(activeIndex>=0)requestAnimationFrame(()=>centerSummaryItem(activeIndex));}});
    let frame=0;
    const queueSync=()=>{if(frame)return;frame=requestAnimationFrame(()=>{frame=0;syncSticky();});};
    window.addEventListener('scroll',queueSync,{passive:true});window.addEventListener('resize',queueSync);syncSticky();
@@ -209,11 +215,9 @@ const relatedPrompts={feelings:'그 사람의 현재 마음이 궁금한가요?'
   if(!summary.length||!positions.length)return;
   const activate=index=>{
    summary.forEach((item,i)=>item.classList.toggle('is-active',i===index));
-   if(!shell||!shell.classList.contains('is-stuck')||shell.classList.contains('is-expanded'))return;
-   const rail=app.querySelector('.reading-session-spread.card-summary'),active=summary[index];
-   if(!rail||!active)return;
-   const target=active.offsetLeft-(rail.clientWidth-active.offsetWidth)/2;
-   rail.scrollTo({left:Math.max(0,target),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+   if(!shell||!shell.classList.contains('is-stuck'))return;
+   if(shell.classList.contains('is-expanded')&&!matchMedia('(max-width:650px)').matches)return;
+   centerSummaryItem(index);
   };
   positions.forEach(node=>{const index=Number(node.dataset.positionIndex);node.addEventListener('mouseenter',()=>activate(index));node.addEventListener('focusin',()=>activate(index));node.addEventListener('click',()=>activate(index));});
   if('IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
