@@ -152,12 +152,20 @@ export function readingHeadline(slug,picks){
  return mostlyDifficult?'지금은 공부량을 더 늘리기보다 집중을 깨는 원인부터 줄이는 게 우선입니다.':moving&&difficult===0?'공부 흐름은 살아 있습니다. 계획보다 실제 문제 풀이와 복습으로 밀어붙여도 좋은 때예요.':moving?'의욕은 있는데 집중을 끊는 요소가 함께 보여요. 루틴 하나만 바로잡아도 체감이 달라질 수 있어요.':'새 계획을 늘리기보다 지금 방식이 왜 안 굴러가는지 먼저 점검하는 편이 좋아요.';
 }
 const timingScores={movement:3,communication:3,attraction:2,renewal:2,decision:1,healing:1,reflection:0,conflict:-1,waiting:-2,distance:-2,closure:-2,blocked:-3};
+const majorTimingWeight={'major-0':.7,'major-1':1.1,'major-2':-.8,'major-6':.3,'major-7':1.3,'major-9':-1.2,'major-10':.7,'major-12':-1.6,'major-13':-.5,'major-14':-.7,'major-16':.6,'major-17':-.1,'major-18':-.8,'major-19':.9,'major-20':.5,'major-21':-.2};
+const suitTimingWeight={wands:.8,swords:.3,cups:0,pentacles:-.7};
+const rankTimingWeight={Ace:.5,Two:.2,Three:.1,Four:-.2,Five:0,Six:.1,Seven:-.3,Eight:.6,Nine:-.2,Ten:-.3,Page:.2,Knight:.5,Queen:-.1,King:0};
+function cardTimingWeight(card,reversed=false){
+ let value=card.arcana==='major'?(majorTimingWeight[card.id]??0):(suitTimingWeight[card.suit]??0)+(rankTimingWeight[card.rank]??0);
+ if(reversed)value-=.65;return value;
+}
 function primaryTags(picks){return picks.map(p=>{const card=cards.find(c=>c.id===p.id);return (p.reversed?card.reversedTags:card.tags)[0];});}
 export function timingInsight(slug,picks){
  const supported=['love','reunion','contact','reunion-timing','job','money','work','study'];
  if(!supported.includes(slug)||!Array.isArray(picks)||!picks.length)return null;
- const tags=primaryTags(picks),score=tags.reduce((sum,t)=>sum+(timingScores[t]??0),0)/tags.length;
- const pace=score>=1.5?'fast':score>=.25?'medium':score>=-1?'slow':'stalled';
+ const items=picks.map(p=>{const card=cards.find(c=>c.id===p.id),tag=(p.reversed?card.reversedTags:card.tags)[0],weight=cardTimingWeight(card,p.reversed);return {card,tag,weight,score:(timingScores[tag]??0)+weight};});
+ const tags=items.map(x=>x.tag),score=items.reduce((sum,x)=>sum+x.score,0)/items.length;
+ const pace=score>=1.8?'fast':score>=.2?'medium':score>=-1.2?'slow':'stalled';
  const ranges={
   love:{fast:'2~6주',medium:'1~3개월',slow:'3~6개월',stalled:'당분간 정체'},
   reunion:{fast:'2~6주',medium:'1~3개월',slow:'3~6개월',stalled:'당분간 정체'},
@@ -219,7 +227,9 @@ export function timingInsight(slug,picks){
    stalled:'공부량을 늘리기 전에 집중을 깨는 환경이나 피로부터 정리해야 흐름이 살아납니다.'
   }
  };
- return {label:labels[pace],range:ranges[slug][pace],text:copy[slug][pace],pace};
+ const ordered=[...items].sort((a,b)=>b.weight-a.weight),fastest=ordered[0],slowest=ordered.at(-1);
+ const basis=fastest.weight>=.7&&slowest.weight<=-.7?`${fastest.card.koreanName}가 속도를 올리는 반면 ${slowest.card.koreanName}가 흐름을 늦춰, 두 카드 사이의 균형까지 반영했어요.`:fastest.weight>=.7?`${fastest.card.koreanName}처럼 빠르게 움직이는 카드가 전체 시기를 조금 앞당기는 쪽으로 반영됐어요.`:slowest.weight<=-.7?`${slowest.card.koreanName}처럼 천천히 진행되는 카드가 있어, 결과보다 준비와 정리 시간을 더 길게 잡았어요.`:'카드들의 기본 속도가 크게 엇갈리지 않아 전체 배열의 흐름을 중심으로 시기를 잡았어요.';
+ return {label:labels[pace],range:ranges[slug][pace],text:copy[slug][pace],pace,basis,score:Number(score.toFixed(2))};
 }
 const actionScenes={
  love:{movement:'마음에 드는 사람이 있다면 기다리기만 하지 말고 가벼운 대화나 한 번의 만남 제안을 만들어보세요.',communication:'애매한 연락을 해석하기보다 내가 궁금한 것을 하나만 명확하게 물어보세요.',attraction:'설렘이 큰 만큼 실제로 편안한 사람인지 한 번 더 확인해보세요.',renewal:'평소와 다른 모임이나 동선 하나를 추가해 새로운 접점을 만들어보세요.',decision:'내가 원하는 관계의 기준 세 가지를 적고, 지금 관계가 거기에 맞는지 보세요.',healing:'새 사람을 찾기 전에 내 컨디션과 일상을 회복하는 약속 하나를 먼저 잡아보세요.',reflection:'과거 연애에서 반복된 패턴 하나를 적고 이번에는 어떻게 다르게 할지 정해보세요.',waiting:'연락을 기다리는 시간을 정해두고 그 밖의 시간은 내 일정으로 채워보세요.',distance:'상대의 반응이 계속 희미하다면 내가 먼저 쫓아가는 횟수를 줄여보세요.',closure:'끝난 관계나 애매한 썸을 붙잡게 하는 행동 하나를 멈춰보세요.',blocked:'지금 막는 현실 조건이 무엇인지 하나만 특정해서 해결 가능 여부를 확인해보세요.',conflict:'호감보다 서로 원하는 관계 방식이 같은지 먼저 확인해보세요.'},
