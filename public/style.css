@@ -2144,9 +2144,3 @@ textarea{
     width:calc(100% - 28px);
   }
 }
-
-
-/* Mobile About card — tighter inner spacing. */
-@media(max-width:760px){
-  .about{padding:12px}
-}
