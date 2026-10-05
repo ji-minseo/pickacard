@@ -80,6 +80,13 @@ test('yes-no page avoids vague hedge copy in visible result language',async()=>{
  assert.ok(!app.includes('아래 카드의 상징과 방향을 종합한 참고 메시지입니다.'));
  assert.ok(app.includes('YES / 보류 / NO 중 하나로 정리했어요.'));
 });
+test('reversed guide card keeps an exact centered 180 degree hover',async()=>{
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('transform-origin:50% 50%;'));
+ assert.ok(css.includes('transform-box:border-box;'));
+ assert.ok(css.includes('transform:translateY(-3px) rotate(180deg);'));
+ assert.ok(!css.includes('transform:translateY(-3px) rotate(179.2deg);'));
+});
 test('primary hover stays burgundy and related links avoid uneven row fills',async()=>{
  const css=await readFile('dist/style.css','utf8');
  assert.ok(css.includes('.button.primary:not(:disabled):hover{\n    background:#562130;'));
