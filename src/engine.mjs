@@ -350,7 +350,7 @@ export function combinationInsights(slug,picks){
   const rule=exact||semantic;
   if(!rule)continue;
   const text=rule.text?.[mode]||rule[mode];if(!text)continue;
-  found.push({priority:exact?.priority||60-i-j,title:`${a.card.koreanName} × ${b.card.koreanName}`,positions:`${a.position} + ${b.position}`,text:`‘${a.position}’의 ${a.card.koreanName}와 ‘${b.position}’의 ${b.card.koreanName}를 같이 보면, ${text}`});
+  found.push({priority:exact?.priority||60-i-j,title:`${a.card.koreanName} × ${b.card.koreanName}`,positions:`${a.position} + ${b.position}`,text:`‘${a.position}’의 ${a.card.koreanName}, 그리고 ‘${b.position}’의 ${b.card.koreanName}. 두 카드를 같이 보면, ${text}`});
  }
  found.sort((a,b)=>b.priority-a.priority);
  const unique=[];for(const insight of found){if(unique.some(x=>x.title===insight.title||x.text===insight.text))continue;unique.push(insight);if(unique.length===2)break;}
@@ -409,7 +409,7 @@ export function synthesis(slug,picks){
   const cardLine=items.map(({card,value})=>card.koreanName+'는 '+(value>0?'진행 쪽':value<0?'보류·재검토 쪽':'중립·조건 확인 쪽')).join(', ');
   const focus=items.find(x=>x.tag===strongest)||items[0];
   const concrete=concreteScenes['yes-no']?.[focus.tag]||generalAdvice(focus.card,focus.pick.reversed);const support=items.find(x=>x!==focus&&x.value!==focus.value)||items[1];
-  return [first,'카드별로 보면 '+cardLine+'이에요. 그래서 왜 이런 답이 나왔는지가 카드마다 분명히 갈립니다.',concrete,support?'추가로 '+support.card.koreanName+'이 '+(support.value>0?'진행 쪽 힘을 보태고 있어요.':support.value<0?'속도를 늦추는 쪽으로 작용해요.':'결정을 한 번 더 확인하게 만드는 카드예요.'):'지금은 첫 카드의 방향을 중심으로 읽으면 됩니다.'];
+  return [first,'카드별로 보면 '+cardLine+'이에요. 그래서 왜 이런 답이 나왔는지가 카드마다 분명히 갈립니다.',concrete,support?'추가로 '+support.card.koreanName+' 카드가 '+(support.value>0?'진행 쪽 힘을 보태고 있어요.':support.value<0?'속도를 늦추는 쪽으로 작용해요.':'결정을 한 번 더 확인하게 만드는 카드예요.'):'지금은 첫 카드의 방향을 중심으로 읽으면 됩니다.'];
  }
  if(slug==='feelings'){
   const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]);
@@ -420,7 +420,7 @@ export function synthesis(slug,picks){
   const futureMap={movement:'앞으로는 먼저 말을 걸거나 실제 행동으로 옮길 가능성이 있습니다.',communication:'앞으로는 대화를 이어가거나 표현이 조금 더 분명해질 수 있어요.',attraction:'호감은 이어질 수 있지만 관계를 확정하는 행동까지는 더 지켜봐야 해요.',healing:'강한 진전보다 편안하게 관계를 유지하려는 태도가 나타날 가능성이 큽니다.',renewal:'관계를 예전과 다르게 보거나 새로운 방식으로 접근할 수 있어요.',decision:'관계를 이어갈지 선을 그을지 스스로 결론을 내리려는 태도가 나올 수 있어요.',reflection:'당분간은 행동보다 혼자 생각하고 정리하는 시간이 더 길 수 있어요.',waiting:'먼저 움직이기보다 상대 반응과 상황을 지켜보는 태도가 이어질 수 있어요.',distance:'가까워지기보다 자기 공간을 지키며 거리를 유지하려는 태도가 더 강할 수 있어요.',closure:'현재 흐름이 이어지면 관계를 정리하거나 선을 분명히 하려는 쪽으로 갈 수 있어요.',blocked:'마음이 있어도 현실적인 부담 때문에 표현이나 행동이 계속 늦어질 수 있어요.',conflict:'태도가 가까워졌다 멀어졌다 하며 일관되지 않게 보일 수 있어요.'};
   const strongest=signals.ranked[0]?.[0];
   const strongestIndex=Math.max(0,tags.findIndex(t=>t===strongest)),strongCard=cards.find(c=>c.id===picks[strongestIndex].id),futureCard=cards.find(c=>c.id===picks[Math.min(3,picks.length-1)].id);
-  return ['결론부터 말하면, 카드 흐름상 상대는 '+current+'으로 읽힙니다.',futureMap[futureTag]||signalNotes[futureTag],'이렇게 읽는 가장 큰 근거는 '+strongCard.koreanName+'에서 ‘'+themes[strongest]+'’이 반복되기 때문이에요. 마지막 흐름의 '+futureCard.koreanName+'도 앞으로의 태도를 '+themes[futureTag]+' 쪽으로 보여줍니다.','즉 마음의 유무만 보기보다 지금 실제로 연락·만남·거리두기 중 어떤 행동을 하고 있는지 함께 보면 이 리딩이 더 선명해져요.'];
+  return ['결론부터 말하면, 카드 흐름상 상대는 '+current+'으로 읽힙니다.',futureMap[futureTag]||signalNotes[futureTag],'이렇게 읽는 가장 큰 근거는 '+strongCard.koreanName+'에서 ‘'+themes[strongest]+'’라는 주제가 반복되기 때문이에요. 마지막 흐름의 '+futureCard.koreanName+'도 앞으로의 태도를 '+themes[futureTag]+' 쪽으로 보여줍니다.','즉 마음의 유무만 보기보다 지금 실제로 연락·만남·거리두기 중 어떤 행동을 하고 있는지 함께 보면 이 리딩이 더 선명해져요.'];
  }
  const practical=['job','money','work','study'];
  if(practical.includes(slug)){
@@ -446,7 +446,7 @@ export function synthesis(slug,picks){
  const strongest=signals.ranked[0][0],support=signals.ranked[1]?.[0];
  const combined=strongest===support||!support?signalNotes[strongest]:`${signalNotes[strongest]} 함께 나타난 ‘${themes[support]}’ 주제도 이 과정을 서두르지 않도록 돌아보게 합니다.`;
  const dominantIndex=Math.max(0,tags.findIndex(t=>t===strongest)),dominantCard=cards.find(c=>c.id===picks[dominantIndex].id),obstaclePick=picks[Math.min(obstacleIndex,picks.length-1)],obstacleCard=cards.find(c=>c.id===obstaclePick.id),plainTone=tone.replace('이번 배열에서는 ','');
- return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’이 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’이 보여서예요.',support&&support!==strongest?'여기에 ‘'+themes[support]+'’도 같이 잡혀 있어서, 마음이 움직이는 것과 실제 관계가 움직이는 속도가 다를 수 있어요.':bridge,'지금은 이 부분을 먼저 보세요 : '+obstacleCard.advice];
+ return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’라는 주제가 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’라는 흐름이 보여서예요.',support&&support!==strongest?'여기에 ‘'+themes[support]+'’도 같이 잡혀 있어서, 마음이 움직이는 것과 실제 관계가 움직이는 속도가 다를 수 있어요.':bridge,'지금은 이 부분을 먼저 보세요 : '+obstacleCard.advice];
 }
 // Future premium adapters may accept this DTO. No remote provider or API client in v0.1.
 export function readingSnapshot(slug,picks,question=''){return {version:2,locale:'ko',readingType:slug,question,selectedCards:picks.map(p=>({...p})),positions:readings[slug].positions.slice(0,picks.length).map(p=>p.label),interpretations:picks.map((p,i)=>interpret(slug,p,i)),summary:synthesis(slug,picks)};}
