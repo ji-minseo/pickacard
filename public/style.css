@@ -1954,3 +1954,29 @@ textarea{
   }
   .guide-detail .guide-next .button{width:100%;justify-content:center}
 }
+
+
+/* Home v5.4 — border-only reading hover and isolated guide hero. */
+/* Match Reading notes hover: keep white fill, accent only the border. */
+.primary-grid .reading-tile:hover,
+.secondary-grid .reading-tile:hover,
+.primary-grid .reading-tile:nth-child(2n):hover,
+.primary-grid .reading-tile:nth-child(3n):hover,
+.secondary-grid .reading-tile:nth-child(2n):hover,
+.secondary-grid .reading-tile:nth-child(3n):hover{
+  background:#fff;
+  border-color:#ebb9b5;
+  box-shadow:var(--shadow);
+}
+
+/* Guide hero must not inherit the global site <header> flex layout. */
+.guide-detail .guide-hero{
+  display:block;
+  width:100%;
+  max-width:none;
+  height:auto;
+  min-height:0;
+  margin:0 0 34px;
+  padding:0 0 34px;
+  border-bottom:1px solid var(--line);
+}
