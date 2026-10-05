@@ -93,8 +93,8 @@ test('home about strip uses tarot artwork instead of emoji badges',async()=>{
 });
 test('service hierarchy exposes cards, saved readings, branded favicon and dictionary search',async()=>{
  const home=await readFile('dist/index.html','utf8');
- assert.ok(home.includes('fill=\"#632b3b\"'));
- assert.ok(home.includes('stroke=\"#e9d7ac\"'));
+ assert.ok(home.includes('%23632b3b'));
+ assert.ok(home.includes('%23e9d7ac'));
  assert.ok(home.includes('href=\"/cards/\"'));
  assert.ok(home.includes('href=\"/my-readings/\"'));
  const cardsPage=await readFile('dist/cards/index.html','utf8');
