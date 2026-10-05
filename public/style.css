@@ -2445,3 +2445,33 @@ textarea{
     padding-top:14px;
   }
 }
+
+
+/* Selection card label fit + FAQ disclosure alignment. */
+/* Long court labels such as KNIGHT should never escape the selected card face. */
+.card-front .card-number{
+  display:block;
+  max-width:100%;
+  min-width:0;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:clip;
+}
+.card-front .card-number.is-long{
+  font-size:9px;
+  letter-spacing:-.04em;
+}
+@media(max-width:520px){
+  .card-front .card-number.is-long{font-size:8px}
+}
+
+/* Center FAQ + / − controls vertically instead of letting baseline positioning drop them. */
+.faq-list summary{
+  position:relative;
+}
+.faq-list summary::after{
+  top:50%;
+  right:2px;
+  transform:translateY(-50%);
+  line-height:1;
+}
