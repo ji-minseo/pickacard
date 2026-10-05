@@ -80,6 +80,23 @@ test('yes-no page avoids vague hedge copy in visible result language',async()=>{
  assert.ok(!app.includes('아래 카드의 상징과 방향을 종합한 참고 메시지입니다.'));
  assert.ok(app.includes('YES / 보류 / NO 중 하나로 정리했어요.'));
 });
+test('today reading and selected guides use real tarot visuals',async()=>{
+ const today=await readFile('dist/tarot/today/index.html','utf8');
+ assert.ok(today.includes('class="daily-card-preview"'));
+ assert.ok(today.includes('/artwork/card-back.svg'));
+ assert.ok(today.includes('잠깐, 나에게 집중하는 시간.'));
+ const upright=await readFile('dist/guide/upright-reversed/index.html','utf8');
+ assert.ok(upright.includes('class="guide-visual orientation-visual"'));
+ assert.ok(upright.includes('/artwork/sun-small.webp'));
+ const major=await readFile('dist/guide/major-arcana/index.html','utf8');
+ assert.ok(major.includes('class="guide-visual suit-visual"'));
+ assert.ok(major.includes('/artwork/lovers-small.webp'));
+ const minor=await readFile('dist/guide/minor-arcana/index.html','utf8');
+ assert.ok(minor.includes('/artwork/wands-1-small.webp'));
+ assert.ok(minor.includes('/artwork/pentacles-1-small.webp'));
+ const questions=await readFile('dist/guide/better-questions/index.html','utf8');
+ assert.ok(questions.includes('class="guide-visual question-comparison"'));
+});
 test('home about strip uses tarot artwork instead of emoji badges',async()=>{
  const home=await readFile('dist/index.html','utf8');
  const start=home.indexOf('<section class="about">'),end=home.indexOf('</section>',start);
