@@ -1621,3 +1621,138 @@ textarea{
   .home-explainer{margin-top:58px}
   .home-explainer,.home-faq{padding:28px 0 46px}
 }
+
+
+/* Home v5.2 — consistent white hover + polished About strip. */
+/* Every reading card gets the same white hover treatment, regardless of nth-child tint. */
+.primary-grid .reading-tile:hover,
+.secondary-grid .reading-tile:hover{
+  background:#fff;
+  border-color:#e8b8b5;
+  box-shadow:0 18px 44px rgba(25,25,35,.075);
+}
+
+/* "미래를 정하는 답보다..." — a richer feature strip in the current red / white system. */
+.about{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
+  gap:34px;
+  align-items:stretch;
+  max-width:none;
+  margin-top:72px;
+  padding:36px;
+  border:1px solid #f0d9d7;
+  border-radius:28px;
+  background:linear-gradient(135deg,#fff8f7 0%,#fff4f3 100%);
+  box-shadow:0 12px 32px rgba(25,25,35,.045);
+}
+.about-copy{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:center;
+  min-width:0;
+}
+.about .kicker{
+  margin-bottom:14px;
+  background:#fff;
+  color:#c94141;
+  box-shadow:0 4px 12px rgba(0,0,0,.025);
+}
+.about h2{
+  max-width:650px;
+  margin:0;
+  font-size:clamp(32px,4.4vw,46px);
+  line-height:1.13;
+  letter-spacing:-.05em;
+}
+.about-copy>p{
+  max-width:650px;
+  margin-top:17px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.72;
+}
+.about-link{
+  display:inline-flex;
+  align-items:center;
+  margin-top:22px;
+  color:#c94141;
+  font-size:13px;
+  font-weight:850;
+}
+.about-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+}
+.about-grid article{
+  display:grid;
+  grid-template-columns:54px minmax(0,1fr);
+  gap:14px;
+  align-items:center;
+  padding:17px;
+  border:1px solid rgba(235,185,181,.62);
+  border-radius:18px;
+  background:rgba(255,255,255,.86);
+  box-shadow:0 7px 18px rgba(0,0,0,.028);
+}
+.about-icon{
+  width:54px;
+  height:54px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  background:#fff0ef;
+  font-family:Apple Color Emoji,"Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:27px;
+  line-height:1;
+}
+.about-grid b{
+  display:block;
+  margin-bottom:3px;
+  color:var(--ink);
+  font-size:15px;
+  font-weight:900;
+  letter-spacing:-.02em;
+}
+.about-grid p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.48;
+}
+
+@media(max-width:760px){
+  .about{
+    grid-template-columns:1fr;
+    gap:24px;
+    margin-top:58px;
+    padding:24px;
+    border-radius:22px;
+  }
+  .about-grid{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  .about-grid article{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:12px;
+    padding:15px;
+  }
+  .about-icon{
+    width:48px;
+    height:48px;
+    border-radius:15px;
+    font-size:24px;
+  }
+}
+@media(max-width:560px){
+  .about-grid{grid-template-columns:1fr}
+  .about-grid article{
+    display:grid;
+    grid-template-columns:48px minmax(0,1fr);
+    align-items:center;
+  }
+}
