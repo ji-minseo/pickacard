@@ -80,6 +80,17 @@ test('yes-no page avoids vague hedge copy in visible result language',async()=>{
  assert.ok(!app.includes('아래 카드의 상징과 방향을 종합한 참고 메시지입니다.'));
  assert.ok(app.includes('YES / 보류 / NO 중 하나로 정리했어요.'));
 });
+test('interaction layer keeps motion restrained and accessible',async()=>{
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(app.includes('function animateResultEntry()'));
+ assert.ok(app.includes("prefers-reduced-motion: reduce"));
+ assert.ok(app.includes("classList.add('results-entering')"));
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('@keyframes pickedCard'));
+ assert.ok(css.includes('@keyframes resultRise'));
+ assert.ok(css.includes('@media(hover:hover) and (pointer:fine)'));
+ assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
+});
 test('saved readings use branded card artwork and readable card metadata',async()=>{
  const page=await readFile('dist/my-readings/index.html','utf8');
  assert.ok(page.includes('class="saved-empty-card"'));
