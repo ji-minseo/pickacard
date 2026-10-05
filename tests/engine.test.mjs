@@ -80,6 +80,17 @@ test('yes-no page avoids vague hedge copy in visible result language',async()=>{
  assert.ok(!app.includes('아래 카드의 상징과 방향을 종합한 참고 메시지입니다.'));
  assert.ok(app.includes('YES / 보류 / NO 중 하나로 정리했어요.'));
 });
+test('home about strip uses tarot artwork instead of emoji badges',async()=>{
+ const home=await readFile('dist/index.html','utf8');
+ const start=home.indexOf('<section class="about">'),end=home.indexOf('</section>',start);
+ const about=home.slice(start,end);
+ assert.ok(about.includes('/artwork/card-back.svg'));
+ assert.ok(about.includes('/artwork/lovers-small.webp'));
+ assert.ok(about.includes('/artwork/sun-small.webp'));
+ assert.ok(!about.includes('🃏'));
+ assert.ok(!about.includes('💗'));
+ assert.ok(!about.includes('↕️'));
+});
 test('service hierarchy exposes cards, saved readings, branded favicon and dictionary search',async()=>{
  const home=await readFile('dist/index.html','utf8');
  assert.ok(home.includes('fill=\"#632b3b\"'));
