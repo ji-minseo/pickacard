@@ -56,6 +56,16 @@ const signalNotes={
 };
 export function synthesis(slug,picks){
  if(slug==='yes-no'){const direction=verdict(picks);return [`이 질문은 ‘${direction}’으로 읽힙니다. 이는 카드에 부여한 상징적 방향성을 합친 결과이며, 입력한 질문의 사실관계를 분석한 답은 아닙니다.`,picks.length>1?'핵심 카드와 조건 카드가 다른 방향을 가리킨다면 결론을 밀어붙이기보다 아직 확인하지 못한 조건을 찾아보세요.':'한 장의 카드는 질문을 바라볼 한 가지 관점입니다. 마음에 와닿는 조언을 실제로 가능한 작은 행동과 연결해보세요.',[...new Set(picks.map(p=>generalAdvice(cards.find(c=>c.id===p.id),p.reversed)))].join(' '),readings[slug].summary];}
+ const practical=['job','money','work','study'];
+ if(practical.includes(slug)){
+  const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]),strongest=signals.ranked[0][0];
+  const focusIndex={job:2,money:2,work:1,study:2}[slug],focusText={job:'보완하면 좋은 부분',money:'주의할 소비와 부담',work:'부담과 갈등의 지점',study:'방해가 되는 요소'}[slug];
+  const focusPick=picks[Math.min(focusIndex,picks.length-1)],focusCard=cards.find(c=>c.id===focusPick.id);
+  const difficult=tags.filter(t=>['blocked','conflict','distance','closure'].includes(t)).length;
+  const active=tags.some(t=>['movement','communication','renewal','decision'].includes(t));
+  const tone=difficult>=Math.ceil(tags.length/2)?'이번 배열에서는 빠르게 밀어붙이기보다 부담을 줄이고 기본 조건을 정리하는 흐름이 더 두드러집니다.':difficult&&active?'움직일 힘과 현실적인 제약이 함께 보여요. 할 수 있는 일과 지금은 보류할 일을 나누어 보는 편이 좋습니다.':active?'생각을 실제 행동으로 옮길 수 있는 주제가 이어집니다. 큰 결론보다 다음 한 단계에 집중해보세요.':'빠른 결과보다 정리와 준비가 중심이 되는 배열입니다. 지금의 리듬을 점검하고 반복 가능한 방식을 만드는 데 의미가 있어요.';
+  return [`${tone} 가장 반복되는 주제는 ‘${themes[strongest]}’입니다. ${generalAdvice(focusCard,focusPick.reversed)}`,`특히 ‘${focusText}’ 위치는 ‘${themes[tags[Math.min(focusIndex,tags.length-1)]]}’로 읽힙니다. 카드의 상징을 실제 일정, 숫자, 경험과 함께 비교해보세요.`,readings[slug].summary];
+ }
  const signals=spreadSignals(slug,picks);
  const tags=signals.positions.map(p=>p.tags[0]);
  const obstacleIndex={reunion:2,breakup:1,love:3,feelings:2,contact:1,'reunion-timing':1,'yes-no':1,today:0}[slug];
