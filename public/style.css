@@ -5673,9 +5673,13 @@ details[open]>p{
     margin:0 5px;
   }
   .question-table-preview .preview-deck{
-    grid-template-columns:repeat(13,minmax(0,1fr));
-    gap:3px;
-    padding:8px;
+    grid-template-columns:repeat(6,minmax(0,1fr));
+    gap:5px;
+    padding:9px;
+    border-radius:15px;
+  }
+  .question-table-preview .preview-card:nth-child(n+19){
+    display:none;
   }
 }
 
