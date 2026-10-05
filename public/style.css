@@ -4663,16 +4663,16 @@ details[open]>p{
   justify-self:center;
 }
 .about-card-pair img{
-  width:27px;
-  height:41px;
+  width:26px;
+  height:39px;
 }
 .about-card-pair img:first-child{
-  left:3px;
-  top:-8px;
+  left:4px;
+  top:2px;
 }
 .about-card-pair .about-card-reversed{
-  right:5px;
-  bottom:3px;
+  right:9px;
+  bottom:5px;
 }
 @media(max-width:760px){
   .about-card-pair{
@@ -4680,15 +4680,15 @@ details[open]>p{
     height:46px;
   }
   .about-card-pair img{
-    width:25px;
-    height:38px;
+    width:24px;
+    height:36px;
   }
   .about-card-pair img:first-child{
-    left:2px;
-    top:-8px;
+    left:3px;
+    top:2px;
   }
   .about-card-pair .about-card-reversed{
-    right:4px;
-    bottom:3px;
+    right:8px;
+    bottom:4px;
   }
 }
