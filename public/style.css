@@ -25,7 +25,6 @@ nav a{min-height:44px;display:inline-flex;align-items:center}footer .footer-grid
 
 
 /* UI polish: iPhone safe scroll, clearer selection artwork, quieter detail cards. */
-#reading-app{scroll-margin-top:max(36px,env(safe-area-inset-top,0px))}
 .card-front{padding:3px;gap:1px}
 .card-front .card-number{font-size:13px;line-height:1}
 .card-front .artwork-holder{height:78%}
@@ -34,8 +33,13 @@ nav a{min-height:44px;display:inline-flex;align-items:center}footer .footer-grid
 .detail-card{width:102px}
 .detail-card .mini-card{height:153px}
 @media(max-width:520px){
-  #reading-app{scroll-margin-top:max(36px,env(safe-area-inset-top,0px))}
   .card-front .card-number{font-size:12px}
   .detail-card{width:80px;margin-left:16px}
   .detail-card .mini-card{height:120px}
 }
+
+
+/* Global UI direction: sans-serif typography and a cleaner warm-white canvas. */
+:root{--paper:#fbfaf7}
+html,body{background:var(--paper)}
+body,body *{font-family:Inter,Pretendard,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans KR",Arial,sans-serif!important}
