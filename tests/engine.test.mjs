@@ -31,7 +31,7 @@ test('feelings and yes-no results stay concrete and decisive',()=>{
  const yesPicks=[{id:'major-19',reversed:false},{id:'major-1',reversed:false},{id:'pentacles-1',reversed:false}];
  const yesSummary=synthesis('yes-no',yesPicks);
  assert.ok(yesSummary[0].includes('해보는 쪽'));
- assert.ok(yesSummary[1].includes('카드별 방향'));
+ assert.ok(yesSummary[1].includes('카드별로 보면'));
  assert.ok(situationExample('yes-no',yesPicks[0],0)?.length>20);
 });
 test('saved readings stay local, capped, removable and clearable',()=>{
