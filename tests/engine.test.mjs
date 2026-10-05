@@ -43,6 +43,13 @@ test('saved readings stay local, capped, removable and clearable',()=>{
  assert.equal(clearSavedReadings(storage),true);assert.deepEqual(loadSavedReadings(storage),[]);
 });
 test('mixed directions do not present decisive yes/no',()=>{assert.equal(verdict([{id:'major-19',reversed:false},{id:'major-16',reversed:false}]),'조금 더 지켜볼 필요가 있음');assert.equal(verdict([{id:'major-19',reversed:false}]),'YES에 가까움');assert.equal(verdict([{id:'major-16',reversed:false}]),'NO에 가까움');});
+test('result copy omits success-probability hedge and uses spaced action colon',async()=>{
+ const app=await readFile('dist/src/app.mjs','utf8'),engine=await readFile('dist/src/engine.mjs','utf8');
+ assert.ok(!app.includes('정답이나 성공 확률이 아닙니다.'));
+ assert.ok(!engine.includes('정답이나 성공 확률이 아닙니다.'));
+ assert.ok(engine.includes('지금 할 일은 이거예요 : '));
+ assert.ok(!engine.includes('지금 할 일은 이거예요: '));
+});
 test('yes-no page avoids vague hedge copy in visible result language',async()=>{
  const html=await readFile('dist/tarot/yes-no/index.html','utf8');
  assert.ok(!html.includes('원하는 답과 이 상징의 차이를 생각해보세요.'));
