@@ -5525,3 +5525,21 @@ details[open]>p{
     transition:none!important;
   }
 }
+
+
+/* Reading-session alignment polish. */
+.selection-heading .step-label{
+  display:block;
+  margin-bottom:16px;
+}
+.selection-heading h2{
+  margin-top:0;
+}
+.reading-intro{
+  max-width:900px;
+}
+@media(max-width:650px){
+  .selection-heading .step-label{
+    margin-bottom:14px;
+  }
+}
