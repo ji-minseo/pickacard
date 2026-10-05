@@ -1980,3 +1980,12 @@ textarea{
   padding:0 0 34px;
   border-bottom:1px solid var(--line);
 }
+
+
+/* Reading form spacing — separate the step capsule from the question heading. */
+.panel-heading .step-label{
+  margin-bottom:14px;
+}
+@media(max-width:650px){
+  .panel-heading .step-label{margin-bottom:12px}
+}
