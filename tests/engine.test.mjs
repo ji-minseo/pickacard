@@ -91,6 +91,17 @@ test('interaction layer keeps motion restrained and accessible',async()=>{
  assert.ok(css.includes('@media(hover:hover) and (pointer:fine)'));
  assert.ok(css.includes('@media(prefers-reduced-motion:reduce)'));
 });
+test('hover refinement keeps home reading grid still and moves physical tarot cards elsewhere',async()=>{
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('.primary-grid .reading-tile:hover'));
+ assert.ok(css.includes('.secondary-grid .reading-tile:hover'));
+ assert.ok(css.includes('transform:none;'));
+ assert.ok(css.includes('.hero-deck .hero-card-sun:hover'));
+ assert.ok(css.includes('.summary-item:hover .mini-card'));
+ assert.ok(css.includes('.detail-card:hover .mini-card'));
+ assert.ok(css.includes('.card-dictionary-art:hover'));
+ assert.ok(css.includes('.orientation-visual figure:hover'));
+});
 test('saved readings use branded card artwork and readable card metadata',async()=>{
  const page=await readFile('dist/my-readings/index.html','utf8');
  assert.ok(page.includes('class="saved-empty-card"'));
