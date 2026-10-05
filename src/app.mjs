@@ -1,11 +1,47 @@
-import {cardNumber,cardArt,cardFace} from './card-view.mjs';
+import {cardNumber,cardArt,cardFace,artwork} from './card-view.mjs';
 import {cards} from './data/cards.mjs';
 import {readings} from './data/readings.mjs';
 import {shuffleDeck,loadDaily,saveDaily,dateKey,interpret,verdict,synthesis,generalAdvice,readingHeadline,timingInsight,nextAction,combinationInsights} from './engine.mjs';
+import {loadSavedReadings,saveReadingRecord,removeSavedReading,clearSavedReadings} from './saved-readings.mjs';
 document.addEventListener('error',event=>{if(event.target instanceof HTMLImageElement&&event.target.closest('.artwork-holder')){event.target.hidden=true;event.target.parentElement.classList.add('image-failed');}},true);
 const root=document.querySelector('[data-reading]');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const legacyRoman=n=>['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'][n]||String(n);
+
+function canvasWrap(ctx,text,maxWidth){
+ const words=String(text||'').split(/\s+/),lines=[];let line='';
+ for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word;}else line=test;}
+ if(line)lines.push(line);return lines;
+}
+function loadCanvasImage(src){return new Promise(resolve=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>resolve(null);img.src=src;});}
+async function createShareImage({readingName,cards:chosen,headline,timing,conclusion}){
+ const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');
+ ctx.fillStyle='#fffaf8';ctx.fillRect(0,0,1080,1350);
+ ctx.fillStyle='#d94949';ctx.font='900 28px Inter, Pretendard, sans-serif';ctx.fillText('PICK A CARD',72,82);
+ ctx.fillStyle='#111';ctx.font='900 58px Inter, Pretendard, sans-serif';ctx.fillText(readingName,72,158);
+ ctx.fillStyle='#777';ctx.font='700 22px Inter, Pretendard, sans-serif';ctx.fillText('YOUR TAROT READING',72,198);
+ const gap=22,cardW=Math.min(150,Math.floor((936-gap*(chosen.length-1))/chosen.length)),cardH=Math.round(cardW*1.5),total=cardW*chosen.length+gap*(chosen.length-1),startX=(1080-total)/2,y=252;
+ const images=await Promise.all(chosen.map(p=>loadCanvasImage('/artwork/'+artwork[p.id]+'.webp')));
+ images.forEach((img,i)=>{const x=startX+i*(cardW+gap);ctx.fillStyle='#fff';ctx.fillRect(x,y,cardW,cardH);if(img){ctx.save();ctx.translate(x+cardW/2,y+cardH/2);if(chosen[i].reversed)ctx.rotate(Math.PI);ctx.drawImage(img,-cardW/2,-cardH/2,cardW,cardH);ctx.restore();}ctx.strokeStyle='#ead9d6';ctx.lineWidth=2;ctx.strokeRect(x,y,cardW,cardH);});
+ let cursor=y+cardH+72;
+ ctx.fillStyle='#c94141';ctx.font='900 20px Inter, Pretendard, sans-serif';ctx.fillText('이번 리딩의 핵심',72,cursor);cursor+=46;
+ ctx.fillStyle='#111';ctx.font='900 40px Inter, Pretendard, sans-serif';for(const line of canvasWrap(ctx,headline||conclusion||'',930).slice(0,4)){ctx.fillText(line,72,cursor);cursor+=54;}
+ if(timing){cursor+=18;ctx.fillStyle='#c94141';ctx.font='900 19px Inter, Pretendard, sans-serif';ctx.fillText('시기 흐름 · '+timing.label,72,cursor);cursor+=42;ctx.fillStyle='#111';ctx.font='900 30px Inter, Pretendard, sans-serif';ctx.fillText(timing.range,72,cursor);cursor+=40;ctx.fillStyle='#666';ctx.font='600 21px Inter, Pretendard, sans-serif';for(const line of canvasWrap(ctx,timing.text,930).slice(0,3)){ctx.fillText(line,72,cursor);cursor+=32;}}
+ ctx.strokeStyle='#ececf0';ctx.beginPath();ctx.moveTo(72,1240);ctx.lineTo(1008,1240);ctx.stroke();
+ ctx.fillStyle='#777';ctx.font='700 20px Inter, Pretendard, sans-serif';ctx.fillText('pickacard.everytinytool.com',72,1292);
+ return await new Promise(resolve=>canvas.toBlob(resolve,'image/png',.94));
+}
+async function shareReadingImage(payload,button,status){
+ if(!button)return;
+ const original=button.textContent;button.disabled=true;button.textContent='이미지 만드는 중…';
+ try{
+  const blob=await createShareImage(payload);if(!blob)throw new Error('image');
+  const file=new File([blob],'pick-a-card-reading.png',{type:'image/png'});
+  if(navigator.share&&navigator.canShare?.({files:[file]})){await navigator.share({files:[file],title:'Pick a Card · '+payload.readingName});if(status)status.textContent='공유 메뉴를 열었어요.';}
+  else{const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);if(status)status.textContent='결과 이미지를 저장했어요.';}
+ }catch(error){if(error?.name!=='AbortError'&&status)status.textContent='이미지를 만들지 못했어요. 잠시 후 다시 시도해 주세요.';}
+ finally{button.disabled=false;button.textContent=original;}
+}
 if(root){
  const slug=root.dataset.reading,r=readings[slug],app=document.querySelector('#reading-app');
  let deck=[],selected=[],count=r.positions.length,question='',phase='question',drawingDate=null,timer=null,storage=null;
