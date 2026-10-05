@@ -135,6 +135,19 @@ test('question panel overlays the table and flying cards keep fixed typography a
  assert.ok(css.includes('.question-session-stage.is-opening .question-table-preview'));
  assert.ok(css.includes('.table-flying-card .mini-card strong'));
 });
+test('sticky result spread compacts, expands on demand and restores at its origin',async()=>{
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(app.includes('class="session-spread-anchor"'));
+ assert.ok(app.includes('class="session-spread-toggle"'));
+ assert.ok(app.includes("shell.classList.toggle('is-stuck',stuck)"));
+ assert.ok(app.includes("shell.classList.toggle('is-expanded')"));
+ assert.ok(app.includes("if(!stuck)shell.classList.remove('is-expanded')"));
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('.session-spread-shell.is-stuck:not(.is-expanded)'));
+ assert.ok(css.includes('.session-spread-shell.is-stuck .session-spread-toggle'));
+ assert.ok(css.includes('padding-top:4px;'));
+ assert.ok(css.includes('min-height:27px;'));
+});
 test('tarot table session keeps shuffle, draw placement and sticky spread continuous',async()=>{
  const app=await readFile('dist/src/app.mjs','utf8');
  assert.ok(app.includes('class="tarot-table" id="tarot-table"'));
