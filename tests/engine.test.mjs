@@ -80,6 +80,20 @@ test('yes-no page avoids vague hedge copy in visible result language',async()=>{
  assert.ok(!app.includes('아래 카드의 상징과 방향을 종합한 참고 메시지입니다.'));
  assert.ok(app.includes('YES / 보류 / NO 중 하나로 정리했어요.'));
 });
+test('sitewide hover feedback and scroll reveal interactions are wired',async()=>{
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(app.includes('function prepareScrollReveal(scope=document)'));
+ assert.ok(app.includes("new IntersectionObserver"));
+ assert.ok(app.includes("new MutationObserver"));
+ assert.ok(app.includes("classList.add('scroll-reveal')"));
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(css.includes('.scroll-reveal{'));
+ assert.ok(css.includes('.scroll-reveal.is-visible'));
+ assert.ok(css.includes('a[href]:not(.button):not(.reading-tile):not(.card-library-tile):hover'));
+ assert.ok(css.includes('.button.secondary:not(:disabled):hover'));
+ assert.ok(css.includes('.count-options label:hover span'));
+ assert.ok(css.includes('.card-library-tile:hover'));
+});
 test('interaction layer keeps motion restrained and accessible',async()=>{
  const app=await readFile('dist/src/app.mjs','utf8');
  assert.ok(app.includes('function animateResultEntry()'));
