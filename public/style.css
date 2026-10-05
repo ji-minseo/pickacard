@@ -4822,3 +4822,31 @@ details[open]>p{
     transition:none!important;
   }
 }
+
+
+/* Restore the original burgundy CTA hover and keep related-reading hover tidy. */
+@media(hover:hover) and (pointer:fine){
+  .button.primary:not(:disabled):hover{
+    background:#562130;
+  }
+
+  .related a{
+    transition:color .2s ease,border-color .2s ease;
+  }
+  .related a:hover{
+    background:transparent;
+  }
+  .related a .related-icon,
+  .related a strong{
+    transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease,color .2s ease;
+  }
+  .related a:hover .related-icon{
+    transform:translateY(-1px);
+    border-color:#e5b6b2;
+    box-shadow:0 7px 16px rgba(48,43,43,.06);
+  }
+  .related a:hover strong{
+    color:#8a3040;
+    transform:translateX(2px);
+  }
+}
