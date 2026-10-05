@@ -1512,3 +1512,112 @@ textarea{
 @media(max-width:380px){
   .primary-grid,.secondary-grid{grid-template-columns:1fr}
 }
+
+
+/* Home v5.1 — Random Everything-inspired guide explainer and FAQ. */
+.home-explainer,.home-faq{
+  padding:32px 0 54px;
+  border-top:1px solid var(--line);
+}
+.home-explainer{
+  margin-top:72px;
+}
+.home-explainer .section-heading,
+.home-faq .section-heading{
+  display:block;
+  max-width:720px;
+  margin-bottom:20px;
+}
+.section-kicker{
+  display:inline-block;
+  margin-bottom:7px;
+  color:#c94141;
+  font-size:12px;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.home-explainer .section-heading h2,
+.home-faq .section-heading h2{
+  margin:0;
+  font-size:clamp(28px,4vw,40px);
+  line-height:1.08;
+  letter-spacing:-.045em;
+}
+.home-explainer .section-heading p{
+  margin:9px 0 0;
+  color:var(--muted);
+  font-size:15px;
+}
+.home-info-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+.home-info-card{
+  display:block;
+  min-height:150px;
+  padding:20px;
+  border:1px solid #f0f0f0;
+  border-radius:18px;
+  background:#fff;
+  box-shadow:0 8px 22px rgba(0,0,0,.035);
+  transition:transform .18s ease,border-color .18s ease;
+}
+.home-info-card:hover{
+  transform:translateY(-2px);
+  border-color:#ebb9b5;
+}
+.home-info-card h3{
+  margin:0 0 8px;
+  font-size:18px;
+  letter-spacing:-.025em;
+}
+.home-info-card p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.58;
+}
+.home-info-card span{
+  display:inline-block;
+  margin-top:16px;
+  color:#c94141;
+  font-size:12px;
+  font-weight:850;
+}
+.explainer-link{
+  display:inline-block;
+  margin-top:17px;
+  color:#c94141;
+  font-size:13px;
+  font-weight:850;
+}
+.faq-list{
+  display:grid;
+  gap:8px;
+}
+.faq-list details{
+  border:1px solid #eeeeee;
+  border-radius:14px;
+  padding:0 15px;
+  background:#fafafa;
+}
+.faq-list summary{
+  cursor:pointer;
+  padding:13px 30px 13px 0;
+  font-weight:800;
+  font-size:15px;
+}
+.faq-list p{
+  margin:0;
+  padding:0 0 14px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.6;
+}
+@media(max-width:720px){
+  .home-info-grid{grid-template-columns:1fr}
+  .home-explainer{margin-top:58px}
+  .home-explainer,.home-faq{padding:28px 0 46px}
+}
