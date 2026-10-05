@@ -996,3 +996,117 @@ textarea{border-radius:12px}
     grid-row:1 / span 2;
   }
 }
+
+
+/* Theme v4.1 — large lower-right reading icons, four-up primary grid, near-white canvas. */
+:root{--paper:#fdfcfb}
+html,body{background:#fdfcfb}
+
+/* Four core readings stay visible in one row on wide screens. */
+.primary-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.secondary-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+
+/* Reading cards: large icon anchored at the lower-right, like a tool-card visual cue. */
+.reading-tile{
+  position:relative;
+  min-height:286px;
+  padding:22px 22px 28px;
+  overflow:hidden;
+}
+.tile-head{
+  display:block;
+  margin:0 0 32px;
+}
+.tile-index{
+  display:block;
+  width:auto;
+  text-align:left;
+}
+.tile-icon{
+  position:absolute;
+  right:18px;
+  bottom:18px;
+  width:76px;
+  height:76px;
+  display:grid;
+  place-items:center;
+  border:1px solid rgba(112,47,64,.12);
+  border-radius:22px;
+  background:rgba(193,154,158,.14);
+  color:var(--wine);
+  font-size:38px;
+  font-weight:850;
+  line-height:1;
+  pointer-events:none;
+}
+.tile-top,.small .tile-top{
+  max-width:80%;
+  font-size:27px;
+  line-height:1.2;
+}
+.tile-bottom,.small .tile-bottom{
+  max-width:72%;
+  line-height:1.72;
+}
+.tile-link,.small .tile-link{
+  max-width:70%;
+  padding-top:24px;
+}
+.small{
+  min-height:248px;
+}
+.small .tile-icon{
+  width:68px;
+  height:68px;
+  right:16px;
+  bottom:16px;
+  border-radius:20px;
+  font-size:32px;
+}
+
+/* Keep large headings, but give multi-line Korean titles a little more breathing room. */
+h1{line-height:1.12}
+.home-intro h1,
+.reading-intro h1,
+.legal>h1{line-height:1.1}
+.results-heading h2,
+.selection-heading h2{line-height:1.14}
+
+@media(max-width:980px){
+  .primary-grid,.secondary-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:650px){
+  .primary-grid,.secondary-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .reading-tile,.small{
+    min-height:220px;
+    padding:18px 16px 22px;
+  }
+  .tile-head{margin-bottom:22px}
+  .tile-top,.small .tile-top{
+    max-width:88%;
+    font-size:23px;
+    line-height:1.22;
+  }
+  .tile-bottom,.small .tile-bottom{
+    max-width:86%;
+    font-size:13px;
+    line-height:1.65;
+  }
+  .tile-link,.small .tile-link{
+    max-width:60%;
+    font-size:12px;
+    padding-top:18px;
+  }
+  .tile-icon,.small .tile-icon{
+    right:13px;
+    bottom:13px;
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    font-size:28px;
+  }
+}
+@media(max-width:380px){
+  .primary-grid,.secondary-grid{grid-template-columns:1fr}
+  .reading-tile,.small{min-height:210px}
+}
