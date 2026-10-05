@@ -98,7 +98,12 @@ test('service hierarchy exposes cards, saved readings, branded favicon and dicti
  assert.ok(home.includes('href=\"/cards/\"'));
  assert.ok(home.includes('href=\"/my-readings/\"'));
  const cardsPage=await readFile('dist/cards/index.html','utf8');
- assert.ok(cardsPage.includes('id=\"card-search\"'));\n assert.ok(cardsPage.includes('class=\"card-library-tools\"'));\n assert.ok(!cardsPage.includes('🔥'));\n assert.ok(!cardsPage.includes('💧'));\n assert.ok(!cardsPage.includes('🗡️'));\n assert.ok(!cardsPage.includes('🪙'));
+ assert.ok(cardsPage.includes('id="card-search"'));
+ assert.ok(cardsPage.includes('class="card-library-tools"'));
+ assert.ok(!cardsPage.includes('🔥'));
+ assert.ok(!cardsPage.includes('💧'));
+ assert.ok(!cardsPage.includes('🗡️'));
+ assert.ok(!cardsPage.includes('🪙'));
  const app=await readFile('dist/src/app.mjs','utf8');
  assert.ok(app.includes("document.querySelector('#card-search')"));
  assert.ok(app.includes("aria-current"));
