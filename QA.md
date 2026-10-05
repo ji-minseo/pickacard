@@ -14,3 +14,7 @@
 ## Limits
 
 No physical-device or screen-reader QA, Lighthouse or CWV field data. Browser preview/custom 404 UI was checked; production HTTP status independently unmeasured. Reading remains a deterministic editorial rule engine, not question semantic analysis or verified predictions about people/future.
+
+## Card back follow-up
+
+Compared three custom SVG prototypes at 50px and 90px with ten-card repeated rows; selected burgundy two-paths/central-light design. 320/390px facedown grids (78 cards), tap/selected/flip and desktop hover verified in actual app. Hover computed transform y=-2px and subtle shadow; five-card result completed, app-origin error log empty. No page overflow at 305/375/1348px document widths. SVG is 1,217 bytes, has no text or external references; asymmetric elements are paired with their identical 180° rotations, centered elements independently reversible. Existing 78 fronts and reading engine unchanged. Prototype assets and QA screenshot are docs-only.
