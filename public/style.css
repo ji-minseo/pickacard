@@ -2475,3 +2475,73 @@ textarea{
   transform:translateY(-50%);
   line-height:1;
 }
+
+
+/* Clear reading takeaway + concrete situation examples. */
+.reading-answer{
+  width:min(900px,100%);
+  margin:0 auto 22px;
+  padding:20px 22px;
+  border:1px solid #f0d7d5;
+  border-radius:18px;
+  background:#fff6f5;
+}
+.reading-answer>span{
+  display:block;
+  margin-bottom:7px;
+  color:#c94141;
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+.reading-answer>strong{
+  display:block;
+  color:var(--ink);
+  font-size:clamp(20px,3vw,28px);
+  line-height:1.42;
+  letter-spacing:-.035em;
+  font-weight:900;
+  word-break:keep-all;
+}
+.context-example{
+  display:grid;
+  grid-template-columns:104px minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+  margin:18px 0 0!important;
+  padding:14px 15px;
+  border:1px solid #eeeeee;
+  border-radius:14px;
+  background:#fafafa;
+}
+.context-example strong{
+  color:#c94141;
+  font-size:12px;
+  font-weight:900;
+}
+.context-example span{
+  color:#4f4f4f;
+  font-size:14px;
+  line-height:1.7;
+}
+@media(max-width:650px){
+  .reading-answer{
+    margin-bottom:18px;
+    padding:16px;
+    border-radius:16px;
+  }
+  .reading-answer>strong{
+    font-size:20px;
+    line-height:1.45;
+  }
+  .context-example{
+    grid-template-columns:1fr;
+    gap:5px;
+    padding:13px;
+    border-radius:13px;
+  }
+  .context-example span{
+    font-size:13px;
+  }
+}
