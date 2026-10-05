@@ -198,6 +198,51 @@ export function nextAction(slug,picks){
  const signals=spreadSignals(slug,picks),tag=signals.ranked[0]?.[0];
  return actionScenes[slug][tag]||generalAdvice(cards.find(c=>c.id===picks[0].id),picks[0].reversed);
 }
+const exactCombinationRules=[
+ {ids:['major-6','major-15'],priority:100,text:{relationship:'끌림은 강하지만 집착이나 불균형이 함께 커질 수 있어요. 좋아하는 마음의 크기보다 서로를 편안하게 존중할 수 있는 관계인지가 핵심입니다.',practical:'매력적인 선택이 보여도 욕심이나 압박 때문에 기준이 흐려질 수 있어요. 지금 원하는 것과 실제로 감당할 수 있는 조건을 분리해서 보세요.'}},
+ {ids:['major-16','major-17'],priority:98,text:{relationship:'한 번 크게 흔들린 뒤에도 회복의 여지는 남아 있어요. 다만 예전으로 돌아가는 것보다 무너진 신뢰나 기대를 새 방식으로 다시 세워야 합니다.',practical:'기존 계획이 흔들린 뒤 오히려 방향을 다시 잡을 여지가 보여요. 실패를 복구하는 데만 매달리기보다 새 기준으로 재정비하는 편이 낫습니다.'}},
+ {ids:['major-20','cups-6'],priority:96,text:{relationship:'과거를 다시 돌아보는 힘이 강한 조합이에요. 추억이나 미련이 재접촉의 계기가 될 수 있지만, 실제 재회는 예전 문제에 대한 새로운 판단이 있어야 이어집니다.',practical:'예전 경험이나 익숙한 선택을 다시 꺼내볼 수 있어요. 과거 방식을 그대로 복원하기보다 지금 기준으로 다시 평가하는 게 중요합니다.'}},
+ {ids:['major-18','swords-7'],priority:95,text:{relationship:'모호함과 회피가 겹쳐 있어 상대의 작은 신호를 크게 해석하기 쉬운 조합이에요. 숨은 마음을 추측하기보다 실제 말과 행동이 확인될 때까지 결론을 늦추는 편이 맞습니다.',practical:'정보가 불완전한 상태에서 우회하거나 눈치로 판단하기 쉬워요. 중요한 선택은 추측이 아니라 확인 가능한 자료를 기준으로 하세요.'}},
+ {ids:['major-19','cups-2'],priority:94,text:{relationship:'호감과 상호 반응이 비교적 분명하게 이어지는 조합이에요. 관계가 움직인다면 한쪽의 독주보다 서로 응답하고 만나는 장면으로 나타날 가능성이 큽니다.',practical:'분명한 성과와 협력이 같이 보이는 조합이에요. 혼자 밀기보다 상대와 조건을 맞출 때 흐름이 더 잘 살아납니다.'}},
+ {ids:['major-9','major-12'],priority:92,text:{relationship:'생각은 깊지만 실제 움직임은 느린 조합이에요. 마음을 정리하는 시간이 길어질 수 있어 연락이나 관계 진전을 재촉할수록 더 멈춰 보일 수 있습니다.',practical:'당장 결과를 내기보다 관점과 방향을 다시 잡는 시간이 필요한 조합이에요. 억지로 속도를 내기보다 막힌 이유를 먼저 정리하세요.'}},
+ {ids:['major-10','pentacles-1'],priority:90,text:{relationship:'환경 변화가 새로운 만남이나 관계의 현실적인 계기로 이어질 수 있어요. 우연한 기회가 생기더라도 실제 약속과 행동으로 이어지는지를 보세요.',practical:'변화의 타이밍과 현실적인 기회가 함께 잡히는 조합이에요. 제안, 공고, 계약, 수입원처럼 손에 잡히는 선택이 보이면 실제 조건을 확인해볼 만합니다.'}},
+ {ids:['major-1','wands-1'],priority:88,text:{relationship:'호감이나 생각을 실제 행동으로 옮기는 힘이 강한 조합이에요. 기다리기보다 대화나 제안처럼 작은 시작을 만드는 쪽이 흐름에 맞습니다.',practical:'아이디어를 실행으로 옮기기 좋은 조합이에요. 준비만 늘리기보다 지금 가능한 첫 행동 하나를 시작하는 게 중요합니다.'}},
+ {ids:['major-13','major-21'],priority:86,text:{relationship:'한 관계 방식의 종료와 완성이 겹쳐 있어요. 다시 이어가더라도 예전 모습 그대로는 어렵고, 완전히 새 관계로 갈 수 있는지가 핵심입니다.',practical:'끝낼 것과 다음 단계로 가져갈 것이 분명해지는 조합이에요. 오래 끌던 일을 정리해야 새 선택에 자리가 생깁니다.'}}
+];
+const semanticCombinationRules={
+ 'attraction|communication':{relationship:'호감이 말과 반응으로 이어질 가능성이 있어요. 설렘만 있는 배열보다 실제 대화가 열릴 여지가 더 강하지만, 한두 번의 연락보다 서로 이어가려는 반응을 확인하세요.',practical:'관심과 소통이 같이 움직여요. 제안이나 협업 기회가 있다면 말로만 두지 말고 구체적인 조건을 확인해보세요.'},
+ 'attraction|blocked':{relationship:'끌림은 있는데 부담이나 현실 조건 때문에 행동이 막히는 조합이에요. 마음이 있다는 해석과 실제로 관계를 시작할 수 있다는 해석은 나눠서 봐야 합니다.',practical:'하고 싶은 선택은 분명하지만 현실 제약이 발목을 잡고 있어요. 욕심을 줄이기보다 무엇이 실제 병목인지 하나를 특정하는 게 먼저입니다.'},
+ 'communication|distance':{relationship:'연락 가능성과 거리감이 동시에 보여요. 대화가 다시 열려도 바로 가까워진다고 보기보다, 서로의 경계와 반응을 확인하는 단계로 읽는 편이 맞습니다.',practical:'대화는 필요하지만 서로의 입장이나 조건 차이가 커 보여요. 합의 가능한 범위를 먼저 좁혀야 합니다.'},
+ 'communication|renewal':{relationship:'예전과 다른 방식의 대화가 흐름을 바꿀 수 있는 조합이에요. 같은 말을 반복하기보다 지금 상황에 맞는 새로운 접근이 중요합니다.',practical:'새 방식이나 새 제안을 말로 구체화할 때 변화가 시작될 수 있어요. 아이디어를 일정·역할·숫자로 바꿔보세요.'},
+ 'movement|conflict':{relationship:'관계는 움직일 수 있지만 동시에 부딪힐 요소도 커요. 연락이나 만남 자체보다 움직인 뒤 같은 갈등을 다시 반복하는지가 더 중요한 배열입니다.',practical:'행동력은 있는데 마찰도 큰 조합이에요. 속도를 올리기 전에 책임 범위와 기준을 맞추지 않으면 일이 더 꼬일 수 있습니다.'},
+ 'movement|waiting':{relationship:'가까워지려는 힘과 멈춰 있는 힘이 같이 있어 속도가 들쭉날쭉할 수 있어요. 한 번의 적극적인 행동 뒤 다시 조용해지는 패턴도 가능합니다.',practical:'시작하려는 힘은 있지만 결과가 바로 따라오지는 않을 수 있어요. 행동은 하되 기다리는 기간에 다음 준비를 이어가는 편이 좋습니다.'},
+ 'movement|reflection':{relationship:'생각만 하던 상태에서 실제 행동으로 넘어갈 수 있는 조합이에요. 다만 충동적으로 움직이기보다 무엇을 확인하고 싶은지 정한 뒤 행동하는 게 좋아요.',practical:'검토와 실행이 연결되는 흐름이에요. 충분히 생각했다면 작은 실험이나 지원처럼 현실 행동으로 옮겨볼 때입니다.'},
+ 'renewal|closure':{relationship:'다시 시작하려면 먼저 끝내야 할 방식이 있다는 조합이에요. 재회든 새 연애든 예전 패턴을 그대로 들고 가서는 같은 장면이 반복될 가능성이 큽니다.',practical:'새 기회를 잡기 전에 오래 끌던 방식이나 비용을 정리해야 해요. 정리 자체가 다음 흐름을 여는 행동이 됩니다.'},
+ 'healing|attraction':{relationship:'끌림은 있지만 급하게 관계를 정의하기보다 편안함과 신뢰가 먼저 자라는 조합이에요. 강한 자극보다 오래 편한 사람이 더 중요할 수 있습니다.',practical:'흥미로운 기회가 보여도 컨디션과 지속 가능성을 같이 봐야 해요. 무리해서 잡기보다 오래 이어갈 수 있는 선택이 유리합니다.'},
+ 'blocked|distance':{relationship:'지금은 마음보다 거리와 막힘이 더 강한 조합이에요. 상대를 더 밀어붙이는 것보다 왜 관계가 멈췄는지 현실적인 이유를 보는 게 먼저입니다.',practical:'조건 자체가 막혀 있고 선택지도 좁게 느껴질 수 있어요. 같은 방식으로 더 힘을 쓰기보다 환경이나 전략을 바꿀 필요가 있습니다.'},
+ 'closure|healing':{relationship:'정리와 회복이 같이 나와 있어요. 관계를 붙잡는 것보다 상처를 덜어내는 과정이 먼저일 수 있고, 그 뒤에야 다음 선택이 선명해질 가능성이 큽니다.',practical:'끝낼 일을 끝내면서 여유가 돌아오는 흐름이에요. 손실을 만회하려 애쓰기보다 부담을 줄이는 선택이 장기적으로 도움이 됩니다.'},
+ 'conflict|healing':{relationship:'상처와 회복 가능성이 함께 있어요. 갈등을 없던 일로 덮기보다 실제로 다룰 수 있을 때 관계의 온도가 달라질 수 있습니다.',practical:'문제가 분명하지만 회복 여지도 있어요. 원인을 사람 탓으로만 두지 않고 구조나 방식 하나를 바꾸면 체감이 달라질 수 있습니다.'},
+ 'decision|conflict':{relationship:'좋아하는 마음만으로 넘기기 어려운 차이가 드러나는 조합이에요. 계속 갈지보다 어떤 조건까지는 받아들일 수 있는지 결정해야 합니다.',practical:'서로 충돌하는 조건 중 무엇을 우선할지 정해야 해요. 모든 걸 동시에 만족시키려 하면 결정만 늦어질 수 있습니다.'}
+};
+function pairKey(a,b){return [a,b].sort().join('|');}
+export function combinationInsights(slug,picks){
+ if(!Array.isArray(picks)||picks.length<2||['today','yes-no'].includes(slug))return [];
+ const mode=['job','money','work','study'].includes(slug)?'practical':'relationship';
+ const items=picks.map((pick,index)=>{const card=cards.find(c=>c.id===pick.id);if(!card)throw new Error('Unknown card');return {pick,index,card,tag:(pick.reversed?card.reversedTags:card.tags)[0],position:readings[slug]?.positions[index]?.label||`${index+1}번째 카드`};});
+ const found=[];
+ for(let i=0;i<items.length;i++)for(let j=i+1;j<items.length;j++){
+  const a=items[i],b=items[j],ids=[a.card.id,b.card.id];
+  const exact=exactCombinationRules.find(rule=>rule.ids.every(id=>ids.includes(id)));
+  const semantic=semanticCombinationRules[pairKey(a.tag,b.tag)];
+  const rule=exact||semantic;
+  if(!rule)continue;
+  const text=rule.text?.[mode]||rule[mode];if(!text)continue;
+  found.push({priority:exact?.priority||60-i-j,title:`${a.card.koreanName} × ${b.card.koreanName}`,positions:`${a.position} + ${b.position}`,text:`‘${a.position}’의 ${a.card.koreanName}와 ‘${b.position}’의 ${b.card.koreanName}를 같이 보면, ${text}`});
+ }
+ found.sort((a,b)=>b.priority-a.priority);
+ const unique=[];for(const insight of found){if(unique.some(x=>x.title===insight.title||x.text===insight.text))continue;unique.push(insight);if(unique.length===2)break;}
+ return unique;
+}
 export function interpret(slug,pick,index){
  const card=cards.find(c=>c.id===pick.id),position=readings[slug]?.positions[index];
  if(!card||!position)throw new Error('Unknown card or position');
