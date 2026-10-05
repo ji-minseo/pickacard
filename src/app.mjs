@@ -47,23 +47,21 @@ function drawReadingCard(ctx,img,pick,x,y,w,h,r=16){
  ctx.restore();ctx.save();roundedRect(ctx,x,y,w,h,r);ctx.strokeStyle='#ead9d6';ctx.lineWidth=2;ctx.stroke();ctx.restore();
 }
 async function createShareImage({slug,cards:chosen}){
- const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');
+ const canvas=document.createElement('canvas');canvas.width=720;canvas.height=690;const ctx=canvas.getContext('2d');
  const heroIndex=keyCardIndex(slug,chosen),heroPick=chosen[heroIndex];
  const images=await Promise.all(chosen.map(p=>loadCanvasImage('/artwork/'+artwork[p.id]+'.webp')));
- ctx.fillStyle='#fffaf8';ctx.fillRect(0,0,1080,1350);
- ctx.strokeStyle='#f0dfdc';ctx.lineWidth=2;roundedRect(ctx,36,36,1008,1278,28);ctx.stroke();
+ ctx.fillStyle='#fffaf8';ctx.fillRect(0,0,720,690);
 
- const heroW=300,heroH=450,heroX=(1080-heroW)/2,heroY=170;
- ctx.fillStyle='#c94141';ctx.font='900 20px Inter, Pretendard, sans-serif';ctx.textAlign='center';ctx.fillText('CORE CARD',540,108);
- ctx.fillStyle='#fff1f0';roundedRect(ctx,heroX-56,heroY-48,heroW+112,heroH+96,32);ctx.fill();
- drawReadingCard(ctx,images[heroIndex],heroPick,heroX,heroY,heroW,heroH,22);
+ ctx.fillStyle='#c94141';ctx.font='900 16px Inter, Pretendard, sans-serif';ctx.textAlign='center';ctx.fillText('CORE CARD',360,30);
+ const heroW=270,heroH=405,heroX=(720-heroW)/2,heroY=52;
+ drawReadingCard(ctx,images[heroIndex],heroPick,heroX,heroY,heroW,heroH,18);
 
  const count=chosen.length;
- const gap=count>=5?18:24;
- const rowW=count>=5?142:count===4?158:count===3?176:count===2?198:220;
+ const gap=count>=5?10:count===4?12:14;
+ const rowW=count>=5?92:count===4?102:count===3?116:count===2?132:146;
  const rowH=Math.round(rowW*1.5);
- const total=rowW*count+gap*(count-1),startX=(1080-total)/2,rowY=830;
- chosen.forEach((pick,i)=>drawReadingCard(ctx,images[i],pick,startX+i*(rowW+gap),rowY,rowW,rowH,14));
+ const total=rowW*count+gap*(count-1),startX=(720-total)/2,rowY=500;
+ chosen.forEach((pick,i)=>drawReadingCard(ctx,images[i],pick,startX+i*(rowW+gap),rowY,rowW,rowH,11));
 
  return await new Promise(resolve=>canvas.toBlob(resolve,'image/png',.94));
 }
