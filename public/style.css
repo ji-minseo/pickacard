@@ -3670,3 +3670,15 @@ textarea{
     padding:13px;
   }
 }
+
+
+/* Timing basis detail. */
+.timing-basis{
+  display:block;
+  margin-top:9px;
+  padding-top:9px;
+  border-top:1px solid #f0e1df;
+  color:#8a6f6c;
+  font-size:11px;
+  line-height:1.6;
+}
