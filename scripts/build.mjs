@@ -2,7 +2,7 @@ import {createHash} from 'node:crypto';
 import {cards} from '../src/data/cards.mjs';
 import {guides} from '../src/data/guides.mjs';
 import {mkdir,writeFile,cp,rm,readFile,readdir} from 'node:fs/promises';
-import {readings,primary,secondary,disclaimer} from '../src/data/readings.mjs';
+import {readings,primary,secondary} from '../src/data/readings.mjs';
 const origin=(process.env.SITE_URL||'https://pickacard.jijiminseo.chatgpt.site').replace(/\/$/,'');
 const basePath=(process.env.BASE_PATH||'').trim().replace(/^\/+|\/+$/g,'');
 const publicBase=basePath?`/${basePath}`:'';
