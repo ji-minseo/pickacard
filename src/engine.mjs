@@ -206,6 +206,64 @@ function withHeadlineContext(slug,situation,text){
  const note=headlineContextNotes[slug]?.[situation];
  return note?text+' '+note:text;
 }
+const headlineNuance={
+ love:{
+  movement:'특히 이번 배열은 기다리기보다 실제 만남이나 행동이 생기는지가 핵심이에요.',
+  communication:'말을 주고받는 힘이 강해서, 호감보다 대화가 실제로 이어지는지를 보는 편이 맞아요.',
+  attraction:'끌림은 분명하지만 설렘과 안정적인 관계 가능성은 따로 확인할 필요가 있어요.',
+  renewal:'새 사람이나 새로운 관계 방식처럼 이전과 다른 흐름이 열리는 쪽에 힘이 실립니다.',
+  decision:'연애운 자체보다 어떤 관계를 선택할지 기준을 정하는 일이 먼저로 보여요.',
+  healing:'강한 진전보다 편안함과 회복이 먼저여서, 서두르지 않는 흐름이 오히려 자연스럽습니다.',
+  reflection:'새로운 사람보다 내 연애 패턴과 기준을 돌아보는 일이 이번 흐름을 더 크게 좌우해요.',
+  waiting:'기회가 없기보다 타이밍이 느린 쪽이라, 기다림을 어떻게 보내는지가 중요해요.',
+  distance:'호감보다 거리와 경계가 더 선명해서, 쫓아가기보다 반응을 지켜보는 편이 맞습니다.',
+  closure:'새 관계를 열기 전에 끝내지 못한 감정이나 애매한 관계를 정리하는 흐름이 먼저예요.',
+  blocked:'마음보다 현실적인 제약이 더 크게 작용하고 있어, 조건 하나를 푸는 게 우선입니다.',
+  conflict:'끌림이 있어도 원하는 관계 방식이 다를 수 있어, 호감보다 기준 충돌을 먼저 봐야 해요.'
+ },
+ reunion:{
+  movement:'특히 이번 배열은 생각보다 실제 연락이나 행동이 생기는지가 재회 흐름을 가릅니다.',
+  communication:'재회의 핵심은 감정 확인보다 다시 대화를 열 수 있는지에 더 가깝습니다.',
+  attraction:'그리움과 끌림은 남아 있지만, 그것만으로 다시 만나도 괜찮은 관계인지는 별개예요.',
+  renewal:'예전으로 돌아가는 재회보다 관계 방식을 새로 만들 수 있는지가 더 중요하게 보여요.',
+  decision:'상대나 나 중 한쪽이 관계를 다시 둘지 말지 결론을 내리는 과정이 크게 잡혀 있어요.',
+  healing:'재접촉보다 먼저 감정이 가라앉고 관계를 편하게 볼 수 있는 상태가 필요한 배열입니다.',
+  reflection:'행동보다 서로가 헤어진 이유를 다시 생각하는 시간이 길어질 수 있어요.',
+  waiting:'마음이 남아 있어도 먼저 움직이지 않는 흐름이 강해서, 속도는 느리게 보는 편이 맞습니다.',
+  distance:'현재는 가까워지는 힘보다 각자의 공간과 거리를 지키는 힘이 더 크게 보여요.',
+  closure:'재회보다 기존 관계 방식을 끝내는 주제가 강해서, 다시 만나더라도 예전과 같기는 어려워요.',
+  blocked:'재회를 막는 현실적인 문제나 두려움이 분명해서, 감정보다 그 조건이 풀리는지가 먼저예요.',
+  conflict:'다시 끌리는 힘과 같은 갈등이 반복될 위험이 같이 보여, 해결 방식이 바뀌는지가 핵심입니다.'
+ },
+ job:{
+  movement:'이번 배열은 준비를 더 쌓는 것보다 실제 지원과 실행으로 넘어가는 힘이 강합니다.',
+  communication:'서류 자체보다 면접·피드백·연락처럼 사람과 주고받는 과정이 결과를 좌우하기 쉬워요.',
+  attraction:'끌리는 회사가 보여도 브랜드보다 실제 업무와 조건을 비교하는 게 중요합니다.',
+  renewal:'기존 지원 방식보다 이력서나 포트폴리오, 지원 채널을 바꾸는 쪽에서 돌파구가 보여요.',
+  decision:'지원 수보다 어떤 직무와 조건을 선택할지 기준을 좁히는 일이 먼저예요.',
+  healing:'지원 속도를 올리기보다 컨디션을 회복해야 준비의 질이 다시 살아나는 흐름입니다.',
+  reflection:'지금은 더 많이 하기보다 최근 지원에서 반복된 약점을 찾아 수정하는 게 효과적이에요.',
+  waiting:'움직임은 이어지지만 결과가 바로 확정되기보다 기다림이 섞일 수 있는 배열입니다.',
+  distance:'목표 포지션과 현재 준비 사이 간격을 줄이는 현실적인 한 단계가 필요해요.',
+  closure:'효율이 낮은 지원 방향 하나를 정리해야 더 가능성 있는 쪽에 힘을 몰아줄 수 있어요.',
+  blocked:'현재 결과를 막는 병목이 비교적 선명해서, 지원 수보다 그 한 가지 보완이 우선입니다.',
+  conflict:'하고 싶은 일과 현실 조건이 충돌하고 있어, 우선순위를 정해야 지원 방향이 선명해집니다.'
+ }
+};
+const synthesisLeadNuance={
+ movement:'특히 실제 행동으로 이어지는 힘이 이번 배열에서 두드러져요.',
+ communication:'특히 말과 반응을 주고받는 과정이 흐름을 크게 좌우해요.',
+ attraction:'특히 끌림이 강해서, 감정의 크기와 현실적인 지속 가능성을 나눠 볼 필요가 있어요.',
+ renewal:'특히 이전과 다른 방식으로 다시 시작하는 주제가 강합니다.',
+ decision:'특히 선택을 미루기보다 기준을 정하는 일이 중요한 배열이에요.',
+ healing:'특히 빠른 진전보다 회복과 편안함을 만드는 과정이 먼저예요.',
+ reflection:'특히 행동보다 생각과 기준을 정리하는 일이 중심에 있어요.',
+ waiting:'특히 기다림과 속도 조절이 크게 잡혀 있어 서두르지 않는 편이 맞아요.',
+ distance:'특히 가까워지는 것보다 거리와 경계를 어떻게 다루는지가 중요해요.',
+ closure:'특히 기존 방식을 끝내고 정리하는 힘이 강하게 나타납니다.',
+ blocked:'특히 현실적인 부담이나 두려움이 흐름을 막는 핵심 조건으로 보여요.',
+ conflict:'특히 서로 다른 욕구나 반복되는 충돌을 어떻게 다룰지가 핵심이에요.'
+};
 export function readingHeadline(slug,picks,situation=''){
  if(!Array.isArray(picks)||!picks.length)return null;
  const supported=['love','reunion','feelings','contact','job','money','work','study'];if(!supported.includes(slug))return null;
@@ -214,10 +272,13 @@ export function readingHeadline(slug,picks,situation=''){
  const difficult=tags.filter(t=>['blocked','conflict','distance','closure'].includes(t)).length;
  const active=tags.filter(t=>['movement','communication','attraction','renewal'].includes(t)).length;
  const mostlyDifficult=difficult>=Math.ceil(tags.length/2),moving=active>=Math.ceil(tags.length/3);
- if(slug==='love')return mostlyDifficult?'지금 연애 흐름은 새로운 시작보다 관계 기준과 경계를 정리하는 쪽이 더 강합니다.':moving&&difficult===0?'연애 흐름은 꽤 열려 있습니다. 만남이나 대화가 실제로 움직일 가능성이 있는 배열이에요.':moving?'호감과 기회는 있는데, 애매한 관계나 현실 조건이 발목을 잡을 수 있어요.':'빠른 진전보다 사람을 천천히 보고 내 기준을 세우는 흐름입니다.';
+ if(slug==='love'){
+  const base=mostlyDifficult?'지금 연애 흐름은 새로운 시작보다 관계 기준과 경계를 정리하는 쪽이 더 강합니다.':moving&&difficult===0?'연애 흐름은 꽤 열려 있습니다. 만남이나 대화가 실제로 움직일 가능성이 있는 배열이에요.':moving?'호감과 기회는 있는데, 애매한 관계나 현실 조건이 발목을 잡을 수 있어요.':'빠른 진전보다 사람을 천천히 보고 내 기준을 세우는 흐름입니다.';
+  return (base+' '+(headlineNuance.love[dominant]||'')).trim();
+ }
  if(slug==='reunion'){
   const base=mostlyDifficult?'현재 흐름만 보면 재회를 밀어붙이기보다 정리와 거리두기 쪽이 더 강합니다.':moving&&difficult===0?'재회 가능성은 닫혀 있지 않습니다. 실제 대화나 재접촉으로 이어질 여지가 있는 배열이에요.':moving?'마음이나 연결의 여지는 남아 있지만, 지금 그대로 다시 만나면 같은 문제가 반복될 가능성이 큽니다.':'그리움은 남아 있어도 실제 재접촉으로 이어질 힘은 아직 약한 편입니다.';
-  return withHeadlineContext(slug,situation,base);
+  return withHeadlineContext(slug,situation,(base+' '+(headlineNuance.reunion[dominant]||'')).trim());
  }
  if(slug==='feelings'){
   const warm=tags.filter(t=>['attraction','communication','movement','healing','renewal'].includes(t)).length;
@@ -243,7 +304,10 @@ export function readingHeadline(slug,picks,situation=''){
   };
   return withHeadlineContext(slug,situation,contactHeadline[dominant]||'연락 흐름은 한 방향으로 단정하기보다 상대의 실제 반응과 현재의 거리를 함께 봐야 하는 배열입니다.');
  }
- if(slug==='job')return mostlyDifficult?'지금은 지원 수를 늘리기보다 준비의 구멍을 먼저 메우는 쪽이 유리합니다.':moving&&difficult===0?'지금은 준비만 더 하기보다 실제 지원으로 넘어가도 좋은 흐름입니다.':moving?'기회는 열려 있지만, 한 가지 보완점이 결과를 크게 좌우할 수 있어요.':'서두르기보다 방향을 정리한 뒤 지원하는 편이 유리합니다.';
+ if(slug==='job'){
+  const base=mostlyDifficult?'지금은 지원 수를 늘리기보다 준비의 구멍을 먼저 메우는 쪽이 유리합니다.':moving&&difficult===0?'지금은 준비만 더 하기보다 실제 지원으로 넘어가도 좋은 흐름입니다.':moving?'기회는 열려 있지만, 한 가지 보완점이 결과를 크게 좌우할 수 있어요.':'서두르기보다 방향을 정리한 뒤 지원하는 편이 유리합니다.';
+  return (base+' '+(headlineNuance.job[dominant]||'')).trim();
+ }
  if(slug==='money')return mostlyDifficult?'지금 금전 흐름은 늘리기보다 새는 돈을 막는 쪽이 우선입니다.':moving&&difficult===0?'돈의 흐름을 바꿀 여지는 있습니다. 다만 들어오는 돈만큼 관리 기준도 같이 세워야 해요.':moving?'들어오는 것과 나가는 것이 함께 커질 수 있어 관리가 핵심입니다.':'큰 변화보다 예산을 정리하고 지키는 쪽이 맞는 흐름입니다.';
  if(slug==='work')return mostlyDifficult?'지금 직장에서는 버티는 힘보다 구조적인 부담을 줄이는 게 먼저입니다.':moving&&difficult===0?'업무나 커리어를 실제로 움직여볼 만한 흐름입니다. 역할 변화나 이직 준비도 현실적으로 검토해볼 수 있어요.':moving?'변화의 기회는 있지만, 현재의 부담을 그대로 안고 움직이면 피로가 반복될 수 있어요.':'큰 결정보다 내가 원하는 업무 조건부터 선명하게 만드는 게 먼저입니다.';
  return mostlyDifficult?'지금은 공부량을 더 늘리기보다 집중을 깨는 원인부터 줄이는 게 우선입니다.':moving&&difficult===0?'공부 흐름은 살아 있습니다. 계획보다 실제 문제 풀이와 복습으로 밀어붙여도 좋은 때예요.':moving?'의욕은 있는데 집중을 끊는 요소가 함께 보여요. 루틴 하나만 바로잡아도 체감이 달라질 수 있어요.':'새 계획을 늘리기보다 지금 방식이 왜 안 굴러가는지 먼저 점검하는 편이 좋아요.';
@@ -464,7 +528,7 @@ export function synthesis(slug,picks){
   if(strongestIndex<0)strongestIndex=futureIndex;
   strongest=tags[strongestIndex]||strongest;
   const strongCard=cards.find(c=>c.id===picks[strongestIndex].id),futureCard=cards.find(c=>c.id===picks[futureIndex].id);
-  return ['결론부터 말하면, 카드 흐름상 상대는 '+current+'으로 읽힙니다.',futureMap[futureTag]||signalNotes[futureTag],'이렇게 읽는 가장 큰 근거는 '+strongCard.koreanName+'에서 ‘'+themes[strongest]+'’ 주제가 반복되기 때문이에요. 마지막 흐름의 '+futureCard.koreanName+'도 앞으로의 태도를 '+themes[futureTag]+' 쪽으로 보여줍니다.','즉 마음의 유무만 보기보다 지금 실제로 연락·만남·거리두기 중 어떤 행동을 하고 있는지 함께 보면 이 리딩이 더 선명해져요.'];
+  return [('결론부터 말하면, 카드 흐름상 상대는 '+current+'으로 읽힙니다. '+(synthesisLeadNuance[strongest]||'')).trim(),futureMap[futureTag]||signalNotes[futureTag],'이렇게 읽는 가장 큰 근거는 '+strongCard.koreanName+'에서 ‘'+themes[strongest]+'’ 주제가 반복되기 때문이에요. 마지막 흐름의 '+futureCard.koreanName+'도 앞으로의 태도를 '+themes[futureTag]+' 쪽으로 보여줍니다.','즉 마음의 유무만 보기보다 지금 실제로 연락·만남·거리두기 중 어떤 행동을 하고 있는지 함께 보면 이 리딩이 더 선명해져요.'];
  }
  const practical=['job','money','work','study'];
  if(practical.includes(slug)){
@@ -480,7 +544,7 @@ export function synthesis(slug,picks){
   if(supportIndex<0)supportIndex=tags.findIndex((_,i)=>i!==focusAt);
   if(supportIndex>=0)support=tags[supportIndex];
   const supportCard=supportIndex>=0?cards.find(c=>c.id===picks[supportIndex].id):null;
-  return ['결론부터 말하면, '+plainTone,'특히 ‘'+focusText+'’ 자리의 '+focusCard.koreanName+' 때문에 ‘'+themes[focusTag]+'’을 먼저 봐야 해요. '+focusCard.advice,support&&supportCard?'여기에 '+supportCard.koreanName+'의 ‘'+themes[support]+'’도 같이 잡혀 있어서, 한 가지 문제만 고치기보다 두 조건을 같이 조정하는 편이 흐름이 더 빨리 바뀔 수 있어요.':'카드 흐름이 한 방향으로 모여 있어 지금 보이는 핵심을 먼저 움직이는 게 좋아요.','지금 할 일은 이거예요 : '+generalAdvice(focusCard,focusPick.reversed)];
+  return [('결론부터 말하면, '+plainTone+' '+(synthesisLeadNuance[strongest]||'')).trim(),'특히 ‘'+focusText+'’ 자리의 '+focusCard.koreanName+' 때문에 ‘'+themes[focusTag]+'’을 먼저 봐야 해요. '+focusCard.advice,support&&supportCard?'여기에 '+supportCard.koreanName+'의 ‘'+themes[support]+'’도 같이 잡혀 있어서, 한 가지 문제만 고치기보다 두 조건을 같이 조정하는 편이 흐름이 더 빨리 바뀔 수 있어요.':'카드 흐름이 한 방향으로 모여 있어 지금 보이는 핵심을 먼저 움직이는 게 좋아요.','지금 할 일은 이거예요 : '+generalAdvice(focusCard,focusPick.reversed)];
  }
  const signals=spreadSignals(slug,picks);
  const tags=signals.positions.map(p=>p.tags[0]);
@@ -501,7 +565,7 @@ export function synthesis(slug,picks){
  strongest=tags[dominantIndex]||strongest;
  const support=signals.ranked.find(([tag])=>tag!==strongest)?.[0];
  const dominantCard=cards.find(c=>c.id===picks[dominantIndex].id),obstaclePick=picks[obstacleAt],obstacleCard=cards.find(c=>c.id===obstaclePick.id),plainTone=tone.replace('이번 배열에서는 ','');
- return ['결론부터 말하면, '+plainTone,'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’ 주제가 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’ 흐름이 보여서예요.',support?'여기에 ‘'+themes[support]+'’도 같이 잡혀 있어서, 마음이 움직이는 것과 실제 관계가 움직이는 속도가 다를 수 있어요.':bridge,'지금은 이 부분을 먼저 보세요 : '+obstacleCard.advice];
+ return [('결론부터 말하면, '+plainTone+' '+(synthesisLeadNuance[strongest]||'')).trim(),'왜 이렇게 읽었냐면 '+dominantCard.koreanName+'에서 ‘'+themes[strongest]+'’ 주제가 강하고, ‘'+focus+'’ 자리의 '+obstacleCard.koreanName+'에서는 ‘'+themes[obstacle]+'’ 흐름이 보여서예요.',support?'여기에 ‘'+themes[support]+'’도 같이 잡혀 있어서, 마음이 움직이는 것과 실제 관계가 움직이는 속도가 다를 수 있어요.':bridge,'지금은 이 부분을 먼저 보세요 : '+obstacleCard.advice];
 }
 // Future premium adapters may accept this DTO. No remote provider or API client in v0.1.
 export function readingSnapshot(slug,picks,question=''){return {version:2,locale:'ko',readingType:slug,question,selectedCards:picks.map(p=>({...p})),positions:readings[slug].positions.slice(0,picks.length).map(p=>p.label),interpretations:picks.map((p,i)=>interpret(slug,p,i)),summary:synthesis(slug,picks)};}
