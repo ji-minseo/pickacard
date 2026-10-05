@@ -3330,3 +3330,113 @@ textarea{
     line-height:1.68;
   }
 }
+
+
+/* Reading-page depth content. */
+.reading-depth{
+  width:min(900px,100%);
+  margin:34px auto 0;
+  padding:30px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:#fff;
+}
+.reading-depth-head{
+  max-width:720px;
+  margin-bottom:18px;
+}
+.reading-depth-head .section-kicker{
+  margin-bottom:7px;
+}
+.reading-depth-head h2{
+  margin:0;
+  font-size:clamp(28px,4vw,38px);
+  line-height:1.12;
+  letter-spacing:-.04em;
+}
+.reading-depth-head>p{
+  margin:10px 0 0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.7;
+}
+.reading-depth-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.reading-depth-grid article{
+  padding:17px;
+  border:1px solid #eeeeee;
+  border-radius:15px;
+  background:#fafafa;
+}
+.reading-depth-grid h3{
+  margin:0 0 8px;
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.42;
+  letter-spacing:-.025em;
+  font-weight:900;
+}
+.reading-depth-grid p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.72;
+}
+.reading-card-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  align-items:center;
+  margin-top:16px;
+  padding-top:16px;
+  border-top:1px solid var(--line);
+}
+.reading-card-links>span{
+  margin-right:3px;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:850;
+}
+.reading-card-links a{
+  display:inline-flex;
+  align-items:baseline;
+  gap:5px;
+  padding:7px 9px;
+  border:1px solid #eeeeee;
+  border-radius:999px;
+  background:#fff;
+  color:var(--ink);
+  font-size:11px;
+  font-weight:850;
+  text-decoration:none;
+}
+.reading-card-links a:hover,
+.reading-card-links a:focus-visible{
+  border-color:#ebb9b5;
+  color:#c94141;
+}
+.reading-card-links small{
+  color:var(--muted);
+  font-size:9px;
+  font-weight:650;
+}
+@media(max-width:760px){
+  .reading-depth{
+    padding:14px;
+    border-radius:16px;
+  }
+  .reading-depth-grid{
+    grid-template-columns:1fr;
+    gap:9px;
+  }
+  .reading-depth-grid article{
+    padding:13px;
+    border-radius:13px;
+  }
+  .reading-depth-head h2{
+    font-size:27px;
+  }
+}
