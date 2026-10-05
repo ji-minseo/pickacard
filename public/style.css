@@ -2109,3 +2109,38 @@ textarea{
     text-align:left;
   }
 }
+
+
+/* Mobile guide gutters — explicit side breathing room for guide index and details. */
+@media(max-width:720px){
+  main.legal.guide-page{
+    width:calc(100% - 32px);
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+    padding-left:0;
+    padding-right:0;
+  }
+  .guide-detail,
+  .guide-list{
+    width:100%;
+    max-width:100%;
+    min-width:0;
+  }
+  .guide-list>a,
+  .guide-section,
+  .guide-detail .guide-next{
+    max-width:100%;
+    min-width:0;
+  }
+  .guide-list>a>div,
+  .guide-section>div,
+  .guide-next>div{
+    min-width:0;
+  }
+}
+@media(max-width:380px){
+  main.legal.guide-page{
+    width:calc(100% - 28px);
+  }
+}
