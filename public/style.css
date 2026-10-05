@@ -4384,7 +4384,11 @@ header nav a[aria-current="page"]{
   to{opacity:1;transform:translateY(0)}
 }
 @keyframes heroContentIn{
-  from{opacity:0;transform:translateY(16px)}
+  from{opacity:0;transform:translateY(18px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes navContentIn{
+  from{opacity:0;transform:translateY(-10px)}
   to{opacity:1;transform:translateY(0)}
 }
 @keyframes detailReveal{
@@ -4396,24 +4400,37 @@ header nav a[aria-current="page"]{
   will-change:transform,opacity;
 }
 .hero-card-back{
-  animation:heroBackIn .72s cubic-bezier(.2,.72,.25,1) .08s both;
+  animation:heroBackIn 1.02s cubic-bezier(.2,.72,.25,1) .12s both;
 }
 .hero-card-sun{
-  animation:heroSunIn .78s cubic-bezier(.2,.72,.25,1) .18s both;
+  animation:heroSunIn 1.08s cubic-bezier(.2,.72,.25,1) .25s both;
 }
 .hero-card-lovers{
-  animation:heroLoversIn .82s cubic-bezier(.2,.72,.25,1) .28s both;
+  animation:heroLoversIn 1.14s cubic-bezier(.2,.72,.25,1) .38s both;
 }
 .home-intro .hero-copy .kicker,
 .home-intro .hero-copy h1,
 .home-intro .hero-copy>p,
 .home-intro .hero-copy .quiet-label{
-  animation:heroContentIn .72s cubic-bezier(.2,.72,.25,1) both;
+  animation:heroContentIn 1.02s cubic-bezier(.2,.72,.25,1) both;
 }
-.home-intro .hero-copy .kicker{animation-delay:.04s}
-.home-intro .hero-copy h1{animation-delay:.13s}
-.home-intro .hero-copy>p{animation-delay:.22s}
-.home-intro .hero-copy .quiet-label{animation-delay:.31s}
+.home-intro .hero-copy .kicker{animation-delay:.08s}
+.home-intro .hero-copy h1{animation-delay:.22s}
+.home-intro .hero-copy>p{animation-delay:.36s}
+.home-intro .hero-copy .quiet-label{animation-delay:.50s}
+
+header .brand{
+  animation:navContentIn .92s cubic-bezier(.2,.72,.25,1) .03s both;
+}
+header nav a{
+  animation:navContentIn .92s cubic-bezier(.2,.72,.25,1) both;
+}
+header nav a:nth-child(1){animation-delay:.12s}
+header nav a:nth-child(2){animation-delay:.20s}
+header nav a:nth-child(3){animation-delay:.28s}
+header nav a:nth-child(4){animation-delay:.36s}
+header nav a:nth-child(5){animation-delay:.44s}
+header nav a:nth-child(6){animation-delay:.52s}
 
 .reading-tile,
 .tile-card-thumb,
@@ -4465,8 +4482,8 @@ button:active{
 }
 
 #reading-app.results-entering>*{
-  animation:resultRise .62s cubic-bezier(.2,.72,.25,1) both;
-  animation-delay:calc(var(--result-order,0) * 70ms);
+  animation:resultRise .84s cubic-bezier(.2,.72,.25,1) both;
+  animation-delay:calc(var(--result-order,0) * 95ms);
 }
 details[open]>p{
   animation:detailReveal .2s ease both;
@@ -4502,6 +4519,8 @@ details[open]>p{
   .hero-card-back,
   .hero-card-sun,
   .hero-card-lovers,
+  header .brand,
+  header nav a,
   .home-intro .hero-copy .kicker,
   .home-intro .hero-copy h1,
   .home-intro .hero-copy>p,
@@ -4716,7 +4735,7 @@ details[open]>p{
 .scroll-reveal{
   opacity:0;
   translate:0 14px;
-  transition:opacity .76s cubic-bezier(.2,.72,.25,1),translate .76s cubic-bezier(.2,.72,.25,1);
+  transition:opacity 1.08s cubic-bezier(.2,.72,.25,1),translate 1.08s cubic-bezier(.2,.72,.25,1);
   transition-delay:var(--reveal-delay,0ms);
 }
 .scroll-reveal.is-visible{
