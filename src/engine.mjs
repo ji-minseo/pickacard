@@ -39,6 +39,20 @@ const concreteScenes={
   blocked:'자존심, 새로운 상대, 일정, 반복된 상처 같은 현실적인 걸림돌이 재접근을 막고 있을 수 있어요.',
   conflict:'연락해도 같은 싸움이나 신뢰 문제로 다시 부딪힐 가능성이 커, 감정보다 문제 해결이 먼저인 흐름이에요.'
  },
+ feelings:{
+  movement:'상대가 먼저 말을 걸거나 약속을 잡는 등 관심이 행동으로 드러나는 모습으로 나타날 수 있어요.',
+  communication:'답장이 이어지거나 질문을 되묻는 등 대화를 끊지 않으려는 태도로 나타날 수 있어요.',
+  attraction:'신경이 쓰이고 더 알고 싶은 호감은 있는 쪽에 가깝지만, 아직 관계를 확정하려는 단계까지는 아닐 수 있어요.',
+  healing:'편안함과 좋은 감정은 있지만 강하게 밀어붙이기보다 부담 없는 관계를 유지하고 싶어 할 수 있어요.',
+  decision:'마음이 없어서라기보다 이 관계를 어디까지 가져갈지 스스로 판단하는 중일 수 있어요.',
+  waiting:'생각은 있어도 먼저 행동하지 않고 상대의 반응이나 상황을 지켜보는 모습에 가까워요.',
+  reflection:'관계와 자신의 감정을 혼자 정리하는 중이라 겉으로는 반응이 적게 보일 수 있어요.',
+  distance:'현재는 가까워지려는 마음보다 자기 공간을 지키거나 거리를 두려는 태도가 더 강하게 보일 수 있어요.',
+  renewal:'예전과는 다른 방식으로 다시 보거나 관계를 새롭게 정의해보려는 생각이 생길 수 있어요.',
+  closure:'현재는 관계를 이어가기보다 마음이나 상황을 정리하려는 쪽에 더 무게가 실릴 수 있어요.',
+  blocked:'호감 여부와 별개로 부담, 자신감 부족, 현실 상황 때문에 표현이나 행동을 멈추고 있을 수 있어요.',
+  conflict:'끌림이나 관심이 있어도 불편함과 경계심이 함께 있어 태도가 왔다 갔다 할 수 있어요.'
+ },
  job:{
   movement:'이력서 수정, 지원 시작, 면접 준비처럼 멈춰 있던 취준이 실제 행동으로 넘어가는 흐름이에요.',
   communication:'면접·과제·리크루터 연락처럼 내 경험을 말로 설명하고 보여주는 과정이 중요해질 수 있어요.',
@@ -103,13 +117,21 @@ export function situationExample(slug,pick,index){
 }
 export function readingHeadline(slug,picks){
  if(!Array.isArray(picks)||!picks.length)return null;
- const supported=['love','reunion','job','money','work','study'];if(!supported.includes(slug))return null;
+ const supported=['love','reunion','feelings','job','money','work','study'];if(!supported.includes(slug))return null;
  const tags=picks.map(p=>{const card=cards.find(c=>c.id===p.id);return (p.reversed?card.reversedTags:card.tags)[0];});
  const difficult=tags.filter(t=>['blocked','conflict','distance','closure'].includes(t)).length;
  const active=tags.filter(t=>['movement','communication','attraction','renewal'].includes(t)).length;
  const mostlyDifficult=difficult>=Math.ceil(tags.length/2),moving=active>=Math.ceil(tags.length/3);
  if(slug==='love')return mostlyDifficult?'지금 연애 흐름은 새로운 시작보다 관계 기준과 경계를 정리하는 쪽이 더 강합니다.':moving&&difficult===0?'연애 흐름은 꽤 열려 있습니다. 만남이나 대화가 실제로 움직일 가능성이 있는 배열이에요.':moving?'호감과 기회는 있는데, 애매한 관계나 현실 조건이 발목을 잡을 수 있어요.':'빠른 진전보다 사람을 천천히 보고 내 기준을 세우는 흐름입니다.';
  if(slug==='reunion')return mostlyDifficult?'현재 흐름만 보면 재회를 밀어붙이기보다 정리와 거리두기 쪽이 더 강합니다.':moving&&difficult===0?'재회 가능성은 닫혀 있지 않습니다. 실제 대화나 재접촉으로 이어질 여지가 있는 배열이에요.':moving?'마음이나 연결의 여지는 남아 있지만, 지금 그대로 다시 만나면 같은 문제가 반복될 가능성이 큽니다.':'그리움은 남아 있어도 실제 재접촉으로 이어질 힘은 아직 약한 편입니다.';
+ if(slug==='feelings'){
+  const warm=tags.filter(t=>['attraction','communication','movement','healing','renewal'].includes(t)).length;
+  const guarded=tags.filter(t=>['distance','blocked','conflict','closure','waiting'].includes(t)).length;
+  if(guarded>=2&&warm===0)return '카드 흐름으로 보면 지금 상대는 호감 표현보다 거리두기와 자기 상황 정리에 더 기울어 있습니다.';
+  if(warm>=2&&guarded===0)return '카드 흐름으로 보면 호감이나 관심은 있는 편이고, 대화나 행동으로 드러날 여지도 있습니다.';
+  if(warm>=1&&guarded>=1)return '마음이나 관심은 남아 있지만, 부담이나 망설임 때문에 적극적으로 움직이기는 어려운 상태로 읽혀요.';
+  return '상대가 아예 무관심한 쪽보다는 아직 판단하고 지켜보는 쪽에 가깝습니다. 행동은 천천히 나올 수 있어요.';
+ }
  if(slug==='job')return mostlyDifficult?'지금은 지원 수를 늘리기보다 준비의 구멍을 먼저 메우는 쪽이 유리합니다.':moving&&difficult===0?'지금은 준비만 더 하기보다 실제 지원으로 넘어가도 좋은 흐름입니다.':moving?'기회는 열려 있지만, 한 가지 보완점이 결과를 크게 좌우할 수 있어요.':'서두르기보다 방향을 정리한 뒤 지원하는 편이 유리합니다.';
  if(slug==='money')return mostlyDifficult?'지금 금전 흐름은 늘리기보다 새는 돈을 막는 쪽이 우선입니다.':moving&&difficult===0?'돈의 흐름을 바꿀 여지는 있습니다. 다만 들어오는 돈만큼 관리 기준도 같이 세워야 해요.':moving?'들어오는 것과 나가는 것이 함께 커질 수 있어 관리가 핵심입니다.':'큰 변화보다 예산을 정리하고 지키는 쪽이 맞는 흐름입니다.';
  if(slug==='work')return mostlyDifficult?'지금 직장에서는 버티는 힘보다 구조적인 부담을 줄이는 게 먼저입니다.':moving&&difficult===0?'업무나 커리어를 실제로 움직여볼 만한 흐름입니다. 역할 변화나 이직 준비도 현실적으로 검토해볼 수 있어요.':moving?'변화의 기회는 있지만, 현재의 부담을 그대로 안고 움직이면 피로가 반복될 수 있어요.':'큰 결정보다 내가 원하는 업무 조건부터 선명하게 만드는 게 먼저입니다.';
@@ -289,7 +311,24 @@ const signalNotes={
  conflict:'드러난 차이를 덮기보다 어떻게 다룰지 살펴봐야 해요. 누가 옳은지보다 반복되는 상호작용에 집중해보세요.'
 };
 export function synthesis(slug,picks){
- if(slug==='yes-no'){const direction=verdict(picks);return [`이 질문은 ‘${direction}’으로 읽힙니다. 이는 카드에 부여한 상징적 방향성을 합친 결과이며, 입력한 질문의 사실관계를 분석한 답은 아닙니다.`,picks.length>1?'핵심 카드와 조건 카드가 다른 방향을 가리킨다면 결론을 밀어붙이기보다 아직 확인하지 못한 조건을 찾아보세요.':'한 장의 카드는 질문을 바라볼 한 가지 관점입니다. 마음에 와닿는 조언을 실제로 가능한 작은 행동과 연결해보세요.',[...new Set(picks.map(p=>generalAdvice(cards.find(c=>c.id===p.id),p.reversed)))].join(' '),readings[slug].summary];}
+ if(slug==='yes-no'){
+  const direction=verdict(picks),items=picks.map(p=>{const card=cards.find(c=>c.id===p.id),value=p.reversed?Math.min(0,card.yesNo):card.yesNo,tag=(p.reversed?card.reversedTags:card.tags)[0];return {card,pick:p,value,tag};});
+  const strongest=spreadSignals(slug,picks).ranked[0]?.[0],condition=themes[strongest];
+  const first=direction==='YES에 가까움'?'지금 질문에는 해보는 쪽이 더 강하게 나옵니다. 다만 ‘'+condition+'’을 무시하고 밀어붙이라는 뜻은 아니에요.':direction==='NO에 가까움'?'지금은 진행하지 않거나 한 번 더 멈춰 보는 쪽이 더 강합니다. 특히 ‘'+condition+'’이 해결되지 않은 상태에서 서두르는 건 추천하지 않아요.':'지금은 YES나 NO를 바로 정하기보다 보류하는 쪽이 맞습니다. 카드들이 한 방향으로 모이지 않아 조건을 하나 더 확인할 필요가 있어요.';
+  const cardLine=items.map(({card,value})=>card.koreanName+'는 '+(value>0?'진행 쪽':value<0?'보류·재검토 쪽':'중립·조건 확인 쪽')).join(', ');
+  const focus=items.find(x=>x.tag===strongest)||items[0];
+  return [first,'카드별 방향은 '+cardLine+'으로 읽혀요. 그래서 답 자체보다 ‘'+condition+'’이 이번 선택의 핵심 조건입니다.',generalAdvice(focus.card,focus.pick.reversed)];
+ }
+ if(slug==='feelings'){
+  const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]);
+  const warm=tags.filter(t=>['attraction','communication','movement','healing','renewal'].includes(t)).length;
+  const guarded=tags.filter(t=>['distance','blocked','conflict','closure','waiting'].includes(t)).length;
+  const current=warm>=2&&guarded===0?'호감이나 관심이 있는 쪽':warm>=1&&guarded>=1?'마음은 있지만 쉽게 행동하지 못하는 쪽':guarded>=2?'지금은 거리와 부담이 더 큰 쪽':'아직 판단하고 지켜보는 쪽';
+  const futureTag=tags[Math.min(3,tags.length-1)];
+  const futureMap={movement:'앞으로는 먼저 말을 걸거나 실제 행동으로 옮길 가능성이 있습니다.',communication:'앞으로는 대화를 이어가거나 표현이 조금 더 분명해질 수 있어요.',attraction:'호감은 이어질 수 있지만 관계를 확정하는 행동까지는 더 지켜봐야 해요.',healing:'강한 진전보다 편안하게 관계를 유지하려는 태도가 나타날 가능성이 큽니다.',renewal:'관계를 예전과 다르게 보거나 새로운 방식으로 접근할 수 있어요.',decision:'관계를 이어갈지 선을 그을지 스스로 결론을 내리려는 태도가 나올 수 있어요.',reflection:'당분간은 행동보다 혼자 생각하고 정리하는 시간이 더 길 수 있어요.',waiting:'먼저 움직이기보다 상대 반응과 상황을 지켜보는 태도가 이어질 수 있어요.',distance:'가까워지기보다 자기 공간을 지키며 거리를 유지하려는 태도가 더 강할 수 있어요.',closure:'현재 흐름이 이어지면 관계를 정리하거나 선을 분명히 하려는 쪽으로 갈 수 있어요.',blocked:'마음이 있어도 현실적인 부담 때문에 표현이나 행동이 계속 늦어질 수 있어요.',conflict:'태도가 가까워졌다 멀어졌다 하며 일관되지 않게 보일 수 있어요.'};
+  const strongest=signals.ranked[0]?.[0];
+  return ['결론부터 말하면, 카드 흐름상 상대는 '+current+'으로 읽힙니다.',futureMap[futureTag]||signalNotes[futureTag],'특히 반복되는 핵심은 ‘'+themes[strongest]+'’이에요. 상대가 실제로 보이는 행동이 이 해석과 맞는지 확인해보는 게 가장 중요합니다.'];
+ }
  const practical=['job','money','work','study'];
  if(practical.includes(slug)){
   const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]),strongest=signals.ranked[0][0];
@@ -311,7 +350,7 @@ export function synthesis(slug,picks){
  const focus={reunion:'다시 만나는 데 걸리는 조건',breakup:'갈등을 다룰 때의 핵심',love:'기대 속에서 놓치기 쉬운 부분',feelings:'확인되지 않은 채 남아 있는 주제',contact:'소통을 어렵게 하는 조건','reunion-timing':'달력보다 먼저 달라져야 할 조건','yes-no':'선택 전에 점검할 조건',today:'오늘 기억할 태도'}[slug];
  const strongest=signals.ranked[0][0],support=signals.ranked[1]?.[0];
  const combined=strongest===support||!support?signalNotes[strongest]:`${signalNotes[strongest]} 함께 나타난 ‘${themes[support]}’ 주제도 이 과정을 서두르지 않도록 돌아보게 합니다.`;
- return [`${tone} ${combined}`,`${bridge} 여기서 ‘${focus}’에 해당하는 주제는 ‘${themes[obstacle]}’입니다. ${cards.find(c=>c.id===picks[Math.min(obstacleIndex,picks.length-1)].id).advice}`,readings[slug].summary];
+ return ['결론부터 말하면, '+tone,'카드 전체에서 가장 강한 주제는 ‘'+themes[strongest]+'’이고, 특히 ‘'+focus+'’에는 ‘'+themes[obstacle]+'’이 걸려 있어요. '+cards.find(c=>c.id===picks[Math.min(obstacleIndex,picks.length-1)].id).advice,bridge+' '+combined];
 }
 // Future premium adapters may accept this DTO. No remote provider or API client in v0.1.
 export function readingSnapshot(slug,picks,question=''){return {version:2,locale:'ko',readingType:slug,question,selectedCards:picks.map(p=>({...p})),positions:readings[slug].positions.slice(0,picks.length).map(p=>p.label),interpretations:picks.map((p,i)=>interpret(slug,p,i)),summary:synthesis(slug,picks)};}
