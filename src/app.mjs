@@ -207,7 +207,14 @@ const relatedPrompts={feelings:'그 사람의 현재 마음이 궁금한가요?'
    stickyCleanup=()=>{window.removeEventListener('scroll',queueSync);window.removeEventListener('resize',queueSync);if(frame)cancelAnimationFrame(frame);};
   }
   if(!summary.length||!positions.length)return;
-  const activate=index=>summary.forEach((item,i)=>item.classList.toggle('is-active',i===index));
+  const activate=index=>{
+   summary.forEach((item,i)=>item.classList.toggle('is-active',i===index));
+   if(!shell||!shell.classList.contains('is-stuck')||shell.classList.contains('is-expanded'))return;
+   const rail=app.querySelector('.reading-session-spread.card-summary'),active=summary[index];
+   if(!rail||!active)return;
+   const target=active.offsetLeft-(rail.clientWidth-active.offsetWidth)/2;
+   rail.scrollTo({left:Math.max(0,target),behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  };
   positions.forEach(node=>{const index=Number(node.dataset.positionIndex);node.addEventListener('mouseenter',()=>activate(index));node.addEventListener('focusin',()=>activate(index));node.addEventListener('click',()=>activate(index));});
   if('IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
    resultObserver=new IntersectionObserver(entries=>{if(shell&&!shell.classList.contains('is-stuck'))return;const visible=entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];if(visible)activate(Number(visible.target.dataset.positionIndex));},{rootMargin:'-24% 0px -56% 0px',threshold:[.05,.2,.45]});
