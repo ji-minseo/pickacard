@@ -80,6 +80,18 @@ test('yes-no page avoids vague hedge copy in visible result language',async()=>{
  assert.ok(!app.includes('아래 카드의 상징과 방향을 종합한 참고 메시지입니다.'));
  assert.ok(app.includes('YES / 보류 / NO 중 하나로 정리했어요.'));
 });
+test('service hierarchy exposes cards, saved readings, branded favicon and dictionary search',async()=>{
+ const home=await readFile('dist/index.html','utf8');
+ assert.ok(home.includes('fill=\"#632b3b\"'));
+ assert.ok(home.includes('stroke=\"#e9d7ac\"'));
+ assert.ok(home.includes('href=\"/cards/\"'));
+ assert.ok(home.includes('href=\"/my-readings/\"'));
+ const cardsPage=await readFile('dist/cards/index.html','utf8');
+ assert.ok(cardsPage.includes('id=\"card-search\"'));
+ const app=await readFile('dist/src/app.mjs','utf8');
+ assert.ok(app.includes("document.querySelector('#card-search')"));
+ assert.ok(app.includes("aria-current"));
+});
 test('every SEO route has unique title, description, H1 and deep static content',async()=>{const titles=new Set(),descriptions=new Set();for(const slug of Object.keys(readings)){const html=await readFile(`dist/tarot/${slug}/index.html`,'utf8');titles.add(html.match(/<title>(.*?)<\/title>/)[1]);descriptions.add(html.match(/name="description" content="(.*?)"/)[1]);assert.equal((html.match(/<h1>/g)||[]).length,1);assert.ok(html.includes('FAQPage'));assert.ok(html.includes(readings[slug].explanation));if(readingContexts[slug])assert.ok(html.includes('name="situation"'));assert.ok(html.includes('조금 더 깊게 읽기'));for(const [heading] of readingDepth[slug])assert.ok(html.includes(heading));}assert.equal(titles.size,Object.keys(readings).length);assert.equal(descriptions.size,Object.keys(readings).length);});
 import {synthesis,readingSnapshot} from '../src/engine.mjs';
 import {artwork} from '../src/card-view.mjs';
