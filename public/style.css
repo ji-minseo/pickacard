@@ -2277,3 +2277,171 @@ textarea{
     box-shadow:0 8px 20px rgba(217,73,73,.05);
   }
 }
+
+
+/* Result rhythm + service/privacy pages — final polish. */
+/* Give result labels the same breathing room used elsewhere on the site. */
+.results-heading .step-label{
+  margin-bottom:14px;
+}
+.synthesis .step-label{
+  margin-bottom:14px;
+}
+.results-heading h2,
+.synthesis h2{
+  margin-top:0;
+}
+
+/* Related reading list: the final row should end cleanly, without an extra rule. */
+.related a:last-child{
+  border-bottom:0;
+  padding-bottom:0;
+  margin-bottom:0;
+}
+
+/* Service info / privacy pages */
+.info-legal{
+  width:min(900px,100%);
+}
+.info-page{
+  width:100%;
+  max-width:900px;
+  margin:0 auto;
+}
+.info-hero{
+  max-width:760px;
+  margin-bottom:28px;
+  padding-bottom:28px;
+  border-bottom:1px solid var(--line);
+}
+.info-hero .section-kicker{
+  margin-bottom:9px;
+}
+.info-hero h1{
+  margin:0;
+  font-size:clamp(42px,6vw,64px);
+  line-height:1.08;
+  letter-spacing:-.055em;
+  font-weight:900;
+  word-break:keep-all;
+}
+.info-hero p{
+  max-width:680px;
+  margin:15px 0 0;
+  color:var(--muted);
+  font-size:16px;
+  line-height:1.72;
+}
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.info-card{
+  display:grid;
+  grid-template-columns:50px minmax(0,1fr);
+  gap:15px;
+  align-items:start;
+  margin:0!important;
+  padding:22px;
+  border:1px solid #eeeeee;
+  border-radius:20px;
+  background:#fff;
+  box-shadow:0 8px 22px rgba(0,0,0,.03);
+}
+.info-card-icon{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  border-radius:15px;
+  background:#fff1f0;
+  font-family:Apple Color Emoji,"Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:24px;
+  line-height:1;
+}
+.info-card h2{
+  margin:1px 0 8px!important;
+  color:var(--ink);
+  font-size:19px;
+  line-height:1.35;
+  letter-spacing:-.03em;
+  font-weight:900;
+}
+.info-card p{
+  margin:0!important;
+  color:var(--muted)!important;
+  font-size:14px!important;
+  line-height:1.72;
+}
+.info-footer{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:18px;
+  margin-top:18px;
+  padding:18px 2px 0;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+  font-size:13px;
+}
+.info-footer .explainer-link{
+  margin:0;
+  flex:0 0 auto;
+}
+
+@media(max-width:650px){
+  .results-heading .step-label,
+  .synthesis .step-label{
+    margin-bottom:12px;
+  }
+  .related a:last-child{
+    padding-bottom:0;
+  }
+  .info-legal,
+  main.legal.guide-page:has(.info-page){
+    width:calc(100% - 28px);
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  .info-hero{
+    margin-bottom:20px;
+    padding-bottom:22px;
+  }
+  .info-hero h1{
+    font-size:clamp(36px,11vw,50px);
+  }
+  .info-hero p{
+    font-size:15px;
+  }
+  .info-grid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  .info-card{
+    grid-template-columns:42px minmax(0,1fr);
+    gap:12px;
+    padding:14px;
+    border-radius:16px;
+  }
+  .info-card-icon{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    font-size:21px;
+  }
+  .info-card h2{
+    font-size:17px;
+  }
+  .info-card p{
+    font-size:13px!important;
+    line-height:1.65;
+  }
+  .info-footer{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:8px;
+    padding-top:14px;
+  }
+}
