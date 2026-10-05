@@ -34,8 +34,7 @@ jobs:
 
       - name: Build for GitHub Pages
         env:
-          SITE_URL: https://ji-minseo.github.io/pickacard
-          BASE_PATH: /pickacard
+          SITE_URL: https://pickacard.everytinytool.com
         run: npm run build
 
       - name: Configure Pages
