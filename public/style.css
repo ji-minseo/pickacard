@@ -4668,7 +4668,7 @@ details[open]>p{
 }
 .about-card-pair img:first-child{
   left:5px;
-  top:1px;
+  top:-5px;
 }
 .about-card-pair .about-card-reversed{
   right:5px;
@@ -4685,7 +4685,7 @@ details[open]>p{
   }
   .about-card-pair img:first-child{
     left:4px;
-    top:1px;
+    top:-5px;
   }
   .about-card-pair .about-card-reversed{
     right:4px;
