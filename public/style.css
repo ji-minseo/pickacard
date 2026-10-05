@@ -4509,7 +4509,7 @@ details[open]>p{
 /* Interaction refinement — keep home grids still, give physical tarot cards a delicate hover. */
 .primary-grid .reading-tile:hover,
 .secondary-grid .reading-tile:hover{
-  transform:none;
+  transform:translateY(-4px);
 }
 .primary-grid .reading-tile:hover .tile-card-thumb,
 .secondary-grid .reading-tile:hover .tile-card-thumb{
