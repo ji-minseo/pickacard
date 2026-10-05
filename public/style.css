@@ -5543,3 +5543,122 @@ details[open]>p{
     margin-bottom:14px;
   }
 }
+
+
+/* Compact sticky spread v2 — text-only rail while stuck. */
+.session-card-name{
+  display:none;
+}
+.session-position{
+  min-height:25px;
+  padding-top:2px;
+  margin-bottom:5px;
+}
+.session-spread-shell.is-stuck:not(.is-expanded){
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:8px;
+  padding:5px 9px;
+  border-radius:13px;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .session-spread-head{
+  display:contents;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .session-spread-head>span{
+  grid-column:1;
+  white-space:nowrap;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .session-spread-head>strong{
+  display:none;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .session-spread-toggle{
+  grid-column:3;
+  min-height:26px;
+  padding:4px 8px;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .reading-session-spread.card-summary{
+  grid-column:2;
+  min-width:0;
+  min-height:24px;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:0;
+  margin:0;
+  padding:0;
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .reading-session-spread.card-summary::-webkit-scrollbar{
+  display:none;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .reading-session-spread .summary-item{
+  flex:0 0 auto;
+  max-width:none;
+  min-width:0;
+  display:inline-flex;
+  align-items:center;
+  padding:0;
+  border-radius:0;
+  background:transparent;
+  transform:none;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .session-position,
+.session-spread-shell.is-stuck:not(.is-expanded) .summary-item .mini-card,
+.session-spread-shell.is-stuck:not(.is-expanded) .summary-item>p{
+  display:none;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .session-card-name{
+  display:inline-flex;
+  align-items:center;
+  color:#6f6664;
+  font-size:10px;
+  font-weight:800;
+  line-height:1;
+  white-space:nowrap;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .summary-item+.summary-item .session-card-name:before{
+  content:'·';
+  margin:0 7px;
+  color:#c9b7b4;
+  font-weight:700;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .summary-item.is-active{
+  background:transparent;
+  transform:none;
+}
+.session-spread-shell.is-stuck:not(.is-expanded) .summary-item.is-active .session-card-name{
+  color:#8a3040;
+}
+
+/* Keep the modal preview at exactly three rows on every width. */
+.question-table-preview .preview-deck{
+  grid-template-columns:repeat(13,minmax(0,1fr));
+}
+
+@media(max-width:650px){
+  .session-position{
+    min-height:21px;
+    padding-top:1px;
+  }
+  .session-spread-shell.is-stuck:not(.is-expanded){
+    gap:6px;
+    padding:5px 7px;
+  }
+  .session-spread-shell.is-stuck:not(.is-expanded) .session-spread-head>span{
+    font-size:8px;
+  }
+  .session-spread-shell.is-stuck:not(.is-expanded) .session-card-name{
+    font-size:9px;
+  }
+  .session-spread-shell.is-stuck:not(.is-expanded) .summary-item+.summary-item .session-card-name:before{
+    margin:0 5px;
+  }
+  .question-table-preview .preview-deck{
+    grid-template-columns:repeat(13,minmax(0,1fr));
+    gap:3px;
+    padding:8px;
+  }
+}
