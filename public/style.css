@@ -5782,3 +5782,24 @@ details[open]>p{
     font-size:8px;
   }
 }
+
+
+/* Korean reading-flow titles wrap only between words, never between Hangul syllables. */
+.reading-intro h1,
+.panel-heading h2,
+.selection-heading h2,
+.results-heading h2,
+.spread-info h2,
+.spread-info h3,
+.result-title h3,
+.reading-answer strong,
+.reading-context-answer span,
+.insight-card strong,
+.verdict h3,
+.combination-reading h2,
+.combination-meta strong,
+.synthesis h2,
+.related h2{
+  word-break:keep-all;
+  overflow-wrap:normal;
+}
