@@ -5662,3 +5662,101 @@ details[open]>p{
     padding:8px;
   }
 }
+
+
+/* Result card scale + arrow-link consistency pass. */
+/* Inline links that end in an arrow use one quiet interaction: underline on hover/focus. */
+.about-link,
+.explainer-link,
+.saved-reading-again,
+.result-tools-foot a,
+.card-topic-grid article>a,
+.back-link,
+.text-link{
+  text-decoration:none;
+  text-decoration-thickness:1px;
+  text-underline-offset:4px;
+}
+@media(hover:hover) and (pointer:fine){
+  .about-link:hover,
+  .explainer-link:hover,
+  .saved-reading-again:hover,
+  .result-tools-foot a:hover,
+  .card-topic-grid article>a:hover,
+  .back-link:hover,
+  .text-link:hover{
+    text-decoration-line:underline;
+  }
+}
+.about-link:focus-visible,
+.explainer-link:focus-visible,
+.saved-reading-again:focus-visible,
+.result-tools-foot a:focus-visible,
+.card-topic-grid article>a:focus-visible,
+.back-link:focus-visible,
+.text-link:focus-visible{
+  text-decoration-line:underline;
+}
+
+/* Results: let the artwork lead, with quieter type inside each physical card. */
+[data-reading] .reading-session-spread .summary-item{
+  flex-basis:88px;
+  max-width:88px;
+}
+[data-reading] .reading-session-spread .summary-item .mini-card{
+  height:132px;
+  min-height:132px;
+  padding:6px 5px 7px;
+}
+[data-reading] .result-position .detail-card{
+  width:124px;
+}
+[data-reading] .result-position .detail-card .mini-card{
+  height:186px;
+  min-height:186px;
+  padding:7px 6px 8px;
+}
+[data-reading] .reading-session-spread .mini-card .artwork-holder,
+[data-reading] .result-position .detail-card .mini-card .artwork-holder{
+  height:82%;
+}
+[data-reading] .reading-session-spread .mini-card .roman,
+[data-reading] .result-position .detail-card .mini-card .roman{
+  font-size:10px;
+  line-height:1;
+}
+[data-reading] .reading-session-spread .mini-card strong,
+[data-reading] .result-position .detail-card .mini-card strong{
+  font-size:9px;
+  line-height:1.2;
+  font-weight:700;
+}
+
+@media(max-width:650px){
+  [data-reading] .reading-session-spread .summary-item{
+    flex-basis:76px;
+    max-width:76px;
+  }
+  [data-reading] .reading-session-spread .summary-item .mini-card{
+    height:114px;
+    min-height:114px;
+    padding:5px 4px 6px;
+  }
+  [data-reading] .result-position .detail-card{
+    width:96px;
+    margin-left:16px;
+  }
+  [data-reading] .result-position .detail-card .mini-card{
+    height:144px;
+    min-height:144px;
+    padding:6px 5px 7px;
+  }
+  [data-reading] .reading-session-spread .mini-card .roman,
+  [data-reading] .result-position .detail-card .mini-card .roman{
+    font-size:8px;
+  }
+  [data-reading] .reading-session-spread .mini-card strong,
+  [data-reading] .result-position .detail-card .mini-card strong{
+    font-size:8px;
+  }
+}
