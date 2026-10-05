@@ -22,3 +22,20 @@ nav a{min-height:44px;display:inline-flex;align-items:center}footer .footer-grid
 @media(hover:hover) and (pointer:fine){.card-button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 3px 6px #43222a20}}
 .card-button:active:not(:disabled){transform:translateY(-1px)}
 @media(prefers-reduced-motion:reduce){.card-button{transition:none}.card-button:hover:not(:disabled),.card-button:active:not(:disabled){transform:none}}
+
+
+/* UI polish: iPhone safe scroll, clearer selection artwork, quieter detail cards. */
+#reading-app{scroll-margin-top:max(36px,env(safe-area-inset-top,0px))}
+.card-front{padding:3px;gap:1px}
+.card-front .card-number{font-size:13px;line-height:1}
+.card-front .artwork-holder{height:78%}
+.card-front .artwork-holder img{transform:scale(1.1);transform-origin:center}
+.card-front.is-reversed .artwork-holder img{transform:rotate(180deg) scale(1.1)}
+.detail-card{width:102px}
+.detail-card .mini-card{height:153px}
+@media(max-width:520px){
+  #reading-app{scroll-margin-top:max(36px,env(safe-area-inset-top,0px))}
+  .card-front .card-number{font-size:12px}
+  .detail-card{width:80px;margin-left:16px}
+  .detail-card .mini-card{height:120px}
+}
