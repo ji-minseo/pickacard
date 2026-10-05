@@ -46,47 +46,25 @@ function drawReadingCard(ctx,img,pick,x,y,w,h,r=16){
  if(img){ctx.translate(x+w/2,y+h/2);if(pick.reversed)ctx.rotate(Math.PI);ctx.drawImage(img,-w/2,-h/2,w,h);}
  ctx.restore();ctx.save();roundedRect(ctx,x,y,w,h,r);ctx.strokeStyle='#ead9d6';ctx.lineWidth=2;ctx.stroke();ctx.restore();
 }
-async function createShareImage({slug,readingName,question,cards:chosen,headline,timing,action,conclusion}){
+async function createShareImage({slug,cards:chosen}){
  const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');
- const heroIndex=keyCardIndex(slug,chosen),heroPick=chosen[heroIndex],heroCard=cards.find(card=>card.id===heroPick.id),support=chosen.map((pick,index)=>({pick,index,card:cards.find(card=>card.id===pick.id)})).filter(item=>item.index!==heroIndex);
+ const heroIndex=keyCardIndex(slug,chosen),heroPick=chosen[heroIndex];
+ const images=await Promise.all(chosen.map(p=>loadCanvasImage('/artwork/'+artwork[p.id]+'.webp')));
  ctx.fillStyle='#fffaf8';ctx.fillRect(0,0,1080,1350);
  ctx.strokeStyle='#f0dfdc';ctx.lineWidth=2;roundedRect(ctx,36,36,1008,1278,28);ctx.stroke();
- ctx.fillStyle='#d94949';ctx.font='900 27px Inter, Pretendard, sans-serif';ctx.fillText('PICK A CARD',72,82);
- ctx.fillStyle='#111';ctx.font='900 54px Inter, Pretendard, sans-serif';ctx.fillText(readingName,72,148);
- ctx.fillStyle='#777';ctx.font='700 19px Inter, Pretendard, sans-serif';ctx.fillText('YOUR TAROT READING',72,184);
- if(question){
-  ctx.fillStyle='#fff1f0';roundedRect(ctx,72,210,936,68,18);ctx.fill();
-  ctx.fillStyle='#9b4d4d';ctx.font='700 19px Inter, Pretendard, sans-serif';
-  const q=question.length>52?question.slice(0,51)+'…':question;ctx.fillText('“'+q+'”',94,253);
- }
- const heroY=question?320:250,heroW=220,heroH=330,heroX=(1080-heroW)/2;
- ctx.fillStyle='#fff1f0';roundedRect(ctx,heroX-62,heroY-42,heroW+124,heroH+100,30);ctx.fill();
- ctx.fillStyle='#c94141';ctx.font='900 17px Inter, Pretendard, sans-serif';ctx.textAlign='center';ctx.fillText('CORE CARD',540,heroY-14);ctx.textAlign='left';
- const images=await Promise.all(chosen.map(p=>loadCanvasImage('/artwork/'+artwork[p.id]+'.webp')));
- drawReadingCard(ctx,images[heroIndex],heroPick,heroX,heroY,heroW,heroH,20);
- ctx.textAlign='center';ctx.fillStyle='#111';ctx.font='900 25px Inter, Pretendard, sans-serif';ctx.fillText(heroCard?.koreanName||'',540,heroY+heroH+35);
- ctx.fillStyle='#8b7774';ctx.font='700 15px Inter, Pretendard, sans-serif';ctx.fillText(heroPick.reversed?'역방향':'정방향',540,heroY+heroH+59);ctx.textAlign='left';
- let supportBottom=heroY+heroH+65;
- if(support.length){
-  const supportW=78,supportH=117,gap=18,total=supportW*support.length+gap*(support.length-1),sx=(1080-total)/2,sy=heroY+heroH+92;
-  support.forEach((item,i)=>drawReadingCard(ctx,images[item.index],item.pick,sx+i*(supportW+gap),sy,supportW,supportH,10));
-  supportBottom=sy+supportH;
- }
- let cursor=Math.max(supportBottom+58,790);
- ctx.fillStyle='#c94141';ctx.font='900 18px Inter, Pretendard, sans-serif';ctx.fillText('이번 리딩의 핵심',72,cursor);cursor+=42;
- ctx.fillStyle='#111';ctx.font='900 34px Inter, Pretendard, sans-serif';
- for(const line of canvasWrap(ctx,headline||conclusion||'',930).slice(0,3)){ctx.fillText(line,72,cursor);cursor+=45;}
- if(timing){
-  cursor+=16;ctx.fillStyle='#c94141';ctx.font='900 17px Inter, Pretendard, sans-serif';ctx.fillText('시기 흐름 · '+timing.label,72,cursor);
-  ctx.fillStyle='#111';ctx.font='900 25px Inter, Pretendard, sans-serif';ctx.fillText(timing.range,300,cursor);cursor+=34;
-  ctx.fillStyle='#6f6664';ctx.font='600 17px Inter, Pretendard, sans-serif';for(const line of canvasWrap(ctx,timing.text,930).slice(0,2)){ctx.fillText(line,72,cursor);cursor+=26;}
- }
- if(action&&cursor<1210){
-  cursor+=14;ctx.fillStyle='#c94141';ctx.font='900 17px Inter, Pretendard, sans-serif';ctx.fillText('지금 할 일은 이거예요 :',72,cursor);cursor+=32;
-  ctx.fillStyle='#4f4948';ctx.font='650 17px Inter, Pretendard, sans-serif';for(const line of canvasWrap(ctx,action,930).slice(0,2)){ctx.fillText(line,72,cursor);cursor+=26;}
- }
- ctx.strokeStyle='#eadfdd';ctx.beginPath();ctx.moveTo(72,1250);ctx.lineTo(1008,1250);ctx.stroke();
- ctx.fillStyle='#7b716f';ctx.font='700 18px Inter, Pretendard, sans-serif';ctx.fillText('pickacard.everytinytool.com',72,1294);
+
+ const heroW=300,heroH=450,heroX=(1080-heroW)/2,heroY=170;
+ ctx.fillStyle='#c94141';ctx.font='900 20px Inter, Pretendard, sans-serif';ctx.textAlign='center';ctx.fillText('CORE CARD',540,108);
+ ctx.fillStyle='#fff1f0';roundedRect(ctx,heroX-56,heroY-48,heroW+112,heroH+96,32);ctx.fill();
+ drawReadingCard(ctx,images[heroIndex],heroPick,heroX,heroY,heroW,heroH,22);
+
+ const count=chosen.length;
+ const gap=count>=5?18:24;
+ const rowW=count>=5?142:count===4?158:count===3?176:count===2?198:220;
+ const rowH=Math.round(rowW*1.5);
+ const total=rowW*count+gap*(count-1),startX=(1080-total)/2,rowY=830;
+ chosen.forEach((pick,i)=>drawReadingCard(ctx,images[i],pick,startX+i*(rowW+gap),rowY,rowW,rowH,14));
+
  return await new Promise(resolve=>canvas.toBlob(resolve,'image/png',.94));
 }
 async function shareReadingImage(payload,button,status){
@@ -122,7 +100,7 @@ const relatedPrompts={feelings:'그 사람의 현재 마음이 궁금한가요?'
   const record={id:String(Date.now())+'-'+slug,savedAt:new Date().toISOString(),slug,readingName:r.name,question,contextLabel:contextNote?.label||'',cards:selected.map(({id,reversed})=>({id,reversed})),headline:headline||(slug==='yes-no'?verdict(selected):summaryLines[0]),timing,action,conclusion:summaryLines[0]};
   if(saveReadingRecord(storage,record)){event.currentTarget.textContent='저장됨 ✓';event.currentTarget.disabled=true;if(toolStatus)toolStatus.textContent='이 브라우저에 최근 리딩으로 저장했어요.';}else if(toolStatus)toolStatus.textContent='이 브라우저에서는 리딩을 저장할 수 없어요.';
  });
- app.querySelector('#share-reading')?.addEventListener('click',event=>shareReadingImage({slug,readingName:r.name,question,cards:selected,headline:headline||(slug==='yes-no'?verdict(selected):summaryLines[0]),timing,action,conclusion:summaryLines[0]},event.currentTarget,toolStatus));
+ app.querySelector('#share-reading')?.addEventListener('click',event=>shareReadingImage({slug,cards:selected},event.currentTarget,toolStatus));
  focusHeading();}
  attachForm();if(slug==='today'){const saved=loadDaily(storage);if(saved){selected=[saved];showResults(true);}}
  window.addEventListener('storage',e=>{if(slug==='today'&&e.key==='pickacard:daily:v1'&&phase==='result'){const saved=loadDaily(storage);if(saved){selected=[saved];showResults(true);}}});
