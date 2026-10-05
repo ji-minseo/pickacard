@@ -4359,3 +4359,148 @@ header nav a[aria-current="page"]{
     height:102px;
   }
 }
+
+
+/* Interaction pass — cards move, interface stays quiet. */
+@keyframes heroBackIn{
+  from{opacity:0;transform:translateY(14px) rotate(-16deg)}
+  to{opacity:1;transform:translateY(0) rotate(-13deg)}
+}
+@keyframes heroSunIn{
+  from{opacity:0;transform:translateY(18px) rotate(1deg)}
+  to{opacity:1;transform:translateY(0) rotate(4deg)}
+}
+@keyframes heroLoversIn{
+  from{opacity:0;transform:translateY(16px) rotate(16deg)}
+  to{opacity:1;transform:translateY(0) rotate(13deg)}
+}
+@keyframes pickedCard{
+  0%{transform:translateY(0) scale(1)}
+  42%{transform:translateY(-7px) scale(1.018)}
+  100%{transform:translateY(0) scale(1)}
+}
+@keyframes resultRise{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes detailReveal{
+  from{opacity:0;transform:translateY(-4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+.hero-card{
+  will-change:transform,opacity;
+}
+.hero-card-back{
+  animation:heroBackIn .52s cubic-bezier(.2,.72,.25,1) .04s both;
+}
+.hero-card-sun{
+  animation:heroSunIn .56s cubic-bezier(.2,.72,.25,1) .13s both;
+}
+.hero-card-lovers{
+  animation:heroLoversIn .58s cubic-bezier(.2,.72,.25,1) .22s both;
+}
+
+.reading-tile,
+.tile-card-thumb,
+.card-library-tile,
+.card-library-thumb img,
+.button,
+button,
+summary{
+  transition-duration:.18s;
+  transition-timing-function:ease;
+}
+.tile-card-thumb{
+  transition-property:transform,box-shadow;
+}
+.card-library-thumb img{
+  transition-property:transform;
+  transform-origin:center 72%;
+}
+.button,
+button{
+  transition-property:transform,background-color,border-color,color,box-shadow;
+}
+.button:active,
+button:active{
+  transform:translateY(1px) scale(.985);
+}
+
+.card-button{
+  position:relative;
+  transition:transform .18s ease;
+}
+.card-button:not(:disabled):hover{
+  transform:translateY(-4px);
+}
+.card-button.is-selected{
+  z-index:2;
+  animation:pickedCard .48s cubic-bezier(.2,.72,.25,1);
+}
+.card-inner{
+  transition:transform .48s cubic-bezier(.2,.72,.25,1);
+}
+.progress-dots span{
+  transform:scaleX(.58);
+  transform-origin:center;
+  transition:transform .22s ease,background-color .22s ease;
+}
+.progress-dots .filled{
+  transform:scaleX(1);
+}
+
+#reading-app.results-entering>*{
+  animation:resultRise .42s cubic-bezier(.2,.72,.25,1) both;
+  animation-delay:calc(var(--result-order,0) * 45ms);
+}
+details[open]>p{
+  animation:detailReveal .2s ease both;
+}
+
+@media(hover:hover) and (pointer:fine){
+  .hero-deck:hover .hero-card-back{
+    transform:translateY(-5px) rotate(-9deg);
+  }
+  .hero-deck:hover .hero-card-sun{
+    transform:translateY(-9px) rotate(1deg);
+  }
+  .hero-deck:hover .hero-card-lovers{
+    transform:translateY(-6px) rotate(9deg);
+  }
+  .hero-card{
+    transition:transform .24s cubic-bezier(.2,.72,.25,1),box-shadow .24s ease;
+  }
+  .hero-deck:hover .hero-card{
+    box-shadow:0 22px 44px rgba(48,43,43,.13);
+  }
+  .reading-tile:hover .tile-card-thumb{
+    transform:translateY(-5px) rotate(2deg);
+    box-shadow:0 15px 26px rgba(48,43,43,.15);
+  }
+  .card-library-tile:hover .card-library-thumb img,
+  .card-library-tile:focus-visible .card-library-thumb img{
+    transform:translateY(-2px) rotate(-1.5deg) scale(1.025);
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hero-card-back,
+  .hero-card-sun,
+  .hero-card-lovers,
+  .card-button.is-selected,
+  #reading-app.results-entering>*,
+  details[open]>p{
+    animation:none!important;
+  }
+  .hero-deck:hover .hero-card-back{transform:rotate(-13deg)}
+  .hero-deck:hover .hero-card-sun{transform:rotate(4deg)}
+  .hero-deck:hover .hero-card-lovers{transform:rotate(13deg)}
+  .reading-tile:hover .tile-card-thumb{transform:rotate(7deg)}
+  .card-library-tile:hover .card-library-thumb img,
+  .card-library-tile:focus-visible .card-library-thumb img{transform:none}
+  .card-button:not(:disabled):hover,
+  .button:active,
+  button:active{transform:none}
+  .progress-dots span{transform:none}
+}
