@@ -3440,3 +3440,233 @@ textarea{
     font-size:27px;
   }
 }
+
+
+/* Saved readings + result sharing controls. */
+.result-tools-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-top:10px;
+  min-height:22px;
+}
+.result-tools-foot a{
+  color:#c94141;
+  font-size:12px;
+  font-weight:850;
+  text-decoration:none;
+}
+.result-tools-foot p{
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  text-align:right;
+}
+.saved-readings-page{
+  width:min(900px,calc(100% - 32px));
+  margin:0 auto;
+  padding:58px 0 80px;
+}
+.saved-readings-hero{
+  position:relative;
+  margin-bottom:24px;
+  padding-bottom:24px;
+  border-bottom:1px solid var(--line);
+}
+.saved-readings-hero .section-kicker{
+  margin-bottom:8px;
+}
+.saved-readings-hero h1{
+  margin:0;
+  font-size:clamp(42px,6vw,64px);
+  line-height:1.07;
+  letter-spacing:-.055em;
+  font-weight:900;
+}
+.saved-readings-hero p{
+  max-width:650px;
+  margin:12px 0 0;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.7;
+}
+.saved-clear{
+  position:absolute;
+  right:0;
+  bottom:24px;
+  border:0;
+  background:transparent;
+  color:#c94141;
+  font:850 12px Inter,Pretendard,sans-serif;
+  cursor:pointer;
+}
+.saved-reading-empty{
+  display:grid;
+  place-items:center;
+  min-height:320px;
+  padding:36px;
+  border:1px dashed #e5d7d5;
+  border-radius:20px;
+  background:#fffafa;
+  text-align:center;
+}
+.saved-reading-empty[hidden]{display:none}
+.saved-reading-empty>span{
+  font-family:Apple Color Emoji,"Segoe UI Emoji","Noto Color Emoji",sans-serif!important;
+  font-size:34px;
+}
+.saved-reading-empty h2{
+  margin:12px 0 6px;
+  font-size:24px;
+  letter-spacing:-.035em;
+}
+.saved-reading-empty p{
+  margin:0 0 18px;
+  color:var(--muted);
+  font-size:14px;
+}
+.saved-reading-list{
+  display:grid;
+  gap:12px;
+}
+.saved-reading-item{
+  padding:20px;
+  border:1px solid #eeeeee;
+  border-radius:18px;
+  background:#fff;
+}
+.saved-reading-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+}
+.saved-reading-head span{
+  display:block;
+  margin-bottom:4px;
+  color:#c94141;
+  font-size:10px;
+  font-weight:900;
+}
+.saved-reading-head h2{
+  margin:0;
+  font-size:23px;
+  line-height:1.25;
+  letter-spacing:-.035em;
+}
+.saved-delete{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  font:800 11px Inter,Pretendard,sans-serif;
+  cursor:pointer;
+}
+.saved-delete:hover{color:#c94141}
+.saved-question{
+  margin:12px 0 0;
+  color:#555;
+  font-size:13px;
+  line-height:1.6;
+}
+.saved-card-row{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  margin-top:15px;
+  padding-bottom:4px;
+  scrollbar-width:thin;
+}
+.saved-mini-card{
+  flex:0 0 70px;
+}
+.saved-mini-card .mini-card{
+  width:70px;
+  height:105px;
+  margin:0;
+}
+.saved-mini-card>span{
+  display:block;
+  margin-top:5px;
+  overflow:hidden;
+  color:var(--muted);
+  font-size:9px;
+  text-align:center;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.saved-reading-copy{
+  margin-top:16px;
+  padding:15px;
+  border-radius:14px;
+  background:#fff7f6;
+}
+.saved-reading-copy>span{
+  display:block;
+  margin-bottom:6px;
+  color:#c94141;
+  font-size:10px;
+  font-weight:900;
+}
+.saved-reading-copy>strong{
+  display:block;
+  color:var(--ink);
+  font-size:16px;
+  line-height:1.55;
+  font-weight:900;
+}
+.saved-reading-copy p{
+  margin:9px 0 0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.65;
+}
+.saved-reading-copy b{
+  color:var(--ink);
+}
+.saved-reading-again{
+  display:inline-flex;
+  margin-top:13px;
+  color:#c94141;
+  font-size:12px;
+  font-weight:850;
+  text-decoration:none;
+}
+@media(max-width:650px){
+  .result-actions{
+    gap:8px;
+  }
+  .result-tools-foot{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:5px;
+  }
+  .result-tools-foot p{
+    text-align:left;
+  }
+  .saved-readings-page{
+    width:calc(100% - 28px);
+    padding:40px 0 62px;
+  }
+  .saved-readings-hero{
+    padding-bottom:20px;
+  }
+  .saved-readings-hero h1{
+    font-size:clamp(36px,11vw,50px);
+  }
+  .saved-clear{
+    position:static;
+    margin-top:12px;
+    padding:0;
+  }
+  .saved-reading-item{
+    padding:14px;
+    border-radius:16px;
+  }
+  .saved-reading-head h2{
+    font-size:20px;
+  }
+  .saved-reading-copy{
+    padding:13px;
+  }
+}
