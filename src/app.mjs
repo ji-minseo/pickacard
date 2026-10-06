@@ -24,6 +24,19 @@ const entryRevealLockClass='entry-reveal-lock';
 const queuedEntryReveals=new Set();
 let scrollRevealObserver=null;
 const revealScrollNode=node=>{
+ const groupParent=node.parentElement;
+ const forceCascade=matchMedia('(min-width:721px)').matches&&node.matches('.guide-list>a,.home-info-grid>.home-info-card');
+ if(forceCascade&&groupParent){
+  const selector=node.matches('.guide-list>a')?'.guide-list>a':'.home-info-grid>.home-info-card';
+  const siblings=[...groupParent.children].filter(item=>item.matches(selector));
+  const siblingIndex=siblings.indexOf(node);
+  if(siblingIndex>=0){
+   const step=node.matches('.guide-list>a')?90:115;
+   window.setTimeout(()=>node.classList.add('is-visible'),siblingIndex*step);
+   scrollRevealObserver?.unobserve(node);
+   return;
+  }
+ }
  node.classList.add('is-visible');
  scrollRevealObserver?.unobserve(node);
 };
