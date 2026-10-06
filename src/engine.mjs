@@ -514,7 +514,7 @@ export function synthesis(slug,picks){
   const cardLine=items.map(({card,value})=>card.koreanName+' 카드는 '+(value>0?'진행 쪽':value<0?'보류·재검토 쪽':'중립·조건 확인 쪽')).join(', ');
   const focus=items.find(x=>x.tag===strongest)||items[0];
   const concrete=concreteScenes['yes-no']?.[focus.tag]||generalAdvice(focus.card,focus.pick.reversed);const support=items.find(x=>x!==focus&&x.value!==focus.value)||items[1];
-  return [first,'카드별로 보면 '+cardLine+'이에요. 그래서 왜 이런 답이 나왔는지가 카드마다 분명히 갈립니다.',concrete,support?'추가로 '+support.card.koreanName+' 카드가 '+(support.value>0?'진행 쪽 힘을 보태고 있어요.':support.value<0?'속도를 늦추는 쪽으로 작용해요.':'결정을 한 번 더 확인하게 만드는 카드예요.'):'지금은 첫 카드의 방향을 중심으로 읽으면 됩니다.'];
+  return [first,'카드별로 보면 '+cardLine+josa(cardLine,'copula')+'. 그래서 왜 이런 답이 나왔는지가 카드마다 분명히 갈립니다.',concrete,support?'추가로 '+support.card.koreanName+' 카드가 '+(support.value>0?'진행 쪽 힘을 보태고 있어요.':support.value<0?'속도를 늦추는 쪽으로 작용해요.':'결정을 한 번 더 확인하게 만드는 카드예요.'):'지금은 첫 카드의 방향을 중심으로 읽으면 됩니다.'];
  }
  if(slug==='feelings'){
   const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]);
