@@ -227,10 +227,16 @@ if(root){
   const dx=to.left-startLeft,dy=to.top-startTop,startScale=from.width/to.width;
   const liftScale=Math.min(Math.max(startScale*1.12,.86),1.12),turn=dx>=0?1.8:-1.8;
   const outer=flyer.animate([
-   {transform:`translate3d(0,0,0) scale(${startScale}) rotateZ(0deg)`,offset:0},
-   {transform:`translate3d(${dx*.34}px,${dy*.30-30}px,0) scale(${liftScale}) rotateZ(${turn}deg)`,offset:.34},
-   {transform:`translate3d(${dx*.76}px,${dy*.73-14}px,0) scale(${(liftScale+1)/2}) rotateZ(${turn*.35}deg)`,offset:.76},
-   {transform:`translate3d(${dx}px,${dy}px,0) scale(1) rotateZ(0deg)`,offset:1}
+   {transform:'translate3d(0,0,0)',offset:0},
+   {transform:`translate3d(${dx*.34}px,${dy*.30-30}px,0) rotateZ(${turn}deg)`,offset:.34},
+   {transform:`translate3d(${dx*.76}px,${dy*.73-14}px,0) rotateZ(${turn*.35}deg)`,offset:.76},
+   {transform:`translate3d(${dx}px,${dy}px,0) rotateZ(0deg)`,offset:1}
+  ],{duration:840,easing:'cubic-bezier(.18,.76,.22,1)',fill:'forwards'});
+  const sizing=flyer.animate([
+   {scale:String(startScale),offset:0},
+   {scale:String(liftScale),offset:.34},
+   {scale:String((liftScale+1)/2),offset:.76},
+   {scale:'1',offset:1}
   ],{duration:840,easing:'cubic-bezier(.18,.76,.22,1)',fill:'forwards'});
   const inner=flyer.querySelector('.flight-card-inner');
   inner?.animate([
@@ -239,7 +245,7 @@ if(root){
    {transform:'rotateY(180deg)',offset:.72},
    {transform:'rotateY(180deg)',offset:1}
   ],{duration:760,delay:90,easing:'cubic-bezier(.2,.68,.24,1)',fill:'forwards'});
-  outer.finished.then(()=>{flyer.remove();settle();}).catch(()=>{flyer.remove();settle();});
+  outer.finished.then(()=>{sizing.cancel();flyer.remove();settle();}).catch(()=>{sizing.cancel();flyer.remove();settle();});
  }
  function start(){if(slug==='today'){const saved=loadDaily(storage);if(saved){selected=[saved];showResults(true);return;}}deck=shuffleDeck();selected=[];drawingDate=dateKey();phase='selecting';app.innerHTML=`<div class="selection-heading"><span class="step-label">02 / PICK YOUR CARDS</span><h2>마음이 가는 카드를 골라주세요.</h2><p id="selection-status" role="status" aria-live="polite">${count}장 중 0장 선택 · ${r.positions[0].label}</p><div class="progress-dots" aria-hidden="true">${Array.from({length:count},()=>'<span></span>').join('')}</div></div><div class="tarot-table" id="tarot-table"><div class="tarot-table-surface"><div class="table-topline"><div><span>YOUR TABLE</span><strong>${r.name}</strong></div><button class="table-shuffle" id="shuffle-deck" type="button"><span aria-hidden="true">↻</span> 카드 다시 섞기</button></div><div class="spread-board spread-${count}" aria-label="${r.name} 스프레드">${r.positions.slice(0,count).map((p,i)=>`<div class="spread-slot" data-slot-index="${i}"><span class="slot-index">${String(i+1).padStart(2,'0')}</span><strong>${p.label}</strong><div class="spread-slot-card" aria-hidden="true"></div></div>`).join('')}</div><div class="deck-wrap"><div class="deck" aria-label="섞인 카드 ${deck.length}장">${deckButtonsHTML()}</div></div><div class="picked-list" aria-label="선택한 카드"></div><p class="selection-note">덱을 다시 섞어도 좋아요. 마음이 가는 카드를 고르면 위의 스프레드 자리로 이동합니다.</p></div></div>`;attachDeckButtons();attachTarotTable();app.querySelector('[data-slot-index="0"]')?.classList.add('is-next');playDeckEntrance();focusHeading();}
  function select(index){
