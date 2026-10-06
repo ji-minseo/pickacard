@@ -6408,3 +6408,137 @@ input[type="search"]:focus{
     transition:none!important;
   }
 }
+
+
+/* Subpage entrance sequences — restore the layered reveal rhythm. */
+html.motion-ready:not(.motion-loaded) [data-reading]>.back-link,
+html.motion-ready:not(.motion-loaded) .reading-intro>.kicker,
+html.motion-ready:not(.motion-loaded) .reading-intro>h1,
+html.motion-ready:not(.motion-loaded) .reading-intro>.lead,
+html.motion-ready:not(.motion-loaded) .reading-intro>p:not(.lead),
+html.motion-ready:not(.motion-loaded) .reading-intro>.reading-meta,
+html.motion-ready:not(.motion-loaded) .question-session-stage,
+html.motion-ready:not(.motion-loaded) .card-library-hero>.section-kicker,
+html.motion-ready:not(.motion-loaded) .card-library-hero>h1,
+html.motion-ready:not(.motion-loaded) .card-library-hero>p,
+html.motion-ready:not(.motion-loaded) .card-library-hero>.card-library-tools,
+html.motion-ready:not(.motion-loaded) .card-dictionary-hero>.card-dictionary-art,
+html.motion-ready:not(.motion-loaded) .card-dictionary-intro>.section-kicker,
+html.motion-ready:not(.motion-loaded) .card-dictionary-intro>h1,
+html.motion-ready:not(.motion-loaded) .card-dictionary-intro>.card-dictionary-lead,
+html.motion-ready:not(.motion-loaded) .card-dictionary-intro>.card-keyword-row,
+html.motion-ready:not(.motion-loaded) .guide-detail>.back-link,
+html.motion-ready:not(.motion-loaded) .guide-hero>.kicker,
+html.motion-ready:not(.motion-loaded) .guide-hero>h1,
+html.motion-ready:not(.motion-loaded) .guide-hero>.lead,
+html.motion-ready:not(.motion-loaded) .guide-page>.kicker,
+html.motion-ready:not(.motion-loaded) .guide-page>h1,
+html.motion-ready:not(.motion-loaded) .guide-page>.lead,
+html.motion-ready:not(.motion-loaded) .faq-page-hero>.section-kicker,
+html.motion-ready:not(.motion-loaded) .faq-page-hero>h1,
+html.motion-ready:not(.motion-loaded) .faq-page-hero>p,
+html.motion-ready:not(.motion-loaded) .info-hero>.section-kicker,
+html.motion-ready:not(.motion-loaded) .info-hero>h1,
+html.motion-ready:not(.motion-loaded) .info-hero>p,
+html.motion-ready:not(.motion-loaded) .saved-readings-hero>.section-kicker,
+html.motion-ready:not(.motion-loaded) .saved-readings-hero>h1,
+html.motion-ready:not(.motion-loaded) .saved-readings-hero>p,
+html.motion-ready:not(.motion-loaded) .saved-readings-hero>.saved-clear{
+  opacity:0;
+  transform:translateY(14px);
+}
+
+html.motion-ready.motion-loaded [data-reading]>.back-link,
+html.motion-ready.motion-loaded .reading-intro>*,
+html.motion-ready.motion-loaded .question-session-stage,
+html.motion-ready.motion-loaded .card-library-hero>*,
+html.motion-ready.motion-loaded .card-dictionary-hero>.card-dictionary-art,
+html.motion-ready.motion-loaded .card-dictionary-intro>*,
+html.motion-ready.motion-loaded .guide-detail>.back-link,
+html.motion-ready.motion-loaded .guide-hero>*,
+html.motion-ready.motion-loaded .guide-page>.kicker,
+html.motion-ready.motion-loaded .guide-page>h1,
+html.motion-ready.motion-loaded .guide-page>.lead,
+html.motion-ready.motion-loaded .faq-page-hero>*,
+html.motion-ready.motion-loaded .info-hero>*,
+html.motion-ready.motion-loaded .saved-readings-hero>*{
+  opacity:1;
+  transform:translateY(0);
+  transition:
+    opacity .82s var(--motion-ease),
+    transform .82s var(--motion-ease);
+}
+
+html.motion-ready.motion-loaded [data-reading]>.back-link,
+html.motion-ready.motion-loaded .guide-detail>.back-link{transition-delay:.04s}
+html.motion-ready.motion-loaded .reading-intro>.kicker,
+html.motion-ready.motion-loaded .card-library-hero>.section-kicker,
+html.motion-ready.motion-loaded .card-dictionary-intro>.section-kicker,
+html.motion-ready.motion-loaded .guide-hero>.kicker,
+html.motion-ready.motion-loaded .guide-page>.kicker,
+html.motion-ready.motion-loaded .faq-page-hero>.section-kicker,
+html.motion-ready.motion-loaded .info-hero>.section-kicker,
+html.motion-ready.motion-loaded .saved-readings-hero>.section-kicker{transition-delay:.10s}
+
+html.motion-ready.motion-loaded .reading-intro>h1,
+html.motion-ready.motion-loaded .card-library-hero>h1,
+html.motion-ready.motion-loaded .card-dictionary-intro>h1,
+html.motion-ready.motion-loaded .guide-hero>h1,
+html.motion-ready.motion-loaded .guide-page>h1,
+html.motion-ready.motion-loaded .faq-page-hero>h1,
+html.motion-ready.motion-loaded .info-hero>h1,
+html.motion-ready.motion-loaded .saved-readings-hero>h1{transition-delay:.19s}
+
+html.motion-ready.motion-loaded .reading-intro>.lead,
+html.motion-ready.motion-loaded .card-library-hero>p,
+html.motion-ready.motion-loaded .card-dictionary-intro>.card-dictionary-lead,
+html.motion-ready.motion-loaded .guide-hero>.lead,
+html.motion-ready.motion-loaded .guide-page>.lead,
+html.motion-ready.motion-loaded .faq-page-hero>p,
+html.motion-ready.motion-loaded .info-hero>p,
+html.motion-ready.motion-loaded .saved-readings-hero>p{transition-delay:.28s}
+
+html.motion-ready.motion-loaded .reading-intro>p:not(.lead),
+html.motion-ready.motion-loaded .card-dictionary-intro>.card-keyword-row,
+html.motion-ready.motion-loaded .card-library-hero>.card-library-tools,
+html.motion-ready.motion-loaded .saved-readings-hero>.saved-clear{transition-delay:.37s}
+
+html.motion-ready.motion-loaded .reading-intro>.reading-meta{transition-delay:.46s}
+html.motion-ready.motion-loaded .question-session-stage{transition-delay:.55s}
+html.motion-ready.motion-loaded .card-dictionary-hero>.card-dictionary-art{transition-delay:.14s}
+
+/* Scroll sections below the fold keep a visible stagger instead of arriving as one block. */
+.reading-depth-grid article.scroll-reveal,
+.card-meaning-grid article.scroll-reveal,
+.card-topic-grid article.scroll-reveal,
+.spread-info li.scroll-reveal,
+.home-info-card.scroll-reveal{
+  translate:0 12px;
+}
+.reading-depth-grid article.scroll-reveal.is-visible,
+.card-meaning-grid article.scroll-reveal.is-visible,
+.card-topic-grid article.scroll-reveal.is-visible,
+.spread-info li.scroll-reveal.is-visible,
+.home-info-card.scroll-reveal.is-visible{
+  translate:0 0;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html.motion-ready:not(.motion-loaded) [data-reading]>.back-link,
+  html.motion-ready:not(.motion-loaded) .reading-intro>*,
+  html.motion-ready:not(.motion-loaded) .question-session-stage,
+  html.motion-ready:not(.motion-loaded) .card-library-hero>*,
+  html.motion-ready:not(.motion-loaded) .card-dictionary-hero>.card-dictionary-art,
+  html.motion-ready:not(.motion-loaded) .card-dictionary-intro>*,
+  html.motion-ready:not(.motion-loaded) .guide-detail>.back-link,
+  html.motion-ready:not(.motion-loaded) .guide-hero>*,
+  html.motion-ready:not(.motion-loaded) .guide-page>.kicker,
+  html.motion-ready:not(.motion-loaded) .guide-page>h1,
+  html.motion-ready:not(.motion-loaded) .guide-page>.lead,
+  html.motion-ready:not(.motion-loaded) .faq-page-hero>*,
+  html.motion-ready:not(.motion-loaded) .info-hero>*,
+  html.motion-ready:not(.motion-loaded) .saved-readings-hero>*{
+    opacity:1!important;
+    transform:none!important;
+  }
+}
