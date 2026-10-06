@@ -6339,3 +6339,72 @@ input[type="search"]:focus{
     transform:none!important;
   }
 }
+
+
+/* Motion tuning — restore the visible stagger, speed up card hover lifts. */
+.scroll-reveal{
+  translate:0 14px;
+  transition-duration:1.08s;
+}
+
+/* Card hover should answer immediately; settling can stay soft. */
+.hero-card{
+  transition:
+    transform 190ms var(--motion-ease),
+    translate 220ms var(--motion-ease),
+    box-shadow 190ms ease;
+}
+.reading-tile{
+  transition:
+    transform 180ms var(--motion-ease),
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+.tile-card-thumb{
+  transition:
+    transform 190ms var(--motion-ease),
+    box-shadow 190ms ease;
+}
+.card-library-tile,
+.guide-list>a,
+.card-prev-next a,
+.saved-reading-item{
+  transition:
+    transform 180ms var(--motion-ease),
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    background-color 180ms ease;
+}
+.card-library-thumb img{
+  transition:transform 190ms var(--motion-ease);
+}
+
+@media(hover:hover) and (pointer:fine){
+  .reading-tile:hover,
+  .card-library-tile:hover,
+  .guide-list>a:hover,
+  .card-prev-next a:hover,
+  .saved-reading-item:hover{
+    transition-duration:180ms;
+  }
+  .primary-grid .reading-tile:hover .tile-card-thumb,
+  .secondary-grid .reading-tile:hover .tile-card-thumb,
+  .card-library-tile:hover .card-library-thumb img{
+    transition-duration:190ms;
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .scroll-reveal,
+  .hero-card,
+  .reading-tile,
+  .tile-card-thumb,
+  .card-library-tile,
+  .guide-list>a,
+  .card-prev-next a,
+  .saved-reading-item,
+  .card-library-thumb img{
+    transition:none!important;
+  }
+}
