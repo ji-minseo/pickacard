@@ -5803,3 +5803,70 @@ details[open]>p{
   word-break:keep-all;
   overflow-wrap:normal;
 }
+
+
+/* Home hero conversion path — one primary start action, one quiet daily shortcut. */
+html{scroll-behavior:smooth}
+#readings{scroll-margin-top:24px}
+.home-intro-with-art .hero-actions{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px 18px;
+  margin-top:24px;
+}
+.home-intro-with-art .hero-start{
+  width:max-content;
+  min-height:48px;
+  padding:12px 18px;
+  border-radius:12px;
+  white-space:nowrap;
+}
+.home-intro-with-art .hero-today-link{
+  display:inline-flex;
+  align-items:center;
+  min-height:44px;
+  color:var(--wine);
+  font-size:14px;
+  font-weight:800;
+  text-decoration:none;
+  text-underline-offset:4px;
+}
+@media(hover:hover) and (pointer:fine){
+  .home-intro-with-art .hero-today-link:hover{
+    text-decoration:underline;
+  }
+}
+.home-intro .hero-copy .hero-actions{
+  animation:heroContentIn 1.02s cubic-bezier(.2,.72,.25,1) .50s both;
+}
+.home-intro .hero-copy .quiet-label{
+  animation-delay:.64s;
+}
+@media(max-width:650px){
+  .home-intro-with-art .hero-actions{
+    margin-top:20px;
+    gap:8px 14px;
+  }
+  .home-intro-with-art .hero-start{
+    min-height:46px;
+    padding:11px 16px;
+    font-size:14px;
+  }
+  .home-intro-with-art .hero-today-link{
+    font-size:13px;
+  }
+  .home-intro-with-art .quiet-label{
+    margin-top:14px;
+  }
+}
+@media(max-width:380px){
+  .home-intro-with-art .hero-actions{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto!important}
+  .home-intro .hero-copy .hero-actions{animation:none!important}
+}
