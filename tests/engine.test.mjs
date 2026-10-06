@@ -4,7 +4,7 @@ test('shuffle produces unique complete deck with independent orientation',()=>{f
 test('unbiased sampling rejects overflow range',()=>{let calls=0;assert.equal(randomInt(22,{getRandomValues(a){a[0]=calls++===0?4294967295:23;}}),1);assert.equal(calls,2);});
 test('daily card survives reload, expires next day, rejects corrupt storage',()=>{let value=null;const s={getItem:()=>value,setItem:(_,v)=>value=v},c={id:'major-17',reversed:true};assert.equal(saveDaily(s,c,'2026-10-04'),true);assert.deepEqual(loadDaily(s,'2026-10-04'),c);assert.equal(loadDaily(s,'2026-10-05'),null);value='bad JSON';assert.equal(loadDaily(s),null);value=JSON.stringify({date:dateKey(),card:{id:'bad',reversed:true}});assert.equal(loadDaily(s),null);assert.equal(saveDaily(null,c),false);});
 test('the same Star card has distinct reunion feelings vs breakup turning point',()=>{assert.notEqual(interpret('reunion',{id:'major-17',reversed:false},1).context,interpret('breakup',{id:'major-17',reversed:false},3).context);});
-test('generated Korean copy chooses particles from the final Hangul syllable',()=>{
+test('generated Korean copy chooses particles from the final Hangul syllable',async()=>{
  assert.equal(josa('상실 · 애도','object'),'를');
  assert.equal(josa('끌림과 호기심','object'),'을');
  assert.equal(josa('서로에게 필요한 거리','object'),'를');
@@ -16,15 +16,14 @@ test('generated Korean copy chooses particles from the final Hangul syllable',()
  assert.equal(josa('상실','subject'),'이');
  assert.equal(josa('거리','copula'),'예요');
  assert.equal(josa('과정','copula'),'이에요');
- const vowel=cards.find(c=>c.id==='cups-4'),consonant=cards.find(c=>c.id==='cups-5');
- assert.ok(vowel.love.includes('‘권태’라는'));
- assert.ok(vowel.reunion.includes('‘권태’를'));
- assert.ok(vowel.breakup.includes('‘권태’와'));
- assert.ok(vowel.contact.includes('‘권태’가'));
- assert.ok(consonant.love.includes('‘상실’이라는'));
- assert.ok(consonant.reunion.includes('‘상실’을'));
- assert.ok(consonant.breakup.includes('‘상실’과'));
- assert.ok(consonant.contact.includes('‘상실’이'));
+ const communicationPicks=readings.job.positions.map(()=>({id:'cups-2',reversed:false}));
+ assert.ok(synthesis('job',communicationPicks)[1].includes('‘말을 주고받을 여지’를 먼저'));
+ const app=await readFile('dist/src/app.mjs','utf8'),engine=await readFile('dist/src/engine.mjs','utf8');
+ assert.ok(app.includes("josa(keywordPhrase,'object')"));
+ assert.ok(!app.includes("keywordPhrase==='상실 · 애도'"));
+ assert.ok(engine.includes("josa(themes[focusTag],'object')"));
+ assert.ok(engine.includes("josa(condition,'copula')"));
+ assert.ok(engine.includes(' 카드가 속도를 올리는 반면 '));
 });
 
 test('priority readings provide a clear headline and concrete situation example',()=>{for(const slug of ['love','reunion','job','money','work','study']){const r=readings[slug],picks=r.positions.map((_,i)=>({id:['major-19','major-1','major-7','major-3','major-10'][i%5],reversed:false}));const headline=readingHeadline(slug,picks);assert.ok(headline&&headline.length>20);for(let i=0;i<r.positions.length;i++){const example=situationExample(slug,picks[i],i);assert.ok(example&&example.length>20);}}});
