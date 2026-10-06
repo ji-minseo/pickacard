@@ -207,6 +207,16 @@ if(root){
   if(slot)slot.classList.add('is-receiving');
   if(!button||!slot||!target||reducedMotion.matches||typeof button.animate!=='function'){settle();return;}
   const from=button.getBoundingClientRect(),to=target.getBoundingClientRect();
+  const verticalDistance=Math.abs((to.top+to.height/2)-(from.top+from.height/2));
+  if(verticalDistance>window.innerHeight*.82){
+   const local=button.animate([
+    {transform:'translateY(0) scale(1)',opacity:1},
+    {transform:'translateY(-8px) scale(1.035)',opacity:1,offset:.5},
+    {transform:'translateY(-3px) scale(.98)',opacity:.32}
+   ],{duration:380,easing:'cubic-bezier(.2,.72,.25,1)',fill:'forwards'});
+   local.finished.then(settle).catch(settle);
+   return;
+  }
   const flyer=document.createElement('div');
   flyer.className='table-flying-card';
   flyer.setAttribute('aria-hidden','true');
