@@ -67,7 +67,7 @@ function prepareScrollReveal(scope=document){
     }
     revealScrollNode(entry.target);
    }
-  },{rootMargin:'0px 0px -3% 0px',threshold:.07});
+  },{rootMargin:document.querySelector('.card-library-page')?'0px 0px -3% 0px':'0px 0px -8% 0px',threshold:.07});
  }
  fresh.forEach((node,index)=>{
   node.classList.add('scroll-reveal');
