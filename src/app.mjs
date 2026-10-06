@@ -222,14 +222,15 @@ if(root){
   flyer.setAttribute('aria-hidden','true');
   flyer.innerHTML=`<span class="flight-card-inner"><span class="flight-card-back"></span><span class="flight-card-front">${cardFace(card,pick.reversed)}</span></span>`;
   document.body.appendChild(flyer);
-  Object.assign(flyer.style,{left:`${from.left}px`,top:`${from.top}px`,width:`${from.width}px`,height:`${from.height}px`});
-  const dx=(to.left+to.width/2)-(from.left+from.width/2),dy=(to.top+to.height/2)-(from.top+from.height/2);
-  const finalScale=to.width/from.width,liftScale=Math.min(Math.max(1.1,finalScale*.86),1.34),turn=dx>=0?1.8:-1.8;
+  const startLeft=from.left+(from.width-to.width)/2,startTop=from.top+(from.height-to.height)/2;
+  Object.assign(flyer.style,{left:`${startLeft}px`,top:`${startTop}px`,width:`${to.width}px`,height:`${to.height}px`});
+  const dx=to.left-startLeft,dy=to.top-startTop,startScale=from.width/to.width;
+  const liftScale=Math.min(Math.max(startScale*1.12,.86),1.12),turn=dx>=0?1.8:-1.8;
   const outer=flyer.animate([
-   {transform:'translate3d(0,0,0) scale(1) rotateZ(0deg)',offset:0},
+   {transform:`translate3d(0,0,0) scale(${startScale}) rotateZ(0deg)`,offset:0},
    {transform:`translate3d(${dx*.34}px,${dy*.30-30}px,0) scale(${liftScale}) rotateZ(${turn}deg)`,offset:.34},
-   {transform:`translate3d(${dx*.76}px,${dy*.73-14}px,0) scale(${(liftScale+finalScale)/2}) rotateZ(${turn*.35}deg)`,offset:.76},
-   {transform:`translate3d(${dx}px,${dy}px,0) scale(${finalScale}) rotateZ(0deg)`,offset:1}
+   {transform:`translate3d(${dx*.76}px,${dy*.73-14}px,0) scale(${(liftScale+1)/2}) rotateZ(${turn*.35}deg)`,offset:.76},
+   {transform:`translate3d(${dx}px,${dy}px,0) scale(1) rotateZ(0deg)`,offset:1}
   ],{duration:840,easing:'cubic-bezier(.18,.76,.22,1)',fill:'forwards'});
   const inner=flyer.querySelector('.flight-card-inner');
   inner?.animate([
