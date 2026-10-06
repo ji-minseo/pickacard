@@ -62,6 +62,28 @@ if(revealRoot){
   for(const record of records)for(const node of record.addedNodes)if(node instanceof Element)prepareScrollReveal(node);
  }).observe(revealRoot,{childList:true,subtree:true});
 }
+
+/* Quiet depth for the home deck: independent translate keeps the printed-card rotations intact. */
+const heroDeck=document.querySelector('.hero-deck');
+if(heroDeck&&matchMedia('(hover:hover) and (pointer:fine)').matches&&!reducedMotion.matches){
+ const heroCards=[...heroDeck.querySelectorAll('.hero-card')];
+ const depth=[.34,.62,.9];
+ let heroFrame=0,lastEvent=null;
+ const renderHeroDepth=()=>{
+  heroFrame=0;
+  if(!lastEvent)return;
+  const rect=heroDeck.getBoundingClientRect();
+  const x=((lastEvent.clientX-rect.left)/rect.width-.5)*7;
+  const y=((lastEvent.clientY-rect.top)/rect.height-.5)*5;
+  heroCards.forEach((card,i)=>{const d=depth[i]??.6;card.style.translate=`${(x*d).toFixed(2)}px ${(y*d).toFixed(2)}px`;});
+ };
+ heroDeck.addEventListener('pointermove',event=>{lastEvent=event;if(!heroFrame)heroFrame=requestAnimationFrame(renderHeroDepth);});
+ heroDeck.addEventListener('pointerleave',()=>{
+  lastEvent=null;
+  if(heroFrame){cancelAnimationFrame(heroFrame);heroFrame=0;}
+  heroCards.forEach(card=>{card.style.translate='0 0';});
+ });
+}
 const legacyRoman=n=>['0','I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'][n]||String(n);
 
 function canvasWrap(ctx,text,maxWidth){
@@ -78,6 +100,13 @@ function downloadReadingImage(blob){
  const url=URL.createObjectURL(blob),a=document.createElement('a');
  a.href=url;a.download='pick-a-card-reading.png';document.body.appendChild(a);a.click();a.remove();
  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function pulseSuccess(button){
+ if(!button)return;
+ button.classList.remove('is-success');
+ void button.offsetWidth;
+ button.classList.add('is-success');
+ window.setTimeout(()=>button.classList.remove('is-success'),720);
 }
 function keyCardIndex(slug,chosen){
  if(chosen.length<=1)return 0;
@@ -128,9 +157,9 @@ async function shareReadingImage(payload,button,status){
   const blob=await createShareImage(payload);if(!blob)throw new Error('image');
   if(phone&&typeof File==='function'&&navigator.share&&navigator.canShare){
    const file=new File([blob],'pick-a-card-reading.png',{type:'image/png'});
-   if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Pick a Card · '+payload.readingName});if(status)status.textContent='공유 메뉴를 열었어요.';return;}
+   if(navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'Pick a Card · '+payload.readingName});pulseSuccess(button);if(status)status.textContent='공유 메뉴를 열었어요.';return;}
   }
-  downloadReadingImage(blob);if(status)status.textContent='PNG 이미지를 저장했어요.';
+  downloadReadingImage(blob);pulseSuccess(button);if(status)status.textContent='PNG 이미지를 저장했어요.';
  }catch(error){if(error?.name!=='AbortError'&&status)status.textContent='이미지를 만들지 못했어요. 잠시 후 다시 시도해 주세요.';}
  finally{button.disabled=false;button.textContent=original;}
 }
@@ -326,7 +355,7 @@ const relatedPrompts={feelings:'그 사람의 현재 마음이 궁금한가요?'
  const toolStatus=app.querySelector('#result-tool-status');
  app.querySelector('#save-reading')?.addEventListener('click',event=>{
   const record={id:String(Date.now())+'-'+slug,savedAt:new Date().toISOString(),slug,readingName:r.name,question,contextLabel:contextNote?.label||'',cards:selected.map(({id,reversed})=>({id,reversed})),headline:headline||(slug==='yes-no'?verdict(selected):summaryLines[0]),timing,action,conclusion:summaryLines[0]};
-  if(saveReadingRecord(storage,record)){event.currentTarget.textContent='저장됨 ✓';event.currentTarget.disabled=true;if(toolStatus)toolStatus.textContent='이 브라우저에 최근 리딩으로 저장했어요.';}else if(toolStatus)toolStatus.textContent='이 브라우저에서는 리딩을 저장할 수 없어요.';
+  if(saveReadingRecord(storage,record)){event.currentTarget.textContent='저장됨 ✓';pulseSuccess(event.currentTarget);event.currentTarget.disabled=true;if(toolStatus)toolStatus.textContent='이 브라우저에 최근 리딩으로 저장했어요.';}else if(toolStatus)toolStatus.textContent='이 브라우저에서는 리딩을 저장할 수 없어요.';
  });
  app.querySelector('#share-reading')?.addEventListener('click',event=>shareReadingImage({slug,cards:selected},event.currentTarget,toolStatus));
  focusHeading();}

@@ -6062,3 +6062,280 @@ html{scroll-behavior:smooth}
     transform:none!important;
   }
 }
+
+
+/* Motion identity pass — quiet, tactile, consistent. */
+:root{
+  --motion-ease:cubic-bezier(.2,.72,.25,1);
+  --motion-fast:180ms;
+  --motion-ui:280ms;
+  --motion-settle:420ms;
+}
+
+/* The hero keeps its printed-card rotations while pointer depth moves on an independent axis. */
+.hero-card{
+  transition:
+    transform var(--motion-ui) var(--motion-ease),
+    translate var(--motion-settle) var(--motion-ease),
+    box-shadow var(--motion-ui) ease;
+}
+
+/* Navigation behaves like ink appearing under the active line, not a bouncing app tab. */
+header nav a{
+  position:relative;
+}
+header nav a::after{
+  content:'';
+  position:absolute;
+  right:0;
+  bottom:7px;
+  left:0;
+  height:1px;
+  background:currentColor;
+  transform:scaleX(0);
+  transform-origin:right center;
+  opacity:.42;
+  transition:transform var(--motion-ui) var(--motion-ease),opacity var(--motion-fast) ease;
+}
+header nav a[aria-current="page"]::after{
+  transform:scaleX(1);
+  opacity:.7;
+}
+
+/* Reading tiles share the same small lift + slower artwork response as physical cards. */
+.reading-tile{
+  transition:
+    transform var(--motion-ui) var(--motion-ease),
+    border-color var(--motion-ui) ease,
+    box-shadow var(--motion-ui) ease,
+    background-color var(--motion-ui) ease;
+}
+.tile-card-thumb{
+  transition:
+    transform var(--motion-settle) var(--motion-ease),
+    box-shadow var(--motion-ui) ease;
+}
+.tile-link{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  width:max-content;
+  max-width:100%;
+}
+.tile-link::after{
+  content:'→';
+  display:inline-block;
+  transition:transform var(--motion-ui) var(--motion-ease),opacity var(--motion-fast) ease;
+  opacity:.72;
+}
+
+/* Repeated service cards use one restrained hover vocabulary. */
+.card-library-tile,
+.guide-list>a,
+.card-prev-next a,
+.card-topic-grid article,
+.saved-reading-item{
+  transition:
+    transform var(--motion-ui) var(--motion-ease),
+    border-color var(--motion-ui) ease,
+    box-shadow var(--motion-ui) ease,
+    background-color var(--motion-ui) ease;
+}
+.card-library-thumb img{
+  transition:transform var(--motion-settle) var(--motion-ease);
+}
+.saved-reading-again,
+.about-link,
+.explainer-link,
+.result-tools-foot a,
+.card-topic-grid article>a,
+.back-link,
+.text-link,
+.home-intro-with-art .hero-today-link{
+  transition:
+    color var(--motion-fast) ease,
+    text-decoration-color var(--motion-fast) ease,
+    opacity var(--motion-fast) ease,
+    translate var(--motion-ui) var(--motion-ease);
+}
+
+/* FAQ disclosure feels hinged rather than instant. */
+.faq-list summary::after,
+details summary::after{
+  transition:transform var(--motion-ui) var(--motion-ease),color var(--motion-fast) ease;
+  transform-origin:center;
+}
+.faq-list details[open] summary::after{
+  transform:translateY(-50%) rotate(180deg);
+}
+details[open]>p{
+  animation:detailReveal .28s var(--motion-ease) both;
+}
+
+/* Form feedback stays tactile but visually quiet. */
+textarea,
+input[type="search"],
+.count-options label span,
+.situation-options label span{
+  transition:
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    box-shadow var(--motion-ui) ease,
+    transform var(--motion-fast) var(--motion-ease);
+}
+textarea:focus,
+input[type="search"]:focus{
+  box-shadow:0 0 0 4px rgba(201,65,65,.055);
+}
+
+/* A successful save/share gets one soft confirmation pulse, then returns to rest. */
+.button.is-success{
+  animation:softSuccess .62s var(--motion-ease) both;
+}
+@keyframes softSuccess{
+  0%{transform:translateY(0) scale(1);box-shadow:0 0 0 rgba(201,65,65,0)}
+  45%{transform:translateY(-1px) scale(1.012);box-shadow:0 8px 20px rgba(201,65,65,.08)}
+  100%{transform:translateY(0) scale(1);box-shadow:0 0 0 rgba(201,65,65,0)}
+}
+
+/* Result cards acknowledge attention without making the reading itself move around. */
+.result-position[data-position-index]{
+  transition:
+    border-color var(--motion-ui) ease,
+    box-shadow var(--motion-ui) ease,
+    background-color var(--motion-ui) ease;
+}
+.session-spread-toggle{
+  transition:
+    transform var(--motion-fast) var(--motion-ease),
+    border-color var(--motion-fast) ease,
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+}
+
+/* Existing reveal system, just a little shorter and closer to the surface. */
+.scroll-reveal{
+  translate:0 10px;
+  transition-duration:.92s;
+}
+
+/* Step lists finish after their parent panel arrives, creating a quiet reading rhythm. */
+.how.scroll-reveal ol li{
+  opacity:0;
+  transform:translateY(6px);
+  transition:opacity .62s var(--motion-ease),transform .62s var(--motion-ease);
+}
+.how.scroll-reveal.is-visible ol li{
+  opacity:1;
+  transform:translateY(0);
+}
+.how.scroll-reveal.is-visible ol li:nth-child(1){transition-delay:.08s}
+.how.scroll-reveal.is-visible ol li:nth-child(2){transition-delay:.15s}
+.how.scroll-reveal.is-visible ol li:nth-child(3){transition-delay:.22s}
+
+@media(hover:hover) and (pointer:fine){
+  header nav a:hover::after{
+    transform:scaleX(1);
+    transform-origin:left center;
+    opacity:.62;
+  }
+
+  .reading-tile:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 28px rgba(48,43,43,.055);
+  }
+  .primary-grid .reading-tile:hover .tile-card-thumb,
+  .secondary-grid .reading-tile:hover .tile-card-thumb{
+    transform:translateY(-4px) rotate(6deg) scale(1.006);
+    box-shadow:0 14px 28px rgba(48,43,43,.13);
+  }
+  .reading-tile:hover .tile-link::after{
+    transform:translateX(3px);
+    opacity:1;
+  }
+
+  .card-library-tile:hover,
+  .guide-list>a:hover,
+  .card-prev-next a:hover,
+  .saved-reading-item:hover{
+    transform:translateY(-2px);
+  }
+  .card-library-tile:hover .card-library-thumb img{
+    transform:translateY(-1px) rotate(-.7deg) scale(1.018);
+  }
+  .card-topic-grid article:hover{
+    transform:translateY(-1px);
+    border-color:#ecd0cd;
+    box-shadow:0 8px 20px rgba(48,43,43,.035);
+  }
+
+  .saved-reading-again:hover,
+  .about-link:hover,
+  .explainer-link:hover,
+  .result-tools-foot a:hover,
+  .card-topic-grid article>a:hover,
+  .back-link:hover,
+  .text-link:hover,
+  .home-intro-with-art .hero-today-link:hover{
+    translate:2px 0;
+  }
+
+  .faq-list summary:hover::after{
+    color:#8a3040;
+  }
+  .session-spread-toggle:not(:disabled):hover{
+    transform:translateY(-1px);
+  }
+  .result-position[data-position-index]:hover{
+    border-color:#edd8d5;
+    box-shadow:0 8px 22px rgba(48,43,43,.028);
+  }
+}
+
+@media(hover:none){
+  .reading-tile:active,
+  .card-library-tile:active,
+  .guide-list>a:active,
+  .card-prev-next a:active{
+    transform:scale(.992);
+  }
+}
+
+@media(prefers-reduced-motion:reduce){
+  .hero-card,
+  header nav a::after,
+  .reading-tile,
+  .tile-card-thumb,
+  .tile-link::after,
+  .card-library-tile,
+  .guide-list>a,
+  .card-prev-next a,
+  .card-topic-grid article,
+  .saved-reading-item,
+  .saved-reading-again,
+  .about-link,
+  .explainer-link,
+  .result-tools-foot a,
+  .card-topic-grid article>a,
+  .back-link,
+  .text-link,
+  .home-intro-with-art .hero-today-link,
+  .faq-list summary::after,
+  details summary::after,
+  textarea,
+  input[type="search"],
+  .count-options label span,
+  .situation-options label span,
+  .result-position[data-position-index],
+  .session-spread-toggle{
+    transition:none!important;
+    translate:none!important;
+  }
+  .button.is-success,
+  .how.scroll-reveal ol li{
+    animation:none!important;
+    transition:none!important;
+    opacity:1!important;
+    transform:none!important;
+  }
+}
