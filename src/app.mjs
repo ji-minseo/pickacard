@@ -54,11 +54,12 @@ function prepareScrollReveal(scope=document){
   node.classList.add('scroll-reveal');
   let delay=Math.min(index%4,3)*55;
   const parent=node.parentElement;
-  if(parent&&node.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card,.card-prev-next a,.related a')){
-   const siblings=[...parent.children].filter(item=>item.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card,.card-prev-next a,.related a'));
+  if(parent&&node.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.guide-article>section,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card,.card-prev-next a,.related a')){
+   const siblings=[...parent.children].filter(item=>item.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.guide-article>section,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card,.card-prev-next a,.related a'));
    const siblingIndex=siblings.indexOf(node);
    if(siblingIndex>=0){
-    if(node.matches('.guide-list>a'))delay=280+Math.min(siblingIndex,9)*95;
+    if(node.matches('.guide-list>a'))delay=120+Math.min(siblingIndex,9)*90;
+    else if(node.matches('.guide-article>section'))delay=80+Math.min(siblingIndex,9)*95;
     else if(node.matches('.card-library-tile'))delay=Math.min(siblingIndex,9)*70;
     else if(node.matches('.faq-list>details'))delay=110+Math.min(siblingIndex,9)*85;
     else if(node.matches('.related a,.card-prev-next a'))delay=90+Math.min(siblingIndex,5)*90;

@@ -6678,3 +6678,39 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
     translate:none!important;
   }
 }
+
+
+/* First-paint reveal fix + tarot-guide cascade. */
+/* While the entry sequence is locked, newly assigned scroll-reveal classes must hide
+   instantly. Otherwise the normal 1.08s transition visibly fades content OUT first. */
+html.motion-ready.entry-reveal-lock .scroll-reveal,
+html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
+  opacity:0!important;
+  translate:0 14px!important;
+  transition:none!important;
+}
+
+/* Tarot guide index + guide article sections use the same chwararak rhythm as card grids. */
+.guide-list>a.scroll-reveal,
+.guide-article>section.scroll-reveal{
+  opacity:0;
+  translate:0 14px;
+}
+.guide-list>a.scroll-reveal.is-visible,
+.guide-article>section.scroll-reveal.is-visible{
+  opacity:1;
+  translate:0 0;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html.motion-ready.entry-reveal-lock .scroll-reveal,
+  html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible,
+  .guide-list>a.scroll-reveal,
+  .guide-list>a.scroll-reveal.is-visible,
+  .guide-article>section.scroll-reveal,
+  .guide-article>section.scroll-reveal.is-visible{
+    opacity:1!important;
+    translate:none!important;
+    transition:none!important;
+  }
+}
