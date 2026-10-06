@@ -142,9 +142,23 @@ if(root){
  function focusHeading(){const heading=app.querySelector('h2');if(heading){heading.tabIndex=-1;heading.classList.add('result-focus');heading.focus({preventScroll:true});app.scrollIntoView?.({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});}}
  function attachForm(){app.querySelector('form').addEventListener('submit',e=>{e.preventDefault();const data=new FormData(e.currentTarget);question=app.querySelector('#question')?.value.trim()||'';situation=String(data.get('situation')||'');if(slug==='yes-no'&&!question){app.querySelector('#form-error').textContent='질문을 먼저 입력해 주세요.';app.querySelector('#question').focus();return;}count=slug==='yes-no'?Number(data.get('count')):r.positions.length;const stage=app.querySelector('.question-session-stage'),submit=e.currentTarget.querySelector('button[type="submit"]');if(stage&&!matchMedia('(prefers-reduced-motion: reduce)').matches){if(submit)submit.disabled=true;stage.classList.add('is-opening');window.setTimeout(start,620);}else start();});}
  function deckButtonsHTML(){return deck.map((_,i)=>`<button class="card-button" type="button" data-index="${i}" aria-label="${i+1}번째 카드 선택" aria-pressed="false"><span class="card-inner"><span class="card-back" aria-hidden="true"></span><span class="card-front" aria-hidden="true"></span></span></button>`).join('');}
- function attachDeckButtons(){app.querySelectorAll('.card-button').forEach(b=>b.addEventListener('click',()=>select(Number(b.dataset.index))));}
+ function attachDeckButtons(){
+  const buttons=[...app.querySelectorAll('.card-button')];
+  buttons.forEach((b,i)=>{
+   b.style.setProperty('--deal-delay',`${Math.min(i,28)*9}ms`);
+   b.style.setProperty('--card-tilt',`${((((i*5)%9)-4)*.12).toFixed(2)}deg`);
+   b.addEventListener('click',()=>select(Number(b.dataset.index)));
+  });
+ }
+ function playDeckEntrance(){
+  const table=app.querySelector('#tarot-table');
+  if(!table)return;
+  table.classList.remove('is-ready');
+  if(reducedMotion.matches){table.classList.add('is-ready');return;}
+  requestAnimationFrame(()=>requestAnimationFrame(()=>table.classList.add('is-ready')));
+ }
  function attachTarotTable(){
-  const table=app.querySelector('#tarot-table'),surface=table?.querySelector('.tarot-table-surface'),shuffle=app.querySelector('#shuffle-deck');
+  const table=app.querySelector('#tarot-table'),surface=table?.querySelector('.tarot-table-surface'),shuffle=app.querySelector('#shuffle-deck'),deckEl=app.querySelector('.deck');
   if(table&&surface&&matchMedia('(hover:hover) and (pointer:fine)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
    table.addEventListener('pointermove',event=>{
     const rect=table.getBoundingClientRect(),x=(event.clientX-rect.left)/rect.width-.5,y=(event.clientY-rect.top)/rect.height-.5;
@@ -153,9 +167,24 @@ if(root){
    });
    table.addEventListener('pointerleave',()=>{surface.style.setProperty('--table-ry','0deg');surface.style.setProperty('--table-rx','0deg');});
   }
+  if(deckEl&&matchMedia('(hover:hover) and (pointer:fine)').matches&&!reducedMotion.matches){
+   deckEl.addEventListener('pointermove',event=>{
+    const card=event.target.closest('.card-button:not(:disabled)');
+    if(!card||!deckEl.contains(card))return;
+    const rect=card.getBoundingClientRect(),px=(event.clientX-rect.left)/rect.width-.5,py=(event.clientY-rect.top)/rect.height-.5;
+    card.style.setProperty('--hover-rx',`${(-py*4.2).toFixed(2)}deg`);
+    card.style.setProperty('--hover-ry',`${(px*5.4).toFixed(2)}deg`);
+   });
+   deckEl.addEventListener('pointerout',event=>{
+    const card=event.target.closest('.card-button');
+    if(!card||card.contains(event.relatedTarget))return;
+    card.style.setProperty('--hover-rx','0deg');
+    card.style.setProperty('--hover-ry','0deg');
+   });
+  }
   shuffle?.addEventListener('click',()=>{
    if(selected.length||phase!=='selecting')return;
-   const deckEl=app.querySelector('.deck');if(!deckEl)return;
+   if(!deckEl)return;
    shuffle.disabled=true;deckEl.classList.add('is-shuffling');
    window.setTimeout(()=>{
     deck=shuffleDeck();deckEl.innerHTML=deckButtonsHTML();deckEl.classList.remove('is-shuffling');shuffle.disabled=false;attachDeckButtons();
@@ -169,20 +198,73 @@ if(root){
    if(!slot||!target)return;
    target.innerHTML=cardFace(card,pick.reversed);
    target.setAttribute('aria-hidden','false');
+   slot.classList.remove('is-receiving');
    slot.classList.add('is-filled');
+   button?.classList.remove('is-launching');
    button?.classList.add('is-drawn');
+   if(selected.length===count)app.querySelector('.spread-board')?.classList.add('is-complete');
   };
-  if(!button||!slot||!target||matchMedia('(prefers-reduced-motion: reduce)').matches||typeof button.animate!=='function'){settle();return;}
+  if(slot)slot.classList.add('is-receiving');
+  if(!button||!slot||!target||reducedMotion.matches||typeof button.animate!=='function'){settle();return;}
   const from=button.getBoundingClientRect(),to=target.getBoundingClientRect();
-  const flyer=document.createElement('div');flyer.className='table-flying-card';flyer.innerHTML=cardFace(card,pick.reversed);document.body.appendChild(flyer);
-  const startLeft=from.left+(from.width-to.width)/2,startTop=from.top+(from.height-to.height)/2;
-  Object.assign(flyer.style,{left:`${startLeft}px`,top:`${startTop}px`,width:`${to.width}px`,height:`${to.height}px`});
-  const dx=to.left-startLeft,dy=to.top-startTop;
-  const motion=flyer.animate([{transform:'translate3d(0,0,0)',opacity:.98},{transform:`translate3d(${dx}px,${dy}px,0)`,opacity:1}],{duration:720,easing:'cubic-bezier(.2,.72,.25,1)',fill:'forwards'});
-  motion.finished.then(()=>{flyer.remove();settle();}).catch(()=>{flyer.remove();settle();});
+  const verticalDistance=Math.abs((to.top+to.height/2)-(from.top+from.height/2));
+  if(verticalDistance>window.innerHeight*.82){
+   const local=button.animate([
+    {transform:'translateY(0) scale(1)',opacity:1},
+    {transform:'translateY(-8px) scale(1.035)',opacity:1,offset:.5},
+    {transform:'translateY(-3px) scale(.98)',opacity:.32}
+   ],{duration:380,easing:'cubic-bezier(.2,.72,.25,1)',fill:'forwards'});
+   local.finished.then(()=>{local.cancel();settle();}).catch(()=>{local.cancel();settle();});
+   return;
+  }
+  const flyer=document.createElement('div');
+  flyer.className='table-flying-card';
+  flyer.setAttribute('aria-hidden','true');
+  flyer.innerHTML=`<span class="flight-card-inner"><span class="flight-card-back"></span><span class="flight-card-front">${cardFace(card,pick.reversed)}</span></span>`;
+  document.body.appendChild(flyer);
+  Object.assign(flyer.style,{left:`${from.left}px`,top:`${from.top}px`,width:`${from.width}px`,height:`${from.height}px`});
+  const dx=(to.left+to.width/2)-(from.left+from.width/2),dy=(to.top+to.height/2)-(from.top+from.height/2);
+  const finalScale=to.width/from.width,liftScale=Math.min(Math.max(1.1,finalScale*.86),1.34),turn=dx>=0?1.8:-1.8;
+  const outer=flyer.animate([
+   {transform:'translate3d(0,0,0) scale(1) rotateZ(0deg)',offset:0},
+   {transform:`translate3d(${dx*.34}px,${dy*.30-30}px,0) scale(${liftScale}) rotateZ(${turn}deg)`,offset:.34},
+   {transform:`translate3d(${dx*.76}px,${dy*.73-14}px,0) scale(${(liftScale+finalScale)/2}) rotateZ(${turn*.35}deg)`,offset:.76},
+   {transform:`translate3d(${dx}px,${dy}px,0) scale(${finalScale}) rotateZ(0deg)`,offset:1}
+  ],{duration:840,easing:'cubic-bezier(.18,.76,.22,1)',fill:'forwards'});
+  const inner=flyer.querySelector('.flight-card-inner');
+  inner?.animate([
+   {transform:'rotateY(0deg)',offset:0},
+   {transform:'rotateY(0deg)',offset:.26},
+   {transform:'rotateY(180deg)',offset:.72},
+   {transform:'rotateY(180deg)',offset:1}
+  ],{duration:760,delay:90,easing:'cubic-bezier(.2,.68,.24,1)',fill:'forwards'});
+  outer.finished.then(()=>{flyer.remove();settle();}).catch(()=>{flyer.remove();settle();});
  }
- function start(){if(slug==='today'){const saved=loadDaily(storage);if(saved){selected=[saved];showResults(true);return;}}deck=shuffleDeck();selected=[];drawingDate=dateKey();phase='selecting';app.innerHTML=`<div class="selection-heading"><span class="step-label">02 / PICK YOUR CARDS</span><h2>마음이 가는 카드를 골라주세요.</h2><p id="selection-status" role="status" aria-live="polite">${count}장 중 0장 선택 · ${r.positions[0].label}</p><div class="progress-dots" aria-hidden="true">${Array.from({length:count},()=>'<span></span>').join('')}</div></div><div class="tarot-table" id="tarot-table"><div class="tarot-table-surface"><div class="table-topline"><div><span>YOUR TABLE</span><strong>${r.name}</strong></div><button class="table-shuffle" id="shuffle-deck" type="button"><span aria-hidden="true">↻</span> 카드 다시 섞기</button></div><div class="spread-board spread-${count}" aria-label="${r.name} 스프레드">${r.positions.slice(0,count).map((p,i)=>`<div class="spread-slot" data-slot-index="${i}"><span class="slot-index">${String(i+1).padStart(2,'0')}</span><strong>${p.label}</strong><div class="spread-slot-card" aria-hidden="true"></div></div>`).join('')}</div><div class="deck-wrap"><div class="deck" aria-label="섞인 카드 ${deck.length}장">${deckButtonsHTML()}</div></div><div class="picked-list" aria-label="선택한 카드"></div><p class="selection-note">덱을 다시 섞어도 좋아요. 마음이 가는 카드를 고르면 위의 스프레드 자리로 이동합니다.</p></div></div>`;attachDeckButtons();attachTarotTable();focusHeading();}
- function select(index){if(phase!=='selecting'||!Number.isInteger(index)||index<0||index>=deck.length||selected.some(s=>s.index===index)||selected.length>=count)return false;const pick={...deck[index],index};selected.push(pick);const card=cards.find(c=>c.id===pick.id),button=app.querySelector(`[data-index="${index}"]`),slot=app.querySelector(`[data-slot-index="${selected.length-1}"]`);button.disabled=true;button.setAttribute('aria-pressed','true');button.setAttribute('aria-label',`${card.koreanName}, ${pick.reversed?'역방향':'정방향'}, 선택됨`);const numberLabel=cardNumber(card);button.querySelector('.card-front').innerHTML=`<span class="card-number ${String(numberLabel).length>3?'is-long':''}">${numberLabel}</span>${cardArt(card,pick.reversed)}<strong>${card.koreanName}</strong><small>${pick.reversed?'역방향':'정방향'}</small>`;button.classList.add('is-selected');button.querySelector('.card-front').classList.toggle('is-reversed',pick.reversed);placePickInSpread(button,slot,card,pick);app.querySelector('.picked-list').insertAdjacentHTML('beforeend',`<span>${selected.length}. ${r.positions[selected.length-1].label} · ${card.koreanName}</span>`);app.querySelectorAll('.progress-dots span').forEach((d,i)=>d.classList.toggle('filled',i<selected.length));app.querySelector('#selection-status').textContent=`${count}장 중 ${selected.length}장 선택${selected.length<count?' · 다음 : '+r.positions[selected.length].label:' · 스프레드를 완성하고 있어요.'}`;const shuffle=app.querySelector('#shuffle-deck');if(shuffle)shuffle.disabled=true;if(selected.length===count){phase='revealing';app.querySelectorAll('.card-button').forEach(b=>b.disabled=true);timer=setTimeout(()=>showResults(false),1150);}return true;}
+ function start(){if(slug==='today'){const saved=loadDaily(storage);if(saved){selected=[saved];showResults(true);return;}}deck=shuffleDeck();selected=[];drawingDate=dateKey();phase='selecting';app.innerHTML=`<div class="selection-heading"><span class="step-label">02 / PICK YOUR CARDS</span><h2>마음이 가는 카드를 골라주세요.</h2><p id="selection-status" role="status" aria-live="polite">${count}장 중 0장 선택 · ${r.positions[0].label}</p><div class="progress-dots" aria-hidden="true">${Array.from({length:count},()=>'<span></span>').join('')}</div></div><div class="tarot-table" id="tarot-table"><div class="tarot-table-surface"><div class="table-topline"><div><span>YOUR TABLE</span><strong>${r.name}</strong></div><button class="table-shuffle" id="shuffle-deck" type="button"><span aria-hidden="true">↻</span> 카드 다시 섞기</button></div><div class="spread-board spread-${count}" aria-label="${r.name} 스프레드">${r.positions.slice(0,count).map((p,i)=>`<div class="spread-slot" data-slot-index="${i}"><span class="slot-index">${String(i+1).padStart(2,'0')}</span><strong>${p.label}</strong><div class="spread-slot-card" aria-hidden="true"></div></div>`).join('')}</div><div class="deck-wrap"><div class="deck" aria-label="섞인 카드 ${deck.length}장">${deckButtonsHTML()}</div></div><div class="picked-list" aria-label="선택한 카드"></div><p class="selection-note">덱을 다시 섞어도 좋아요. 마음이 가는 카드를 고르면 위의 스프레드 자리로 이동합니다.</p></div></div>`;attachDeckButtons();attachTarotTable();app.querySelector('[data-slot-index="0"]')?.classList.add('is-next');playDeckEntrance();focusHeading();}
+ function select(index){
+  if(phase!=='selecting'||!Number.isInteger(index)||index<0||index>=deck.length||selected.some(s=>s.index===index)||selected.length>=count)return false;
+  const pick={...deck[index],index};selected.push(pick);
+  const card=cards.find(c=>c.id===pick.id),button=app.querySelector(`[data-index="${index}"]`),slotIndex=selected.length-1,slot=app.querySelector(`[data-slot-index="${slotIndex}"]`);
+  button.disabled=true;
+  button.setAttribute('aria-pressed','true');
+  button.setAttribute('aria-label',`${card.koreanName}, ${pick.reversed?'역방향':'정방향'}, 선택됨`);
+  const numberLabel=cardNumber(card),front=button.querySelector('.card-front');
+  front.innerHTML=`<span class="card-number ${String(numberLabel).length>3?'is-long':''}">${numberLabel}</span>${cardArt(card,pick.reversed)}<strong>${card.koreanName}</strong><small>${pick.reversed?'역방향':'정방향'}</small>`;
+  front.classList.toggle('is-reversed',pick.reversed);
+  button.classList.add('is-launching');
+  placePickInSpread(button,slot,card,pick);
+  app.querySelector('.picked-list').insertAdjacentHTML('beforeend',`<span>${selected.length}. ${r.positions[slotIndex].label} · ${card.koreanName}</span>`);
+  app.querySelectorAll('.progress-dots span').forEach((d,i)=>d.classList.toggle('filled',i<selected.length));
+  app.querySelectorAll('.spread-slot').forEach((node,i)=>node.classList.toggle('is-next',i===selected.length&&selected.length<count));
+  app.querySelector('#selection-status').textContent=`${count}장 중 ${selected.length}장 선택${selected.length<count?' · 다음 : '+r.positions[selected.length].label:' · 스프레드를 완성하고 있어요.'}`;
+  const shuffle=app.querySelector('#shuffle-deck');if(shuffle)shuffle.disabled=true;
+  if(selected.length===count){
+   phase='revealing';
+   app.querySelectorAll('.card-button').forEach(b=>b.disabled=true);
+   timer=setTimeout(()=>showResults(false),reducedMotion.matches?120:1480);
+  }
+  return true;
+ }
  function cardSummary(){return `<div class="session-spread-anchor" aria-hidden="true"></div><section class="session-spread-shell" aria-label="이번 리딩의 카드"><div class="session-spread-head"><span>YOUR SPREAD</span><button class="session-spread-toggle" type="button" aria-expanded="false">펼쳐보기</button></div><div class="card-summary reading-session-spread" tabindex="0" role="region" aria-label="선택한 카드 요약, 가로로 스크롤할 수 있습니다">${selected.map((pick,i)=>{const c=cards.find(c=>c.id===pick.id);return `<div class="summary-item" data-summary-index="${i}"><span class="session-position">${r.positions[i]?.label||`카드 ${i+1}`}</span>${cardFace(c,pick.reversed)}<span class="session-card-name">${c.koreanName} · ${pick.reversed?'역방향':'정방향'}</span><p>${pick.reversed?'역방향':'정방향'}</p></div>`}).join('')}</div></section>`;}
  function positionResult(pick,i){const {card,position,meaning,context,example,lens,caution}=interpret(slug,pick,i);return `<article class="result-position" data-position-index="${i}" tabindex="0"><div class="detail-card" aria-hidden="true">${cardFace(card,pick.reversed)}</div><div class="result-title"><span>${String(i+1).padStart(2,'0')}</span><div><h3>${position.label}</h3><p class="card-meta">${card.koreanName} · ${card.name} · ${pick.reversed?'역방향':'정방향'}</p></div></div><div class="keywords">${card.keywords.map(k=>`<span>${k}</span>`).join('')}</div><p>${meaning}</p><p>${context}</p>${example?`<p class="context-example"><strong>상황으로 풀면</strong><span>${example}</span></p>`:''}${slug==='yes-no'?`<p class="lens">이 카드의 방향성 : ${pick.reversed?'역방향이므로 실행보다 조건 재점검을 우선하는 신호로 반영했습니다.':card.yesNo>0?'시도와 개방을 나타내는 상징으로 YES 쪽에 반영했습니다.':card.yesNo<0?'멈춤과 재정비를 나타내는 상징으로 NO 쪽에 반영했습니다.':'조건과 관찰이 필요한 중립의 상징으로 반영했습니다.'}</p>`:''}<p class="lens">${lens}</p>${caution?`<p class="caution">${caution}</p>`:''}</article>`;}
  function dailyResult(){const pick=selected[0],c=cards.find(c=>c.id===pick.id);return `<div class="daily-grid">${[['오늘의 전체 흐름',`‘${c.keywords.join(' · ')}’을 오늘의 관점으로 삼아보세요. ${pick.reversed?c.reversed:c.upright}로 읽을 수 있습니다.`],['연애',pick.reversed?`오늘은 ${c.reversed}로 읽습니다. ${c.advice}`:c.love],['일 / 학업',`${generalAdvice(c,pick.reversed)} 업무나 공부에서는 이 조언을 오늘 끝낼 작은 과제 하나에 적용해 보세요.`],['금전',`‘${c.keywords[0]}’ 키워드가 나의 소비 태도와 어떻게 닿는지 돌아보세요. 수익이나 손실의 예고가 아니며, 지출은 실제 예산을 확인한 뒤 결정하세요.`],['오늘의 조언',generalAdvice(c,pick.reversed)]].map(([title,text])=>`<article class="result-position"><h3>${title}</h3><p>${text}</p></article>`).join('')}</div>`;}
