@@ -6714,3 +6714,31 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
     transition:none!important;
   }
 }
+
+
+/* Guide cascade specificity fix — keep hover fast, but let reveal delay actually win. */
+.guide-list>a.scroll-reveal,
+.guide-article>section.scroll-reveal{
+  transition-property:opacity,translate,transform,border-color,box-shadow,background-color;
+  transition-duration:1.08s,1.08s,180ms,180ms,180ms,180ms;
+  transition-timing-function:
+    cubic-bezier(.2,.72,.25,1),
+    cubic-bezier(.2,.72,.25,1),
+    cubic-bezier(.2,.72,.25,1),
+    ease,ease,ease;
+  transition-delay:
+    var(--reveal-delay,0ms),
+    var(--reveal-delay,0ms),
+    0ms,0ms,0ms,0ms;
+}
+@media(hover:hover) and (pointer:fine){
+  .guide-list>a.scroll-reveal:hover{
+    transition-duration:1.08s,1.08s,180ms,180ms,180ms,180ms;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .guide-list>a.scroll-reveal,
+  .guide-article>section.scroll-reveal{
+    transition:none!important;
+  }
+}
