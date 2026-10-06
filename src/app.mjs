@@ -9,15 +9,18 @@ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'
 
 const revealSelector=[
  '.section-heading','.reading-tile','.how','.about','.about-grid article','.guide-teaser','main>.faq-section',
- '.reading-intro','.question-panel','.spread-info','.card-library-hero','.card-library-group','.card-library-tile',
- '.card-dictionary-hero','.card-meaning-overview','.card-topic-section','.guide-hero',
- '.guide-visual','.guide-article>section','.guide-list>a','.guide-next','.guide-page>.kicker','.guide-page>h1','.guide-page>.lead',
- '.faq-page-hero','.faq-page-shell .faq-list>details','.faq-guide-link','.info-hero','.info-card','.info-footer','.saved-readings-hero',
+ '.question-panel','.spread-info','.spread-info li','.reading-depth','.reading-depth-grid article','.reading-faq',
+ '.card-library-group','.card-library-tile','.card-meaning-overview','.card-meaning-grid article','.card-topic-section','.card-topic-grid article',
+ '.card-dictionary-cta','.card-prev-next','.guide-visual','.guide-article>section','.guide-list>a','.guide-next',
+ '.faq-page-shell .faq-list>details','.faq-guide-link','.info-card','.info-footer',
  '.saved-reading-item','.saved-reading-empty','.results-heading','.reading-answer',
  '.reading-context-answer','.reading-insights','.card-summary','.result-position',
- '.combination-reading','.synthesis','.related','.result-actions','.result-tools-foot'
+ '.combination-reading','.synthesis','.related','.result-actions','.result-tools-foot',
+ '.home-info-card','.home-faq'
 ].join(',');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
+if(reducedMotion.matches)document.documentElement.classList.add('motion-loaded');
+else requestAnimationFrame(()=>requestAnimationFrame(()=>document.documentElement.classList.add('motion-loaded')));
 let scrollRevealObserver=null;
 function prepareScrollReveal(scope=document){
  const candidates=[];
@@ -42,8 +45,8 @@ function prepareScrollReveal(scope=document){
   node.classList.add('scroll-reveal');
   let delay=Math.min(index%4,3)*55;
   const parent=node.parentElement;
-  if(parent&&node.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item')){
-   const siblings=[...parent.children].filter(item=>item.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item'));
+  if(parent&&node.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card')){
+   const siblings=[...parent.children].filter(item=>item.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card'));
    const siblingIndex=siblings.indexOf(node);
    if(siblingIndex>=0){
     if(node.matches('.guide-list>a'))delay=280+Math.min(siblingIndex,9)*95;
