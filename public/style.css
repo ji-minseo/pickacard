@@ -6542,3 +6542,39 @@ html.motion-ready.motion-loaded .card-dictionary-hero>.card-dictionary-art{trans
     transform:none!important;
   }
 }
+
+
+/* Original cascade reveal restoration — cards keep the old chwararak rhythm. */
+/* Later hover shorthands had overwritten opacity/translate transitions on reveal cards.
+   Keep the original 1.08s reveal + sibling delays, while hover transforms stay quick. */
+.scroll-reveal{
+  transition-property:opacity,translate,transform,border-color,box-shadow,background-color,color;
+  transition-duration:1.08s,1.08s,180ms,180ms,180ms,180ms,180ms;
+  transition-timing-function:
+    cubic-bezier(.2,.72,.25,1),
+    cubic-bezier(.2,.72,.25,1),
+    cubic-bezier(.2,.72,.25,1),
+    ease,ease,ease,ease;
+  transition-delay:
+    var(--reveal-delay,0ms),
+    var(--reveal-delay,0ms),
+    0ms,0ms,0ms,0ms,0ms;
+}
+
+/* These are the two most visible cascades: preserve the original stagger exactly. */
+.reading-tile.scroll-reveal,
+.card-library-tile.scroll-reveal{
+  opacity:0;
+  translate:0 14px;
+}
+.reading-tile.scroll-reveal.is-visible,
+.card-library-tile.scroll-reveal.is-visible{
+  opacity:1;
+  translate:0 0;
+}
+
+@media(prefers-reduced-motion:reduce){
+  .scroll-reveal{
+    transition:none!important;
+  }
+}
