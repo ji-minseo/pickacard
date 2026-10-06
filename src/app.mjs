@@ -12,11 +12,11 @@ const revealSelector=[
  '.spread-info .spread-head','.spread-info li','.reading-depth-head','.reading-depth-grid article','.reading-card-links',
  '.card-library-group-head','.card-library-tile','.card-meaning-overview .card-section-heading','.card-meaning-grid article',
  '.card-topic-section .card-section-heading','.card-topic-grid article',
- '.card-dictionary-cta','.card-prev-next','.guide-visual','.guide-article>section','.guide-list>a','.guide-next',
+ '.card-dictionary-cta','.card-prev-next a','.guide-visual','.guide-article>section','.guide-list>a','.guide-next',
  '.faq-list>details','.faq-guide-link','.info-card','.info-footer',
  '.saved-reading-item','.saved-reading-empty','.results-heading','.reading-answer',
  '.reading-context-answer','.reading-insights','.card-summary','.result-position',
- '.combination-reading','.synthesis','.related','.result-actions','.result-tools-foot',
+ '.combination-reading','.synthesis','.related h2','.related a','.result-actions','.result-tools-foot',
  '.home-info-card'
 ].join(',');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
@@ -54,13 +54,14 @@ function prepareScrollReveal(scope=document){
   node.classList.add('scroll-reveal');
   let delay=Math.min(index%4,3)*55;
   const parent=node.parentElement;
-  if(parent&&node.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card')){
-   const siblings=[...parent.children].filter(item=>item.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card'));
+  if(parent&&node.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card,.card-prev-next a,.related a')){
+   const siblings=[...parent.children].filter(item=>item.matches('.reading-tile,.card-library-tile,.about-grid article,.guide-list>a,.faq-list>details,.info-card,.saved-reading-item,.reading-depth-grid article,.card-meaning-grid article,.card-topic-grid article,.spread-info li,.home-info-card,.card-prev-next a,.related a'));
    const siblingIndex=siblings.indexOf(node);
    if(siblingIndex>=0){
     if(node.matches('.guide-list>a'))delay=280+Math.min(siblingIndex,9)*95;
     else if(node.matches('.card-library-tile'))delay=Math.min(siblingIndex,9)*70;
-    else if(node.matches('.faq-list>details'))delay=Math.min(siblingIndex,9)*85;
+    else if(node.matches('.faq-list>details'))delay=110+Math.min(siblingIndex,9)*85;
+    else if(node.matches('.related a,.card-prev-next a'))delay=90+Math.min(siblingIndex,5)*90;
     else delay=Math.min(siblingIndex,9)*115;
    }
   }

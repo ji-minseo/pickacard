@@ -6606,3 +6606,75 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
     translate:none!important;
   }
 }
+
+
+/* Three-item cascade + result spacing polish. */
+/* Three-card/three-item groups should reveal as individual pieces, never as one block. */
+.home-info-card.scroll-reveal,
+.about-grid article.scroll-reveal,
+.reading-depth-grid article.scroll-reveal,
+.card-meaning-grid article.scroll-reveal,
+.card-prev-next a.scroll-reveal,
+.related a.scroll-reveal{
+  opacity:0;
+  translate:0 14px;
+}
+.home-info-card.scroll-reveal.is-visible,
+.about-grid article.scroll-reveal.is-visible,
+.reading-depth-grid article.scroll-reveal.is-visible,
+.card-meaning-grid article.scroll-reveal.is-visible,
+.card-prev-next a.scroll-reveal.is-visible,
+.related a.scroll-reveal.is-visible{
+  opacity:1;
+  translate:0 0;
+}
+
+/* Results: give the icon a real column so copy never crowds it. */
+.related a{
+  grid-template-columns:48px minmax(0,1fr) auto;
+  column-gap:18px;
+  row-gap:5px;
+}
+.related-icon{
+  width:48px;
+  height:48px;
+}
+
+/* Today only lost its grid gap on mobile because an older display:block override won. */
+@media(max-width:800px){
+  .daily-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+  .daily-grid .result-position{
+    margin:0;
+  }
+}
+@media(max-width:650px){
+  .related a{
+    grid-template-columns:44px minmax(0,1fr);
+    column-gap:14px;
+    row-gap:5px;
+  }
+  .related-icon{
+    width:44px;
+    height:44px;
+    grid-row:1 / span 2;
+  }
+  .related a strong{
+    grid-column:2;
+    justify-self:start;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .home-info-card.scroll-reveal,
+  .about-grid article.scroll-reveal,
+  .reading-depth-grid article.scroll-reveal,
+  .card-meaning-grid article.scroll-reveal,
+  .card-prev-next a.scroll-reveal,
+  .related a.scroll-reveal{
+    opacity:1!important;
+    translate:none!important;
+  }
+}
