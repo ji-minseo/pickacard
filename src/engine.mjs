@@ -2,6 +2,7 @@ import {positionVoices,themes} from './data/narratives.mjs';
 import {cards} from './data/cards.mjs';
 import {readings} from './data/readings.mjs';
 import {readingContexts,contextProfiles} from './data/reading-contexts.mjs';
+import {josa} from './korean.mjs';
 export function randomInt(max,cryptoSource=globalThis.crypto){
  if(!Number.isSafeInteger(max)||max<1)throw new Error('Invalid random range');
  const limit=Math.floor(4294967296/max)*max;const a=new Uint32Array(1);do{cryptoSource.getRandomValues(a);}while(a[0]>=limit);return a[0]%max;
@@ -130,7 +131,7 @@ export function contextualInsight(slug,contextKey,picks){
  const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]);
  const difficult=tags.filter(t=>['blocked','conflict','distance','closure'].includes(t)).length>=Math.ceil(tags.length/2);
  const strongest=signals.ranked[0]?.[0],option=readingContexts[slug].options.find(([key])=>key===contextKey),profile=contextProfiles[slug][contextKey];
- return {label:option?.[1]||contextKey,text:(difficult?profile.difficult:profile.active)+' 이번 배열에서는 특히 ‘'+themes[strongest]+'’을 같이 봐야 해요.'};
+ return {label:option?.[1]||contextKey,text:(difficult?profile.difficult:profile.active)+' 이번 배열에서는 특히 ‘'+themes[strongest]+'’'+josa(themes[strongest],'object')+' 같이 봐야 해요.'};
 }
 const jobPositionScenes=[
  {
@@ -389,7 +390,7 @@ export function timingInsight(slug,picks){
   }
  };
  const ordered=[...items].sort((a,b)=>b.weight-a.weight),fastest=ordered[0],slowest=ordered.at(-1);
- const basis=fastest.weight>=.7&&slowest.weight<=-.7?`${fastest.card.koreanName}가 속도를 올리는 반면 ${slowest.card.koreanName}가 흐름을 늦춰, 두 카드 사이의 균형까지 반영했어요.`:fastest.weight>=.7?`${fastest.card.koreanName}처럼 빠르게 움직이는 카드가 전체 시기를 조금 앞당기는 쪽으로 반영됐어요.`:slowest.weight<=-.7?`${slowest.card.koreanName}처럼 천천히 진행되는 카드가 있어, 결과보다 준비와 정리 시간을 더 길게 잡았어요.`:'카드들의 기본 속도가 크게 엇갈리지 않아 전체 배열의 흐름을 중심으로 시기를 잡았어요.';
+ const basis=fastest.weight>=.7&&slowest.weight<=-.7?`${fastest.card.koreanName} 카드가 속도를 올리는 반면 ${slowest.card.koreanName} 카드가 흐름을 늦춰, 두 카드 사이의 균형까지 반영했어요.`:fastest.weight>=.7?`${fastest.card.koreanName}처럼 빠르게 움직이는 카드가 전체 시기를 조금 앞당기는 쪽으로 반영됐어요.`:slowest.weight<=-.7?`${slowest.card.koreanName}처럼 천천히 진행되는 카드가 있어, 결과보다 준비와 정리 시간을 더 길게 잡았어요.`:'카드들의 기본 속도가 크게 엇갈리지 않아 전체 배열의 흐름을 중심으로 시기를 잡았어요.';
  return {label:labels[pace],range:ranges[slug][pace],text:copy[slug][pace],pace,basis,score:Number(score.toFixed(2))};
 }
 const actionScenes={
@@ -509,7 +510,7 @@ export function synthesis(slug,picks){
  if(slug==='yes-no'){
   const direction=verdict(picks),items=picks.map(p=>{const card=cards.find(c=>c.id===p.id),value=p.reversed?Math.min(0,card.yesNo):card.yesNo,tag=(p.reversed?card.reversedTags:card.tags)[0];return {card,pick:p,value,tag};});
   const strongest=spreadSignals(slug,picks).ranked[0]?.[0],condition=themes[strongest];
-  const first=direction==='YES에 가까움'?'지금 질문에는 해보는 쪽이 더 강합니다. 핵심 조건은 ‘'+condition+'’이에요.':direction==='NO에 가까움'?'지금은 진행하기보다 멈추거나 재검토하는 쪽이 더 강합니다. 가장 크게 걸리는 건 ‘'+condition+'’이에요.':'지금은 YES나 NO를 바로 정하기보다 보류하는 쪽이 맞습니다. 카드들이 한 방향으로 모이지 않아 조건을 하나 더 확인할 필요가 있어요.';
+  const first=direction==='YES에 가까움'?'지금 질문에는 해보는 쪽이 더 강합니다. 핵심 조건은 ‘'+condition+'’'+josa(condition,'copula')+'.':direction==='NO에 가까움'?'지금은 진행하기보다 멈추거나 재검토하는 쪽이 더 강합니다. 가장 크게 걸리는 건 ‘'+condition+'’'+josa(condition,'copula')+'.':'지금은 YES나 NO를 바로 정하기보다 보류하는 쪽이 맞습니다. 카드들이 한 방향으로 모이지 않아 조건을 하나 더 확인할 필요가 있어요.';
   const cardLine=items.map(({card,value})=>card.koreanName+' 카드는 '+(value>0?'진행 쪽':value<0?'보류·재검토 쪽':'중립·조건 확인 쪽')).join(', ');
   const focus=items.find(x=>x.tag===strongest)||items[0];
   const concrete=concreteScenes['yes-no']?.[focus.tag]||generalAdvice(focus.card,focus.pick.reversed);const support=items.find(x=>x!==focus&&x.value!==focus.value)||items[1];
@@ -544,7 +545,7 @@ export function synthesis(slug,picks){
   if(supportIndex<0)supportIndex=tags.findIndex((_,i)=>i!==focusAt);
   if(supportIndex>=0)support=tags[supportIndex];
   const supportCard=supportIndex>=0?cards.find(c=>c.id===picks[supportIndex].id):null;
-  return [('결론부터 말하면, '+plainTone+' '+(synthesisLeadNuance[strongest]||'')).trim(),'특히 ‘'+focusText+'’ 자리의 '+focusCard.koreanName+' 때문에 ‘'+themes[focusTag]+'’을 먼저 봐야 해요. '+focusCard.advice,support&&supportCard?'여기에 '+supportCard.koreanName+'의 ‘'+themes[support]+'’도 같이 잡혀 있어서, 한 가지 문제만 고치기보다 두 조건을 같이 조정하는 편이 흐름이 더 빨리 바뀔 수 있어요.':'카드 흐름이 한 방향으로 모여 있어 지금 보이는 핵심을 먼저 움직이는 게 좋아요.','지금 할 일은 이거예요 : '+generalAdvice(focusCard,focusPick.reversed)];
+  return [('결론부터 말하면, '+plainTone+' '+(synthesisLeadNuance[strongest]||'')).trim(),'특히 ‘'+focusText+'’ 자리의 '+focusCard.koreanName+' 때문에 ‘'+themes[focusTag]+'’'+josa(themes[focusTag],'object')+' 먼저 봐야 해요. '+focusCard.advice,support&&supportCard?'여기에 '+supportCard.koreanName+'의 ‘'+themes[support]+'’도 같이 잡혀 있어서, 한 가지 문제만 고치기보다 두 조건을 같이 조정하는 편이 흐름이 더 빨리 바뀔 수 있어요.':'카드 흐름이 한 방향으로 모여 있어 지금 보이는 핵심을 먼저 움직이는 게 좋아요.','지금 할 일은 이거예요 : '+generalAdvice(focusCard,focusPick.reversed)];
  }
  const signals=spreadSignals(slug,picks);
  const tags=signals.positions.map(p=>p.tags[0]);
