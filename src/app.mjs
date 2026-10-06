@@ -8,19 +8,28 @@ const root=document.querySelector('[data-reading]');
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 const revealSelector=[
- '.section-heading','.reading-tile','.how','.about','.about-grid article','.guide-teaser','main>.faq-section',
- '.question-panel','.spread-info','.spread-info li','.reading-depth','.reading-depth-grid article','.reading-faq',
- '.card-library-group','.card-library-tile','.card-meaning-overview','.card-meaning-grid article','.card-topic-section','.card-topic-grid article',
+ '.section-heading','.reading-tile','.how','.about','.about-grid article','.guide-teaser',
+ '.spread-info .spread-head','.spread-info li','.reading-depth-head','.reading-depth-grid article','.reading-card-links',
+ '.card-library-group-head','.card-library-tile','.card-meaning-overview .card-section-heading','.card-meaning-grid article',
+ '.card-topic-section .card-section-heading','.card-topic-grid article',
  '.card-dictionary-cta','.card-prev-next','.guide-visual','.guide-article>section','.guide-list>a','.guide-next',
- '.faq-page-shell .faq-list>details','.faq-guide-link','.info-card','.info-footer',
+ '.faq-list>details','.faq-guide-link','.info-card','.info-footer',
  '.saved-reading-item','.saved-reading-empty','.results-heading','.reading-answer',
  '.reading-context-answer','.reading-insights','.card-summary','.result-position',
  '.combination-reading','.synthesis','.related','.result-actions','.result-tools-foot',
- '.home-info-card','.home-faq'
+ '.home-info-card'
 ].join(',');
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
-if(reducedMotion.matches)document.documentElement.classList.add('motion-loaded');
-else requestAnimationFrame(()=>requestAnimationFrame(()=>document.documentElement.classList.add('motion-loaded')));
+const entryRevealLockClass='entry-reveal-lock';
+if(reducedMotion.matches){
+ document.documentElement.classList.add('motion-loaded');
+ document.documentElement.classList.remove(entryRevealLockClass);
+}else{
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  document.documentElement.classList.add('motion-loaded');
+  window.setTimeout(()=>document.documentElement.classList.remove(entryRevealLockClass),720);
+ }));
+}
 let scrollRevealObserver=null;
 function prepareScrollReveal(scope=document){
  const candidates=[];
@@ -51,6 +60,7 @@ function prepareScrollReveal(scope=document){
    if(siblingIndex>=0){
     if(node.matches('.guide-list>a'))delay=280+Math.min(siblingIndex,9)*95;
     else if(node.matches('.card-library-tile'))delay=Math.min(siblingIndex,9)*70;
+    else if(node.matches('.faq-list>details'))delay=Math.min(siblingIndex,9)*85;
     else delay=Math.min(siblingIndex,9)*115;
    }
   }

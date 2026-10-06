@@ -6578,3 +6578,31 @@ html.motion-ready.motion-loaded .card-dictionary-hero>.card-dictionary-art{trans
     transition:none!important;
   }
 }
+
+
+/* Entry reveal coordination — title first, scroll content second. */
+/* On refresh, viewport content may already intersect. Hold only those scroll reveals
+   until the page-title entrance has clearly started; after that, scrolling is independent. */
+html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
+  opacity:0;
+  translate:0 14px;
+}
+
+/* FAQ uses the same quick cascade as the card grids: each row is its own reveal item. */
+.faq-list>details.scroll-reveal{
+  opacity:0;
+  translate:0 12px;
+}
+.faq-list>details.scroll-reveal.is-visible{
+  opacity:1;
+  translate:0 0;
+}
+
+@media(prefers-reduced-motion:reduce){
+  html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible,
+  .faq-list>details.scroll-reveal,
+  .faq-list>details.scroll-reveal.is-visible{
+    opacity:1!important;
+    translate:none!important;
+  }
+}
