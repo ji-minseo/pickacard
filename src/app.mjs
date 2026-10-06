@@ -67,7 +67,7 @@ function prepareScrollReveal(scope=document){
     }
     revealScrollNode(entry.target);
    }
-  },{rootMargin:'0px 0px -8% 0px',threshold:.08});
+  },{rootMargin:'0px 0px 12% 0px',threshold:.06});
  }
  fresh.forEach((node,index)=>{
   node.classList.add('scroll-reveal');
