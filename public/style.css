@@ -6742,3 +6742,32 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
     transition:none!important;
   }
 }
+
+
+/* Home reading-notes trio — preserve the 1 → 2 → 3 cascade. */
+.home-info-grid>.home-info-card.scroll-reveal{
+  opacity:0;
+  translate:0 14px;
+  transition-property:opacity,translate,transform,border-color,box-shadow;
+  transition-duration:1.08s,1.08s,180ms,180ms,180ms;
+  transition-timing-function:
+    cubic-bezier(.2,.72,.25,1),
+    cubic-bezier(.2,.72,.25,1),
+    cubic-bezier(.2,.72,.25,1),
+    ease,ease;
+  transition-delay:
+    var(--reveal-delay,0ms),
+    var(--reveal-delay,0ms),
+    0ms,0ms,0ms;
+}
+.home-info-grid>.home-info-card.scroll-reveal.is-visible{
+  opacity:1;
+  translate:0 0;
+}
+@media(prefers-reduced-motion:reduce){
+  .home-info-grid>.home-info-card.scroll-reveal{
+    opacity:1!important;
+    translate:none!important;
+    transition:none!important;
+  }
+}
