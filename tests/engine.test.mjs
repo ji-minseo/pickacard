@@ -104,6 +104,80 @@ test('relationship context fallback is opt-in, local and outcome-neutral',()=>{
  const second=resolveQuestionFocus('feelings','답장이 없어요','crush',picks);
  assert.deepEqual(first,second);
 });
+test('natural Korean intent corpus avoids misleading relationship classifications',()=>{
+ const samples={
+  love:[
+   ['새 인연이 찾아올까요?','new'],['소개팅 이후 만날 사람이 궁금해요','new'],
+   ['연애할 수 있을까요?','new'],['연애가 시작될까 불안해요','new'],
+   ['썸인 그 사람에게 고백해도 될까요?','crush'],['남자친구와 싸웠어요','conflict'],
+   ['남친과 다툼이 반복돼요','conflict'],['남자친구와 소원해졌어요','conflict'],
+   ['연애 중인데 헤어질까요?','relationship'],['사랑이 이루어질까요?',null]
+  ],
+  reunion:[
+   ['재회는 언제 할 수 있을까요?','timing'],['그 사람과 언제 다시 만날까요?','timing'],
+   ['전남친이 언제 연락할까요?','reconnect'],['연락 차단당했는데 재회할 수 있나요?','reconnect'],
+   ['헤어진 이유가 해결될 수 있을까요?','repair'],['다시 만날 수 있을까요?','return'],
+   ['재회하지 말아야 할까요?','boundaries'],['다시 만나고 싶지 않은데 어떡하죠?','boundaries'],
+   ['그 사람과 연락하고 싶지 않아요','boundaries'],['언제 헤어진 게 맞는 선택인지 알까요?',null]
+  ],
+  feelings:[
+   ['전남친이 아직 미련이 있나요?','past'],['나를 좋아할까요?','interest'],
+   ['그 사람은 날 어떻게 생각할까요?','interest'],['그 사람은 나를 어떻게 생각할까요?','interest'],
+   ['갑자기 차가워졌어요','distance'],['상대가 갑자기 좋아졌어요','interest'],
+   ['지하철 거리에서 마주쳤는데 날 좋아할까요?','interest'],
+   ['왜 답장을 하지 않을까요?','messages'],['그 사람이 날 피하는 것 같아요','distance'],
+   ['상대방의 속마음이 궁금해요','uncertainty']
+  ]
+ };
+ for(const [slug,cases] of Object.entries(samples)){
+  const picks=readings[slug].positions.map((_,i)=>({id:cards[[1,8,26,37,17][i]].id,reversed:i%2===1}));
+  for(const [question,expected] of cases){
+   const focus=resolveQuestionFocus(slug,question,'',picks);
+   assert.equal(focus?.key??null,expected,`${slug} incorrectly read "${question}"`);
+   if(focus){
+    assert.equal(focus.source,'question');
+    assert.ok(focus.evidence.includes(focus.cardName));
+    assert.ok(focus.counterpoint?.includes('함께 읽어볼 수 있어요'));
+    assert.ok(!/undefined|null|NaN/.test([focus.evidence,focus.counterpoint,focus.action].join(' ')));
+   }
+  }
+ }
+});
+test('same spread yields genuinely different focuses without losing card orientation',()=>{
+ const picks=['major-6','major-9','cups-2','swords-8','major-17'].map((id,i)=>({id,reversed:i%2===0}));
+ const situations={
+  reunion:['그 사람에게 연락이 올까요?','재회는 언제쯤?','다시 만나고 싶지 않아요','헤어진 원인을 돌아보고 싶어요'],
+  love:['새 인연을 만나고 싶어요','썸남에게 고백해도 될까요?','남자친구와 싸웠어요'],
+  feelings:['상대가 나를 좋아할까요?','갑자기 차가워졌어요','답장이 오지 않아요','그 사람은 날 어떻게 생각할까요?']
+ };
+ for(const [slug,questions] of Object.entries(situations)){
+  const arr=picks.slice(0,readings[slug].positions.length);
+  const focuses=questions.map(q=>resolveQuestionFocus(slug,q,'',arr));
+  assert.equal(new Set(focuses.map(f=>f?.key)).size,questions.length);
+  assert.equal(new Set(focuses.map(f=>f?.description)).size,questions.length);
+  assert.ok(focuses.every(f=>f&&f.counterpoint&&f.action.length>15));
+  for(const focus of focuses){
+   const dir=arr[focus.index].reversed?'역방향':'정방향';
+   assert.ok(focus.evidence.includes(dir));
+   assert.ok(focus.counterpoint.includes('카드가'));
+  }
+ }
+});
+test('relationship focus stays readable across the full deck and both directions',()=>{
+ for(const slug of ['love','reunion','feelings']){
+  for(const reversed of [false,true]){
+   for(let i=0;i<cards.length;i++){
+    const picks=readings[slug].positions.map((_,j)=>({id:cards[(i+j)%cards.length].id,reversed:j===0?reversed:!reversed}));
+    const question={love:'연애 중에 갈등이 생겼어요',reunion:'다시 만날 수 있을까요?',feelings:'그 사람은 날 어떻게 생각할까요?'}[slug];
+    const focus=resolveQuestionFocus(slug,question,'',picks);
+    assert.ok(focus?.evidence.includes('카드가'),slug);
+    assert.ok(focus.counterpoint.includes('카드가'),slug);
+    assert.ok(!focus.evidence.includes('undefined'),slug);
+    assert.ok(!focus.counterpoint.includes('undefined'),slug);
+   }
+  }
+ }
+});
 test('shuffle produces unique complete deck with independent orientation',()=>{for(let i=0;i<200;i++){const d=shuffleDeck();assert.equal(new Set(d.map(c=>c.id)).size,78);assert.ok(d.every(c=>typeof c.reversed==='boolean'));}});
 test('unbiased sampling rejects overflow range',()=>{let calls=0;assert.equal(randomInt(22,{getRandomValues(a){a[0]=calls++===0?4294967295:23;}}),1);assert.equal(calls,2);});
 test('daily card survives reload, expires next day, rejects corrupt storage',()=>{let value=null;const s={getItem:()=>value,setItem:(_,v)=>value=v},c={id:'major-17',reversed:true};assert.equal(saveDaily(s,c,'2026-10-04'),true);assert.deepEqual(loadDaily(s,'2026-10-04'),c);assert.equal(loadDaily(s,'2026-10-05'),null);value='bad JSON';assert.equal(loadDaily(s),null);value=JSON.stringify({date:dateKey(),card:{id:'bad',reversed:true}});assert.equal(loadDaily(s),null);assert.equal(saveDaily(null,c),false);});
