@@ -233,6 +233,33 @@ test('feelings and yes-no results stay concrete and decisive',()=>{
  assert.ok(yesSummary[1].includes('카드별로 보면'));
  assert.ok(situationExample('yes-no',yesPicks[0],0)?.length>20);
 });
+test('saved reading archive preserves question-specific interpretation safely',async()=>{
+ const app=await readFile('dist/src/app.mjs','utf8');
+ const privacy=await readFile('dist/privacy/index.html','utf8');
+ const job=await readFile('dist/tarot/job/index.html','utf8');
+ const css=await readFile('dist/style.css','utf8');
+ assert.ok(app.includes('questionFocus:questionFocus?{label:questionFocus.label'));
+ assert.ok(app.includes('class="saved-focus-details"'));
+ assert.ok(app.includes('class="saved-focus-body"'));
+ assert.ok(app.includes('esc(item.questionFocus.description)'));
+ assert.ok(app.includes('esc(item.questionFocus.evidence)'));
+ assert.ok(app.includes('esc(item.questionFocus.counterpoint)'));
+ assert.ok(app.includes('esc(item.questionFocus.action)'));
+ assert.ok(css.includes('.saved-focus-details summary:focus-visible'));
+ assert.ok(job.includes('질문은 자동 저장되거나 외부로 전송되지 않아요.'));
+ assert.ok(job.includes('‘이 리딩 저장’을 누르면 이 브라우저에 함께 저장돼요.'));
+ assert.ok(privacy.includes('직접 ‘이 리딩 저장’을 누르지 않으면'));
+ assert.ok(!privacy.includes('질문은 브라우저 메모리에서만 사용되며 새로고침하거나'));
+ const focus=resolveQuestionFocus('reunion','다시 만날 수 있을까요?','recent',
+  readings.reunion.positions.map((_,i)=>({id:cards[i+2].id,reversed:i%2===0})));
+ let value=null;
+ const memory={getItem:()=>value,setItem:(_,v)=>{value=v},removeItem:()=>{value=null}};
+ const record={id:'focus-check',slug:'reunion',question:'다시 만날 수 있을까요?',cards:[{id:cards[1].id,reversed:false}],questionFocus:{label:focus.label,description:focus.description,evidence:focus.evidence,counterpoint:focus.counterpoint,action:focus.action}};
+ assert.equal(saveReadingRecord(memory,record),true);
+ assert.deepEqual(loadSavedReadings(memory)[0].questionFocus,record.questionFocus);
+ assert.equal(clearSavedReadings(memory),true);
+ assert.equal(loadSavedReadings(memory).length,0);
+});
 test('saved readings stay local, capped, removable and clearable',()=>{
  let value=null;const storage={getItem:()=>value,setItem:(_,v)=>value=v,removeItem:()=>value=null};
  for(let i=0;i<12;i++)assert.equal(saveReadingRecord(storage,{id:'r'+i,slug:'love',cards:[{id:'major-6',reversed:false}],savedAt:'2026-10-05T00:00:00Z'}),true);
