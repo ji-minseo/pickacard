@@ -101,7 +101,7 @@ export function resolveQuestionFocus(slug,question='',situation='',picks=[]){
  return {
   key,label,source,index,positionLabel,cardName:card.koreanName,
   description,
-  evidence:`‘${positionLabel}’ 자리에서 나온 ${card.koreanName}의 ${pick.reversed?'역방향':'정방향'}은 ‘${card.keywords[0]}’을 함께 생각해보게 해요.`,
+  evidence:`‘${positionLabel}’ 자리에서 나온 ${card.koreanName}의 ${pick.reversed?'역방향':'정방향'}은 ‘${card.keywords[0]}’ 주제를 함께 생각해보게 해요.`,
   action:`${action} ${signalGuidance[tag]||''}`.trim()
  };
 }
