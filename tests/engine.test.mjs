@@ -1,5 +1,56 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {cards} from '../src/data/cards.mjs';import {readings} from '../src/data/readings.mjs';import {cardSlug} from '../src/data/card-directory.mjs';import {readingDepth} from '../src/data/reading-depth.mjs';import {readingContexts} from '../src/data/reading-contexts.mjs';import {loadSavedReadings,saveReadingRecord,removeSavedReading,clearSavedReadings} from '../src/saved-readings.mjs';import {shuffleDeck,randomInt,loadDaily,saveDaily,dateKey,interpret,verdict,readingHeadline,situationExample,timingInsight,nextAction,combinationInsights,contextualInsight} from '../src/engine.mjs';import {readFile} from 'node:fs/promises';import {josa} from '../src/korean.mjs';
+import {resolveQuestionFocus} from '../src/question-focus.mjs';
 test('all 78 cards support every reading position and orientation',()=>{assert.equal(cards.length,78);for(const c of cards)for(const [slug,r] of Object.entries(readings))for(let i=0;i<r.positions.length;i++)for(const reversed of [true,false]){const result=interpret(slug,{id:c.id,reversed},i);assert.ok(result.context.length>15);assert.ok(result.meaning.length>15);assert.ok(result.lens.length>15);}});
+test('question intent adapts to the specific concern while keeping the same cards',()=>{
+ const picks=['major-1','major-8','cups-2','swords-8'].map(id=>({id,reversed:false}));
+ const interview=resolveQuestionFocus('job','다음 주 면접을 어떻게 준비할까요?','change',picks);
+ const documents=resolveQuestionFocus('job','포트폴리오와 이력서가 걱정돼요','change',picks);
+ const outcome=resolveQuestionFocus('job','최종 합격 발표가 날까요?','change',picks);
+ const change=resolveQuestionFocus('job','이직할 때 어떤 걸 봐야 하나요?','change',picks);
+ assert.equal(interview.key,'interview');
+ assert.equal(documents.key,'application');
+ assert.equal(outcome.key,'outcome');
+ assert.equal(change.key,'transition');
+ assert.equal(interview.index,1);
+ assert.equal(documents.index,2);
+ assert.equal(outcome.index,2);
+ assert.equal(change.index,3);
+ assert.notEqual(interview.description,documents.description);
+ assert.notEqual(interview.action,documents.action);
+ assert.ok(interview.evidence.includes(interview.cardName));
+ assert.ok(interview.evidence.includes('강점'));
+ assert.ok(!outcome.action.includes('합격 확정'));
+ assert.equal(resolveQuestionFocus('job','','change',picks).source,'situation');
+ assert.equal(resolveQuestionFocus('job','잘될까요?','',picks),null);
+ assert.equal(resolveQuestionFocus('job','면접','change',picks).source,'question');
+ assert.equal(resolveQuestionFocus('job','<img src=x onerror=alert(1)>','',picks),null);
+});
+test('all question-enabled readings have focused interpretations and daily card stays unchanged',async()=>{
+ const examples={
+  love:'썸에서 고백해도 될까요?',reunion:'다시 연락하고 싶어요',
+  breakup:'이별을 고민해요',feelings:'상대가 왜 답장을 안 할까요?',
+  contact:'언제 연락이 올까요?','reunion-timing':'재회 시기가 궁금해요',
+  'yes-no':'이직을 시작할까요?',job:'면접 준비를 도와줘',
+  money:'생활비 지출이 걱정돼요',work:'상사와 갈등이 있어요',
+  study:'시험 점수가 고민이에요'
+ };
+ for(const [slug,r] of Object.entries(readings)){
+  const picks=r.positions.map((_,i)=>({id:cards[i+1].id,reversed:i%2===1}));
+  const focus=resolveQuestionFocus(slug,examples[slug]||'', '',picks);
+  if(slug==='today'){assert.equal(focus,null);continue;}
+  assert.ok(focus,`missing focus for ${slug}`);
+  assert.ok(focus.action.length>20);
+  assert.ok(focus.evidence.includes(focus.cardName));
+  assert.ok(focus.index<picks.length);
+  assert.ok(!focus.action.includes(examples[slug]));
+ }
+ const built=await readFile('dist/src/app.mjs','utf8');
+ const focusModule=await readFile('dist/src/question-focus.mjs','utf8');
+ assert.ok(built.includes('resolveQuestionFocus(slug,question,situation,selected)'));
+ assert.ok(built.includes('question-focus-next'));
+ assert.ok(focusModule.includes('function resolveQuestionFocus'));
+ assert.ok(!built.includes("track('question_text'"));
+});
 test('shuffle produces unique complete deck with independent orientation',()=>{for(let i=0;i<200;i++){const d=shuffleDeck();assert.equal(new Set(d.map(c=>c.id)).size,78);assert.ok(d.every(c=>typeof c.reversed==='boolean'));}});
 test('unbiased sampling rejects overflow range',()=>{let calls=0;assert.equal(randomInt(22,{getRandomValues(a){a[0]=calls++===0?4294967295:23;}}),1);assert.equal(calls,2);});
 test('daily card survives reload, expires next day, rejects corrupt storage',()=>{let value=null;const s={getItem:()=>value,setItem:(_,v)=>value=v},c={id:'major-17',reversed:true};assert.equal(saveDaily(s,c,'2026-10-04'),true);assert.deepEqual(loadDaily(s,'2026-10-04'),c);assert.equal(loadDaily(s,'2026-10-05'),null);value='bad JSON';assert.equal(loadDaily(s),null);value=JSON.stringify({date:dateKey(),card:{id:'bad',reversed:true}});assert.equal(loadDaily(s),null);assert.equal(saveDaily(null,c),false);});
