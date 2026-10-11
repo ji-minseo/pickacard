@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {cards} from '../src/data/cards.mjs';import {readings} from '../src/data/readings.mjs';import {cardSlug} from '../src/data/card-directory.mjs';import {readingDepth} from '../src/data/reading-depth.mjs';import {readingContexts} from '../src/data/reading-contexts.mjs';import {loadSavedReadings,saveReadingRecord,removeSavedReading,clearSavedReadings} from '../src/saved-readings.mjs';import {shuffleDeck,randomInt,loadDaily,saveDaily,dateKey,interpret,verdict,readingHeadline,situationExample,timingInsight,nextAction,combinationInsights,contextualInsight} from '../src/engine.mjs';import {readFile} from 'node:fs/promises';import {josa} from '../src/korean.mjs';
-import {resolveQuestionFocus} from '../src/question-focus.mjs';
+import {resolveQuestionFocus,reconcileQuestionReading} from '../src/question-focus.mjs';
 test('all 78 cards support every reading position and orientation',()=>{assert.equal(cards.length,78);for(const c of cards)for(const [slug,r] of Object.entries(readings))for(let i=0;i<r.positions.length;i++)for(const reversed of [true,false]){const result=interpret(slug,{id:c.id,reversed},i);assert.ok(result.context.length>15);assert.ok(result.meaning.length>15);assert.ok(result.lens.length>15);}});
 test('question intent adapts to the specific concern while keeping the same cards',()=>{
  const picks=['major-1','major-8','cups-2','swords-8'].map(id=>({id,reversed:false}));
@@ -177,6 +177,59 @@ test('relationship focus stays readable across the full deck and both directions
    }
   }
  }
+});
+test('explicit refusal to reunite stays respected across final result, even for upbeat cards',()=>{
+ const picks=['major-19','cups-2','major-6','wands-8','major-17'].map(id=>({id,reversed:false}));
+ for(const question of ['다시 만나고 싶지 않아요','재회하지 말아야 할까요?','그 사람과 연락하고 싶지 않아요']){
+  const focus=resolveQuestionFocus('reunion',question,'recent',picks);
+  assert.equal(focus.key,'boundaries');
+  const original={
+   headline:readingHeadline('reunion',picks,'recent'),
+   timing:timingInsight('reunion',picks),
+   action:nextAction('reunion',picks,'recent'),
+   combinations:combinationInsights('reunion',picks),
+   summaryLines:synthesis('reunion',picks)
+  };
+  const revised=reconcileQuestionReading('reunion',focus,picks,original);
+  assert.equal(revised.timing,null);
+  assert.deepEqual(revised.combinations,[]);
+  assert.ok(revised.headline.includes('원하는 거리와 선택'));
+  assert.ok(!revised.headline.includes('재회 가능성은 닫혀'));
+  assert.ok(revised.action.includes('재접촉을 의무로 여기지'));
+  assert.ok(revised.summaryLines[0].includes('다시 만나야 할 이유나 의무'));
+  assert.ok(revised.summaryLines[1].includes('재회를 막고 있는 요소'));
+  assert.ok(revised.summaryLines[2].includes('앞으로의 관계 흐름'));
+  assert.ok(revised.summaryLines.every(line=>!line.includes('재회 가능성은 닫혀')));
+  assert.equal(original.timing!==null,true);
+ }
+ for(const slug of ['reunion','love','feelings']){
+  const result={headline:'그대로',timing:{range:'1~3개월'},action:'원래 조언',combinations:[1],summaryLines:['그대로']};
+  assert.equal(reconcileQuestionReading(slug,null,picks,result),result);
+  if(slug==='reunion')assert.equal(reconcileQuestionReading(slug,{key:'return'},picks,result),result);
+ }
+});
+test('timing and GA4 copy remain consistent and include no raw question tracking',async()=>{
+ const [app,css,guide,timingPage,jobPage,privacyPage,home]=await Promise.all([
+  readFile('dist/src/app.mjs','utf8'),readFile('dist/style.css','utf8'),
+  readFile('dist/guide/index.html','utf8'),readFile('dist/tarot/reunion-timing/index.html','utf8'),
+  readFile('dist/tarot/job/index.html','utf8'),readFile('dist/privacy/index.html','utf8'),
+  readFile('dist/index.html','utf8')
+ ]);
+ assert.ok(app.includes('reconcileQuestionReading(slug,questionFocus,selected,baseReading)'));
+ assert.ok(app.includes('relatedSlugs=boundaryReading?'));
+ assert.ok(app.includes("contextNote=slug==='today'||boundaryReading?null:"));
+ assert.ok(app.includes('class="timing-disclaimer"'));
+ assert.ok(css.includes('.timing-disclaimer{'));
+ assert.ok(css.includes('@media(max-width:650px)'));
+ assert.ok(timingPage.includes('상징적 구간'));
+ assert.ok(timingPage.includes('재회 날짜나 기다려야 하는 기한'));
+ assert.ok(home.includes('G-SW0DQ32ER2'));
+ assert.ok(jobPage.includes('G-SW0DQ32ER2'));
+ assert.ok(privacyPage.includes('Google Analytics 4'));
+ for(const event of ['reading_start','card_selection_complete','result_view','save_reading','share_result','related_reading_click'])assert.ok(app.includes("track('"+event+"'"));
+ assert.ok(app.includes('has_question:Boolean(question)'));
+ assert.ok(!app.includes("question_text:question"));
+ assert.ok(!app.includes("query:question"));
 });
 test('shuffle produces unique complete deck with independent orientation',()=>{for(let i=0;i<200;i++){const d=shuffleDeck();assert.equal(new Set(d.map(c=>c.id)).size,78);assert.ok(d.every(c=>typeof c.reversed==='boolean'));}});
 test('unbiased sampling rejects overflow range',()=>{let calls=0;assert.equal(randomInt(22,{getRandomValues(a){a[0]=calls++===0?4294967295:23;}}),1);assert.equal(calls,2);});
