@@ -148,7 +148,7 @@ test('same spread yields genuinely different focuses without losing card orienta
  const situations={
   reunion:['그 사람에게 연락이 올까요?','재회는 언제쯤?','다시 만나고 싶지 않아요','헤어진 원인을 돌아보고 싶어요'],
   love:['새 인연을 만나고 싶어요','썸남에게 고백해도 될까요?','남자친구와 싸웠어요'],
-  feelings:['상대가 나를 좋아할까요?','갑자기 차가워졌어요','답장이 오지 않아요','그 사람은 날 어떻게 생각할까요?']
+  feelings:['상대가 나를 좋아할까요?','갑자기 차가워졌어요','답장이 오지 않아요','전남친이 아직 미련이 있을까요?']
  };
  for(const [slug,questions] of Object.entries(situations)){
   const arr=picks.slice(0,readings[slug].positions.length);
