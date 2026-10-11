@@ -6798,6 +6798,17 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
   line-height:1.75;
   word-break:keep-all;
 }
+.question-focus .question-focus-counterpoint{
+  margin-top:13px;
+  padding:11px 12px;
+  border-left:2px solid #d7b5a0;
+  border-radius:0 9px 9px 0;
+  background:#faf6f1;
+}
+.question-focus .question-focus-counterpoint strong{
+  color:var(--ink);
+  margin-right:5px;
+}
 .question-focus .question-focus-next{
   padding-top:10px;
   margin-top:12px;
