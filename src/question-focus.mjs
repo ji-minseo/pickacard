@@ -30,7 +30,7 @@ const definitions={
   ['distance','권태·거리감',/권태|거리감|소원|식은|멀어진/,3,'관계의 온도보다 편안하게 대화할 공간이 있는지 확인해봐요.','거리감이 커진 계기를 사실과 추측으로 나눠 적어보세요.']
  ],
  feelings:[
-  ['distance','달라진 태도·거리감',/차갑|피하|거리감|거리를\s*두|거리\s*두|달라진|무관심|변했|냉정|소원해|멀어진|멀어졌/,2,'태도가 달라진 이유는 카드만으로 확인할 수 없어요. 보이는 행동과 내가 짐작하는 마음을 나눠 보세요.','상대의 감정을 단정하기보다 내가 직접 확인할 수 있는 대화 주제를 정해보세요.'],
+  ['distance','달라진 태도·거리감',/차갑|차가워|차가워졌|피하|거리감|거리를\s*두|거리\s*두|달라진|무관심|변했|냉정|소원해|멀어진|멀어졌/,2,'태도가 달라진 이유는 카드만으로 확인할 수 없어요. 보이는 행동과 내가 짐작하는 마음을 나눠 보세요.','상대의 감정을 단정하기보다 내가 직접 확인할 수 있는 대화 주제를 정해보세요.'],
   ['messages','연락 속 태도',/연락|답장|읽씹|안읽씹|카톡|문자|메시지|회신/,0,'메시지의 빈도와 실제 마음은 같지 않아요. 대화의 양방향성을 관찰하는 관점으로 읽어보세요.','연락의 간격보다 대화가 상호적으로 이어지는지 살펴보세요.'],
   ['past','전 연인·미련',/전\s*애인|전\s*연인|전남친|전여친|미련|잊었|헤어진\s*사람/,1,'추억이나 미련처럼 보이는 상징이 있어도 현재의 재회 의사까지 알 수 있는 것은 아니에요.','과거의 기억과 현재 확인된 행동을 분리해서 생각해보세요.'],
   ['interest','호감·관심',/호감|좋아|사랑|관심|썸|짝사랑|(?:나를|날)\s*어떻게\s*생각/,1,'카드는 상대의 마음을 증명하지 않아요. 감정에 대한 여러 관점을 실제 반응과 비교해보세요.','호감을 단정하기보다 서로 편하게 대화할 기회가 있는지 확인해보세요.'],
@@ -127,6 +127,18 @@ const signalGuidance={
  blocked:'막힌 이유를 한 가지로 구체화하고 줄일 수 있는지 살펴보세요.',
  conflict:'서로 충돌하는 조건의 우선순위를 정해보세요.'
 };
+function compareRelationshipSignals(primary,secondary){
+ const open=new Set(['movement','communication','attraction','renewal','decision']);
+ const guarded=new Set(['blocked','conflict','distance','closure','waiting']);
+ if(primary===secondary)return '두 자리에서 같은 의미가 반복되지만, 실제 행동이나 상황까지 같다는 뜻은 아니에요.';
+ if((open.has(primary)&&guarded.has(secondary))||(guarded.has(primary)&&open.has(secondary)))
+  return '한쪽에는 움직이려는 힘이, 다른 쪽에는 속도를 늦추는 조건이 함께 나타나요. 실제 선택과 장애물을 구분해서 읽어보세요.';
+ if(open.has(primary)&&open.has(secondary))
+  return '두 자리 모두 변화나 표현을 향하지만, 생각만으로 결론을 내리기보다 실제 행동으로 확인할 필요가 있어요.';
+ if(guarded.has(primary)&&guarded.has(secondary))
+  return '두 자리 모두 부담이나 거리와 관련된 주제를 보여줘요. 진전을 서두르기보다 반복되는 조건을 먼저 살펴보세요.';
+ return '두 자리가 서로 다른 관점을 보여줘요. 어느 한 장만으로 관계의 결론을 확정하기보다 함께 읽어보세요.';
+}
 export function resolveQuestionFocus(slug,question='',situation='',picks=[]){
  if(!readings[slug]||!Array.isArray(picks)||!picks.length)return null;
  const value=String(question??'').normalize('NFKC').slice(0,300).trim();
@@ -156,13 +168,13 @@ export function resolveQuestionFocus(slug,question='',situation='',picks=[]){
   if(otherCard&&otherIndex!==index){
    const otherLabel=readings[slug].positions[otherIndex]?.label||'함께 읽는 카드';
    const otherTag=(otherPick.reversed?otherCard.reversedTags:otherCard.tags)[0];
-   counterpoint=`함께 볼 ‘${otherLabel}’ 자리에는 ${otherCard.koreanName}(${otherPick.reversed?'역방향':'정방향'})이 나왔어요. ‘${otherCard.keywords[0]}’ 주제를 비춰주는 카드예요. ${crosscheck[1]} ${signalGuidance[otherTag]||''}`.trim();
+   counterpoint=`‘${otherLabel}’ 자리에서는 ${otherCard.koreanName} 카드가 ${otherPick.reversed?'역방향':'정방향'}으로 나왔어요. ‘${otherCard.keywords[0]}’ 주제를 함께 읽어볼 수 있어요. ${compareRelationshipSignals(tag,otherTag)} ${crosscheck[1]}`.trim();
   }
  }
  return {
   key,label,source,index,positionLabel,cardName:card.koreanName,
   description,
-  evidence:`‘${positionLabel}’ 자리의 ${card.koreanName}(${pick.reversed?'역방향':'정방향'})은 ‘${card.keywords[0]}’ 주제를 떠올리게 해요. ${signalGuidance[tag]||''}`.trim(),
+  evidence:`‘${positionLabel}’ 자리에서 ${card.koreanName} 카드가 ${pick.reversed?'역방향':'정방향'}으로 나왔어요. ‘${card.keywords[0]}’ 주제를 떠올리게 해요. ${signalGuidance[tag]||''}`.trim(),
   counterpoint,
   action:crosscheck?action:`${action} ${signalGuidance[tag]||''}`.trim()
  };
