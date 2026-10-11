@@ -6831,3 +6831,44 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
   .question-focus h3{font-size:18px}
   .question-focus p{font-size:13px}
 }
+
+
+/* Saved question-specific reading, collapsed by default to keep archives scannable. */
+.saved-focus-details{
+  margin-top:13px;
+  padding:0 13px;
+  border:1px solid #eae1db;
+  border-radius:12px;
+  background:#fffcf8;
+}
+.saved-focus-details summary{
+  cursor:pointer;
+  padding:12px 0;
+  color:var(--ink);
+  font-size:13px;
+  font-weight:750;
+  line-height:1.5;
+  word-break:keep-all;
+}
+.saved-focus-details summary:focus-visible{
+  outline:2px solid #ba726c;
+  outline-offset:3px;
+}
+.saved-focus-body{
+  border-top:1px solid #eae1db;
+  padding:8px 0 13px;
+}
+.saved-focus-body p{
+  margin:9px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.75;
+  word-break:keep-all;
+}
+.saved-focus-body strong{color:var(--ink)}
+.saved-focus-legacy{
+  margin:12px 0 0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.6;
+}
