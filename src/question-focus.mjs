@@ -179,3 +179,26 @@ export function resolveQuestionFocus(slug,question='',situation='',picks=[]){
   action:crosscheck?action:`${action} ${signalGuidance[tag]||''}`.trim()
  };
 }
+
+
+// Align the prominent takeaway with explicit user boundaries.
+// Do not turn a "I do not want to reunite" question into contact advice or a countdown.
+export function reconcileQuestionReading(slug,focus,picks,result){
+ if(slug!=='reunion'||focus?.key!=='boundaries'||!Array.isArray(picks)||picks.length<5)return result;
+ const obstacle=cards.find(card=>card.id===picks[2]?.id);
+ const future=cards.find(card=>card.id===picks[4]?.id);
+ if(!obstacle||!future)return result;
+ return {
+  ...result,
+  headline:'이번 질문은 재회 가능성보다 내가 원하는 거리와 선택을 지키는 데 초점을 맞춰 읽는 편이 좋아요.',
+  timing:null,
+  action:focus.action,
+  combinations:[],
+  summaryLines:[
+   '결론부터 말하면, 카드는 다시 만나야 할 이유나 의무를 정해주지 않아요. 지금 재회를 바라지 않는 마음과 실제 관계의 경계를 우선해도 괜찮습니다.',
+   `‘재회를 막고 있는 요소’ 위치의 ${obstacle.koreanName} 카드에서는 ‘${obstacle.keywords[0]}’을 상징적으로 읽어볼 수 있어요. 이전 관계에서 더는 반복하고 싶지 않은 조건이 무엇인지 생각해보세요.`,
+   `‘앞으로의 관계 흐름’ 위치의 ${future.koreanName} 카드에서는 ‘${future.keywords[0]}’을 떠올릴 수 있어요. 이 카드는 원하지 않는 재접촉을 권하는 뜻이 아니라, 앞으로 나에게 필요한 선택의 기준을 정리하는 관점이에요.`,
+   '지금은 이 부분을 먼저 보세요 : '+focus.action
+  ]
+ };
+}
