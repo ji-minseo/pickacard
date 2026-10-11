@@ -6771,3 +6771,52 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
     transition:none!important;
   }
 }
+
+
+/* Optional question-aware interpretation; visually subordinate to the main result. */
+.question-focus{
+  width:min(900px,100%);
+  margin:0 auto 22px;
+  padding:19px 22px;
+  border:1px solid #e8ddd6;
+  border-radius:18px;
+  background:#fffdfa;
+}
+.question-focus .step-label{display:block;margin-bottom:8px}
+.question-focus h3{
+  margin:0 0 10px;
+  font-size:clamp(18px,2.5vw,22px);
+  line-height:1.4;
+  color:var(--ink);
+  letter-spacing:-.03em;
+  word-break:keep-all;
+}
+.question-focus p{
+  margin:8px 0 0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.75;
+  word-break:keep-all;
+}
+.question-focus .question-focus-next{
+  padding-top:10px;
+  margin-top:12px;
+  border-top:1px solid #ede6e0;
+}
+.question-focus-next strong{
+  color:var(--ink);
+  margin-right:7px;
+}
+.question-focus small{
+  display:block;
+  margin-top:12px;
+  color:#817b75;
+  font-size:11px;
+  line-height:1.6;
+  word-break:keep-all;
+}
+@media(max-width:650px){
+  .question-focus{margin-bottom:18px;padding:16px;border-radius:16px}
+  .question-focus h3{font-size:18px}
+  .question-focus p{font-size:13px}
+}
