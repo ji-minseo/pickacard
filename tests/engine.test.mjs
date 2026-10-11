@@ -279,6 +279,9 @@ test('feelings and yes-no results stay concrete and decisive',()=>{
  const feelingsHeadline=readingHeadline('feelings',feelingsPicks),feelingsSummary=synthesis('feelings',feelingsPicks);
  assert.ok(feelingsHeadline&&feelingsHeadline.length>20);
  assert.ok(feelingsSummary[0].startsWith('결론부터 말하면'));
+ assert.ok(feelingsSummary[0].includes('상징'));
+ assert.ok(!feelingsSummary[0].includes('상대는 호감'));
+ assert.ok(!feelingsHeadline.includes('지금 상대는 호감'));
  assert.ok(situationExample('feelings',feelingsPicks[0],0)?.length>20);
  const yesPicks=[{id:'major-19',reversed:false},{id:'major-1',reversed:false},{id:'pentacles-1',reversed:false}];
  const yesSummary=synthesis('yes-no',yesPicks);
