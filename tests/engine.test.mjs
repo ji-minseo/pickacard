@@ -51,6 +51,59 @@ test('all question-enabled readings have focused interpretations and daily card 
  assert.ok(focusModule.includes('function resolveQuestionFocus'));
  assert.ok(!built.includes("track('question_text'"));
 });
+test('popular relationship readings compare distinct card positions by question type',()=>{
+ const love=['major-1','major-8','cups-2','swords-8','major-17'].map((id,i)=>({id,reversed:i%2===1}));
+ const reunion=love;
+ const feelings=love.slice(0,4);
+ const cases=[
+  ['love','새 인연이 찾아올까요?','solo',love,'new',2,3],
+  ['love','썸인 그 사람에게 고백해도 될까요?','crush',love,'crush',1,2],
+  ['love','남자친구와 다툼이 반복돼요','relationship',love,'conflict',3,4],
+  ['reunion','그 사람한테 연락이 올까요?','recent',reunion,'reconnect',3,2],
+  ['reunion','재회는 언제 할 수 있을까요?','mid',reunion,'timing',4,2],
+  ['reunion','헤어진 이유가 해결될 수 있을까요?','long',reunion,'repair',2,4],
+  ['reunion','다시 만날 수 있을까요?','long',reunion,'return',4,2],
+  ['feelings','전남친에게 미련이 남았을까요?','ex',feelings,'past',1,3],
+  ['feelings','갑자기 차가워졌어요','relationship',feelings,'distance',2,3],
+  ['feelings','왜 답장을 하지 않을까요?','crush',feelings,'messages',0,2],
+  ['feelings','나를 좋아할까요?','crush',feelings,'interest',1,0],
+  ['feelings','그 사람 속마음이 궁금해요','relationship',feelings,'uncertainty',2,0]
+ ];
+ for(const [slug,question,situation,picks,key,index,other] of cases){
+  const result=resolveQuestionFocus(slug,question,situation,picks);
+  assert.ok(result,`${slug}: ${question}`);
+  assert.equal(result.key,key);
+  assert.equal(result.index,index);
+  assert.equal(result.source,'question');
+  assert.equal(result.cardName,cards.find(c=>c.id===picks[index].id).koreanName);
+  assert.ok(result.counterpoint?.includes(cards.find(c=>c.id===picks[other].id).koreanName));
+  assert.ok(result.counterpoint?.includes(readings[slug].positions[other].label));
+  assert.ok(result.evidence.includes(readings[slug].positions[index].label));
+  assert.ok(!result.counterpoint.includes('확정된'));
+  assert.ok(result.action.length>15);
+ }
+ assert.notEqual(resolveQuestionFocus('reunion','연락이 올까요?','',reunion).counterpoint,
+                 resolveQuestionFocus('reunion','헤어진 이유를 알고 싶어요','',reunion).counterpoint);
+});
+test('relationship context fallback is opt-in, local and outcome-neutral',()=>{
+ const picks=['major-1','major-8','cups-2','swords-8','major-17'].map(id=>({id,reversed:false}));
+ const situations={love:['solo','crush','relationship'],reunion:['recent','mid','long'],feelings:['crush','relationship','ex']};
+ for(const [slug,values] of Object.entries(situations)){
+  for(const value of values){
+   const result=resolveQuestionFocus(slug,'',value,picks);
+   assert.equal(result.source,'situation',`${slug}/${value}`);
+   assert.ok(result.counterpoint);
+   assert.ok(result.description);
+   assert.ok(!/100%|확정|반드시 재회|진짜 속마음은/.test(result.action));
+  }
+  assert.equal(resolveQuestionFocus(slug,'잘될까요?','',picks),null);
+ }
+ assert.equal(resolveQuestionFocus('today','', 'crush',picks),null);
+ assert.equal(resolveQuestionFocus('reunion','<script>alert(1)</script>','',picks),null);
+ const first=resolveQuestionFocus('feelings','답장이 없어요','crush',picks);
+ const second=resolveQuestionFocus('feelings','답장이 없어요','crush',picks);
+ assert.deepEqual(first,second);
+});
 test('shuffle produces unique complete deck with independent orientation',()=>{for(let i=0;i<200;i++){const d=shuffleDeck();assert.equal(new Set(d.map(c=>c.id)).size,78);assert.ok(d.every(c=>typeof c.reversed==='boolean'));}});
 test('unbiased sampling rejects overflow range',()=>{let calls=0;assert.equal(randomInt(22,{getRandomValues(a){a[0]=calls++===0?4294967295:23;}}),1);assert.equal(calls,2);});
 test('daily card survives reload, expires next day, rejects corrupt storage',()=>{let value=null;const s={getItem:()=>value,setItem:(_,v)=>value=v},c={id:'major-17',reversed:true};assert.equal(saveDaily(s,c,'2026-10-04'),true);assert.deepEqual(loadDaily(s,'2026-10-04'),c);assert.equal(loadDaily(s,'2026-10-05'),null);value='bad JSON';assert.equal(loadDaily(s),null);value=JSON.stringify({date:dateKey(),card:{id:'bad',reversed:true}});assert.equal(loadDaily(s),null);assert.equal(saveDaily(null,c),false);});
