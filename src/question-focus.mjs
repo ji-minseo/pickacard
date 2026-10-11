@@ -162,6 +162,6 @@ export function resolveQuestionFocus(slug,question='',situation='',picks=[]){
   description,
   evidence:`‘${positionLabel}’ 자리의 ${card.koreanName}(${pick.reversed?'역방향':'정방향'})은 ‘${card.keywords[0]}’ 주제를 떠올리게 해요. ${signalGuidance[tag]||''}`.trim(),
   counterpoint,
-  action:`${action} ${signalGuidance[tag]||''}`.trim()
+  action:crosscheck?action:`${action} ${signalGuidance[tag]||''}`.trim()
  };
 }
