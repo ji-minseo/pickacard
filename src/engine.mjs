@@ -284,7 +284,7 @@ export function readingHeadline(slug,picks,situation=''){
  if(slug==='feelings'){
   const warm=tags.filter(t=>['attraction','communication','movement','healing','renewal'].includes(t)).length;
   const guarded=tags.filter(t=>['distance','blocked','conflict','closure','waiting'].includes(t)).length;
-  const base=guarded>=2&&warm===0?'카드 흐름으로 보면 지금 상대는 호감 표현보다 거리두기와 자기 상황 정리에 더 기울어 있습니다.':warm>=2&&guarded===0?'카드 흐름으로 보면 호감이나 관심은 있는 편이고, 대화나 행동으로 드러날 여지도 있습니다.':warm>=1&&guarded>=1?'마음이나 관심은 남아 있지만, 부담이나 망설임 때문에 적극적으로 움직이기는 어려운 상태로 읽혀요.':'상대가 아예 무관심한 쪽보다는 아직 판단하고 지켜보는 쪽에 가깝습니다. 행동은 천천히 나올 수 있어요.';
+  const base=guarded>=2&&warm===0?'이번 카드 배열에는 호감 표현보다 거리두기와 자기 상황 정리의 상징이 더 크게 나타납니다.':warm>=2&&guarded===0?'카드 배열에서는 호감과 관심, 대화나 행동으로 움직이는 상징이 함께 나타납니다.':warm>=1&&guarded>=1?'카드에는 관심과 부담의 상징이 함께 나와요. 마음에 대한 추측보다 실제 행동을 확인하는 편이 좋아요.':'지금은 판단을 유보하고 반응을 지켜보는 상징이 중심이에요. 상대의 실제 마음은 카드로 확인할 수 없어요.';
   const nuance={movement:'특히 이번 배열은 생각보다 행동으로 드러나는지가 핵심이에요.',communication:'말을 걸고 반응을 이어가는 힘이 다른 신호보다 더 두드러집니다.',attraction:'끌림은 보이지만 호감과 관계 의지는 구분해서 볼 필요가 있어요.',renewal:'상대를 바라보는 방식이나 관계의 접근법이 바뀌는 흐름이 강합니다.',healing:'강한 표현보다 편안함과 회복을 원하는 마음이 더 앞설 수 있어요.',decision:'상대도 이 관계를 어떻게 둘지 판단하려는 흐름이 강합니다.',reflection:'행동보다 혼자 생각하고 정리하는 시간이 길어질 수 있어요.',waiting:'먼저 움직이기보다 상황과 반응을 지켜보는 쪽에 힘이 실립니다.',distance:'가까워지는 것보다 자기 공간을 지키려는 흐름이 더 선명해요.',closure:'현재는 관계를 이어가는 마음보다 정리와 선 긋기 쪽을 더 크게 봐야 해요.',blocked:'마음이 있더라도 현실적인 부담이 행동을 막는 배열에 가깝습니다.',conflict:'호감과 부담이 함께 있어 태도가 들쭉날쭉하게 보일 수 있어요.'}[dominant]||'';
   return withHeadlineContext(slug,situation,(base+' '+nuance).trim());
  }
@@ -520,7 +520,7 @@ export function synthesis(slug,picks){
   const signals=spreadSignals(slug,picks),tags=signals.positions.map(p=>p.tags[0]);
   const warm=tags.filter(t=>['attraction','communication','movement','healing','renewal'].includes(t)).length;
   const guarded=tags.filter(t=>['distance','blocked','conflict','closure','waiting'].includes(t)).length;
-  const current=warm>=2&&guarded===0?'호감이나 관심이 있는 쪽':warm>=1&&guarded>=1?'마음은 있지만 쉽게 행동하지 못하는 쪽':guarded>=2?'지금은 거리와 부담이 더 큰 쪽':'아직 판단하고 지켜보는 쪽';
+  const current=warm>=2&&guarded===0?'호감과 관심의 상징이 두드러지는 배열':warm>=1&&guarded>=1?'관심과 부담의 상징이 함께 나타나는 배열':guarded>=2?'거리와 부담의 상징이 더 강한 배열':'판단을 유보하고 지켜보는 상징이 중심인 배열';
   const futureTag=tags[Math.min(3,tags.length-1)];
   const futureMap={movement:'앞으로는 먼저 말을 걸거나 실제 행동으로 옮길 가능성이 있습니다.',communication:'앞으로는 대화를 이어가거나 표현이 조금 더 분명해질 수 있어요.',attraction:'호감은 이어질 수 있지만 관계를 확정하는 행동까지는 더 지켜봐야 해요.',healing:'강한 진전보다 편안하게 관계를 유지하려는 태도가 나타날 가능성이 큽니다.',renewal:'관계를 예전과 다르게 보거나 새로운 방식으로 접근할 수 있어요.',decision:'관계를 이어갈지 선을 그을지 스스로 결론을 내리려는 태도가 나올 수 있어요.',reflection:'당분간은 행동보다 혼자 생각하고 정리하는 시간이 더 길 수 있어요.',waiting:'먼저 움직이기보다 상대 반응과 상황을 지켜보는 태도가 이어질 수 있어요.',distance:'가까워지기보다 자기 공간을 지키며 거리를 유지하려는 태도가 더 강할 수 있어요.',closure:'현재 흐름이 이어지면 관계를 정리하거나 선을 분명히 하려는 쪽으로 갈 수 있어요.',blocked:'마음이 있어도 현실적인 부담 때문에 표현이나 행동이 계속 늦어질 수 있어요.',conflict:'태도가 가까워졌다 멀어졌다 하며 일관되지 않게 보일 수 있어요.'};
   const futureIndex=Math.min(3,picks.length-1);
@@ -529,7 +529,7 @@ export function synthesis(slug,picks){
   if(strongestIndex<0)strongestIndex=futureIndex;
   strongest=tags[strongestIndex]||strongest;
   const strongCard=cards.find(c=>c.id===picks[strongestIndex].id),futureCard=cards.find(c=>c.id===picks[futureIndex].id);
-  return [('결론부터 말하면, 카드 흐름상 상대는 '+current+'으로 읽힙니다. '+(synthesisLeadNuance[strongest]||'')).trim(),futureMap[futureTag]||signalNotes[futureTag],'이렇게 읽는 가장 큰 근거는 '+strongCard.koreanName+'에서 ‘'+themes[strongest]+'’ 주제가 반복되기 때문이에요. 마지막 흐름의 '+futureCard.koreanName+'도 앞으로의 태도를 '+themes[futureTag]+' 쪽으로 보여줍니다.','즉 마음의 유무만 보기보다 지금 실제로 연락·만남·거리두기 중 어떤 행동을 하고 있는지 함께 보면 이 리딩이 더 선명해져요.'];
+  return [('결론부터 말하면, 이번 카드는 '+current+'입니다. '+(synthesisLeadNuance[strongest]||'')).trim(),futureMap[futureTag]||signalNotes[futureTag],'이렇게 읽는 가장 큰 근거는 '+strongCard.koreanName+'에서 ‘'+themes[strongest]+'’ 주제가 반복되기 때문이에요. 마지막 흐름의 '+futureCard.koreanName+'도 앞으로의 태도를 '+themes[futureTag]+' 쪽으로 보여줍니다.','즉 마음의 유무만 보기보다 지금 실제로 연락·만남·거리두기 중 어떤 행동을 하고 있는지 함께 보면 이 리딩이 더 선명해져요.'];
  }
  const practical=['job','money','work','study'];
  if(practical.includes(slug)){
