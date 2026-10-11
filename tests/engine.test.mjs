@@ -235,6 +235,22 @@ test('shuffle produces unique complete deck with independent orientation',()=>{f
 test('unbiased sampling rejects overflow range',()=>{let calls=0;assert.equal(randomInt(22,{getRandomValues(a){a[0]=calls++===0?4294967295:23;}}),1);assert.equal(calls,2);});
 test('daily card survives reload, expires next day, rejects corrupt storage',()=>{let value=null;const s={getItem:()=>value,setItem:(_,v)=>value=v},c={id:'major-17',reversed:true};assert.equal(saveDaily(s,c,'2026-10-04'),true);assert.deepEqual(loadDaily(s,'2026-10-04'),c);assert.equal(loadDaily(s,'2026-10-05'),null);value='bad JSON';assert.equal(loadDaily(s),null);value=JSON.stringify({date:dateKey(),card:{id:'bad',reversed:true}});assert.equal(loadDaily(s),null);assert.equal(saveDaily(null,c),false);});
 test('the same Star card has distinct reunion feelings vs breakup turning point',()=>{assert.notEqual(interpret('reunion',{id:'major-17',reversed:false},1).context,interpret('breakup',{id:'major-17',reversed:false},3).context);});
+test('post-breakup context gets its own headline insight and next action',()=>{
+ const picks=readings.breakup.positions.map((_,i)=>({id:['major-13','cups-5','major-17','swords-6','major-21'][i],reversed:false}));
+ const option=readingContexts.breakup.options.find(([key])=>key==='post');
+ assert.deepEqual(option,['post','이별 후']);
+ const note=contextualInsight('breakup','post',picks);
+ assert.equal(note?.label,'이별 후');
+ assert.match(note?.text,/이별|감정|회복|정리/);
+ const headline=readingHeadline('breakup',picks,'post');
+ assert.ok(headline&&headline.length>30);
+ assert.match(headline,/이별|정리|회복|기준/);
+ const action=nextAction('breakup',picks,'post');
+ assert.ok(action&&action.length>30);
+ assert.match(action,/이별|일상|회복|기준|거리/);
+ const considering=readingHeadline('breakup',picks,'considering');
+ assert.notEqual(headline,considering);
+});
 test('generated Korean copy chooses particles from the final Hangul syllable',async()=>{
  assert.equal(josa('상실 · 애도','object'),'를');
  assert.equal(josa('끌림과 호기심','object'),'을');
