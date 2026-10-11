@@ -6872,3 +6872,19 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
   font-size:12px;
   line-height:1.6;
 }
+
+
+/* Explain symbolic time windows without implying a predicted real-world date. */
+.timing-disclaimer{
+  display:block;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid #f0e1df;
+  color:#806f6a;
+  font-size:12px;
+  line-height:1.65;
+  word-break:keep-all;
+}
+@media(max-width:650px){
+  .timing-disclaimer{font-size:12px;line-height:1.7}
+}
