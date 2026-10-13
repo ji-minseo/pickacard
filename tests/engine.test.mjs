@@ -645,7 +645,7 @@ test('all 78 card pages explain both orientations in each of the ten situational
  const magician=await readFile('dist/cards/the-magician/index.html','utf8');
  assert.ok(magician.includes('좋은 말과 실제 배려'));
  const moon=await readFile('dist/cards/the-moon/index.html','utf8');
- assert.ok(moon.includes('침묵이나 표정 하나로 속마음을 확정하기 어려운 흐름'));
+ assert.ok(moon.includes('표현이 적다는 이유로 감정이 없다고 단정하지는 마세요'));
 });
 test('all internal static links and artwork files exist',async()=>{assert.equal(Object.keys(artwork).length,78);assert.ok(cards.every(c=>artwork[c.id]));const {readdir,stat}=await import('node:fs/promises');async function scan(dir){for(const item of await readdir(dir,{withFileTypes:true})){const p=`${dir}/${item.name}`;if(item.isDirectory())await scan(p);else if(item.name.endsWith('.html')){const html=await readFile(p,'utf8');for(const match of html.matchAll(/href="(\/[^"#]*)/g)){const link=match[1].split('?')[0];if(!link)continue;await stat(`dist${link}${link.endsWith('/')?'index.html':''}`);}}}}await scan('dist');for(const [id,file] of Object.entries(artwork)){assert.ok(cards.some(c=>c.id===id));await stat(`dist/artwork/${file}.webp`);await stat(`dist/artwork/${file}-small.webp`);}});
 import {spreadSignals} from '../src/engine.mjs';
