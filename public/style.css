@@ -2952,6 +2952,22 @@ textarea{
   font-size:14px;
   line-height:1.75;
 }
+.card-topic-reading>span{
+ display:block;
+ margin-bottom:7px;
+ color:#9a4a54;
+ font-size:11px;
+ font-weight:850;
+ letter-spacing:.035em;
+}
+.card-topic-reading--reversed{
+ margin-top:14px;
+ padding-top:14px;
+ border-top:1px solid #eee6e5;
+}
+.card-topic-reading--reversed>span{
+ color:#886f67;
+}
 .card-topic-grid a{
   display:inline-flex;
   margin-top:auto;

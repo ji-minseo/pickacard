@@ -632,6 +632,21 @@ test('relationship synthesis never cites the same card as both dominant evidence
 });
 test('synthesis responds to middle-position cards, not only endpoints',()=>{const a=[0,6,19,7,21].map(n=>({id:`major-${n}`,reversed:false}));const b=a.map(p=>({...p}));b[2]={id:'major-16',reversed:false};assert.notDeepEqual(synthesis('reunion',a),synthesis('reunion',b));assert.equal(readingSnapshot('reunion',a,'test').interpretations.length,5);});
 test('78-card dictionary has one indexable detail page per card',async()=>{const hub=await readFile('dist/cards/index.html','utf8');assert.ok(hub.includes('타로 카드 78장 의미 사전'));const slugs=new Set();for(const card of cards){const slug=cardSlug(card);assert.ok(!slugs.has(slug));slugs.add(slug);const html=await readFile(`dist/cards/${slug}/index.html`,'utf8');assert.equal((html.match(/<h1>/g)||[]).length,1);assert.ok(html.includes(card.koreanName));assert.ok(html.includes(card.name));assert.ok(html.includes(card.upright));assert.ok(html.includes(card.reversed));assert.ok(html.includes('/tarot/love/'));assert.ok(html.includes('/tarot/reunion/'));assert.ok(html.includes('현실적인 질문에서 읽으면'));assert.ok(html.includes('/tarot/job/'));assert.ok(html.includes('/tarot/money/'));assert.ok(html.includes('/tarot/study/'));}assert.equal(slugs.size,78);});
+test('all 78 card pages explain both orientations in each of the ten situational readings',async()=>{
+ for(const card of cards){
+  const html=await readFile(`dist/cards/${cardSlug(card)}/index.html`,'utf8');
+  assert.equal((html.match(/class="card-topic-reading card-topic-reading--upright"/g)||[]).length,10,card.name+' upright');
+  assert.equal((html.match(/class="card-topic-reading card-topic-reading--reversed"/g)||[]).length,10,card.name+' reversed');
+  assert.equal((html.match(/UPRIGHT · 정방향일 때/g)||[]).length,10);
+  assert.equal((html.match(/REVERSED · 역방향일 때/g)||[]).length,10);
+  assert.ok(!html.includes('<p>undefined</p>'),card.name);
+  assert.ok(!html.includes('<p></p>'),card.name);
+ }
+ const magician=await readFile('dist/cards/the-magician/index.html','utf8');
+ assert.ok(magician.includes('좋은 말과 실제 배려'));
+ const moon=await readFile('dist/cards/the-moon/index.html','utf8');
+ assert.ok(moon.includes('침묵이나 표정 하나로 속마음을 확정하기 어려운 흐름'));
+});
 test('all internal static links and artwork files exist',async()=>{assert.equal(Object.keys(artwork).length,78);assert.ok(cards.every(c=>artwork[c.id]));const {readdir,stat}=await import('node:fs/promises');async function scan(dir){for(const item of await readdir(dir,{withFileTypes:true})){const p=`${dir}/${item.name}`;if(item.isDirectory())await scan(p);else if(item.name.endsWith('.html')){const html=await readFile(p,'utf8');for(const match of html.matchAll(/href="(\/[^"#]*)/g)){const link=match[1].split('?')[0];if(!link)continue;await stat(`dist${link}${link.endsWith('/')?'index.html':''}`);}}}}await scan('dist');for(const [id,file] of Object.entries(artwork)){assert.ok(cards.some(c=>c.id===id));await stat(`dist/artwork/${file}.webp`);await stat(`dist/artwork/${file}-small.webp`);}});
 import {spreadSignals} from '../src/engine.mjs';
 test('all spread positions and all semantic tags contribute',()=>{const picks=[0,6,16,18,19].map(n=>({id:`major-${n}`,reversed:true}));const profile=spreadSignals('reunion',picks);assert.equal(profile.positions.length,5);assert.equal(Object.values(profile.totals).reduce((a,b)=>a+b,0),15);for(let i=0;i<5;i++){const changed=picks.map(p=>({...p}));changed[i]={id:'cups-2',reversed:false};assert.notDeepEqual(spreadSignals('reunion',changed).totals,profile.totals);}});
