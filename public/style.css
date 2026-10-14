@@ -7034,3 +7034,100 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
   .deep-reading-preview p{font-size:12px}
   .deep-reading-cta{width:100%}
 }
+
+
+/* Deep Reading product page. */
+.deep-reading-page{max-width:920px;margin:0 auto}
+.deep-reading-page-hero{
+  padding:18px 0 30px;
+  border-bottom:1px solid var(--line);
+}
+.deep-reading-page-hero h1{
+  margin:8px 0 12px;
+  font:700 clamp(36px,6vw,58px)/1.08 'Batang',Georgia,serif;
+  letter-spacing:-.05em;
+}
+.deep-reading-page-hero>p{
+  max-width:680px;
+  margin:0;
+  font-size:17px;
+  line-height:1.9;
+}
+.deep-reading-page-price{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-top:20px;
+}
+.deep-reading-page-price strong{
+  color:var(--wine);
+  font:700 28px/1 Georgia,serif;
+}
+.deep-reading-page-price span{color:var(--muted);font-size:13px}
+.deep-reading-page-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:0 24px;
+  margin:28px 0;
+}
+.deep-reading-page-grid article{
+  display:grid;
+  grid-template-columns:34px 1fr;
+  gap:12px;
+  padding:18px 0;
+  border-top:1px solid var(--line);
+}
+.deep-reading-page-grid article>span{
+  color:var(--wine);
+  font:700 13px/1.4 Georgia,serif;
+}
+.deep-reading-page-grid p{margin:0;line-height:1.75}
+.deep-reading-page-compare{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+  margin:32px 0;
+}
+.deep-reading-page-compare>div{
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fffdfa;
+}
+.deep-reading-page-compare span{
+  color:var(--wine);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.13em;
+}
+.deep-reading-page-compare h2{
+  margin:7px 0 9px;
+  font-size:23px;
+  line-height:1.4;
+}
+.deep-reading-page-compare p{margin:0;line-height:1.8}
+.deep-reading-page-status{
+  margin-top:34px;
+  padding:24px;
+  border-top:2px solid var(--wine);
+  background:#f4ece5;
+}
+.deep-reading-page-status strong{
+  display:block;
+  margin-bottom:7px;
+  font-size:18px;
+}
+.deep-reading-page-status p{
+  max-width:700px;
+  margin:0 0 18px;
+  line-height:1.8;
+}
+@media(max-width:650px){
+  .deep-reading-page-hero h1{font-size:38px}
+  .deep-reading-page-hero>p{font-size:15px}
+  .deep-reading-page-grid,
+  .deep-reading-page-compare{grid-template-columns:1fr}
+  .deep-reading-page-grid{gap:0}
+  .deep-reading-page-compare{gap:12px}
+  .deep-reading-page-status{padding:20px 16px}
+}
