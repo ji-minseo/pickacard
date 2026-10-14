@@ -6904,3 +6904,133 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
 @media(max-width:650px){
   .timing-disclaimer{font-size:12px;line-height:1.7}
 }
+
+
+/* Deep Reading — premium layer that follows a complete free reading. */
+.deep-reading-offer{
+  position:relative;
+  width:min(900px,100%);
+  margin:26px auto 34px;
+  padding:24px;
+  border:1px solid #dbc6bc;
+  border-top:2px solid var(--wine);
+  border-radius:20px;
+  background:
+    linear-gradient(180deg,rgba(255,252,248,.98),rgba(250,243,237,.96)),
+    #fffaf5;
+  box-shadow:0 16px 42px rgba(79,37,43,.08);
+  overflow:hidden;
+}
+.deep-reading-offer:after{
+  content:'';
+  position:absolute;
+  inset:auto -56px -76px auto;
+  width:180px;
+  height:180px;
+  border:1px solid rgba(111,54,67,.09);
+  border-radius:50%;
+  pointer-events:none;
+}
+.deep-reading-kicker{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:12px;
+}
+.deep-reading-kicker>span:first-child{
+  color:var(--wine);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.16em;
+}
+.deep-reading-price{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+.deep-reading-offer h2{
+  margin:0;
+  color:var(--ink);
+  font:700 clamp(24px,3.4vw,34px)/1.35 'Batang',Georgia,serif;
+  letter-spacing:-.04em;
+  word-break:keep-all;
+}
+.deep-reading-lead{
+  max-width:680px;
+  margin:10px 0 20px;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.8;
+  word-break:keep-all;
+}
+.deep-reading-preview{
+  display:grid;
+  gap:0;
+  margin:0 0 20px;
+  border-top:1px solid #eaded7;
+}
+.deep-reading-preview article{
+  display:grid;
+  grid-template-columns:34px minmax(0,1fr) 20px;
+  align-items:start;
+  gap:12px;
+  padding:14px 0;
+  border-bottom:1px solid #eaded7;
+}
+.deep-reading-preview article>span{
+  padding-top:1px;
+  color:var(--wine);
+  font:700 12px/1.4 Georgia,serif;
+}
+.deep-reading-preview strong{
+  display:block;
+  margin-bottom:4px;
+  color:var(--ink);
+  font-size:14px;
+}
+.deep-reading-preview p{
+  margin:0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.65;
+  word-break:keep-all;
+}
+.deep-reading-preview i{
+  color:#9f7d76;
+  font-style:normal;
+  font-size:15px;
+  opacity:.65;
+}
+.deep-reading-cta{
+  min-height:48px;
+  padding-inline:20px;
+}
+.deep-reading-note{
+  margin:9px 0 0;
+  color:var(--muted);
+  font-size:11px;
+  line-height:1.6;
+}
+@media(max-width:650px){
+  .deep-reading-offer{
+    margin:22px auto 28px;
+    padding:19px 16px;
+    border-radius:17px;
+  }
+  .deep-reading-kicker{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:5px;
+  }
+  .deep-reading-offer h2{font-size:25px}
+  .deep-reading-lead{font-size:13px;margin-bottom:17px}
+  .deep-reading-preview article{
+    grid-template-columns:28px minmax(0,1fr) 16px;
+    gap:9px;
+    padding:13px 0;
+  }
+  .deep-reading-preview strong{font-size:13px}
+  .deep-reading-preview p{font-size:12px}
+  .deep-reading-cta{width:100%}
+}
