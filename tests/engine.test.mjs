@@ -1,5 +1,7 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {cards} from '../src/data/cards.mjs';import {readings} from '../src/data/readings.mjs';import {cardSlug} from '../src/data/card-directory.mjs';import {readingDepth} from '../src/data/reading-depth.mjs';import {readingContexts} from '../src/data/reading-contexts.mjs';import {loadSavedReadings,saveReadingRecord,removeSavedReading,clearSavedReadings} from '../src/saved-readings.mjs';import {shuffleDeck,randomInt,loadDaily,saveDaily,dateKey,interpret,verdict,readingHeadline,situationExample,timingInsight,nextAction,combinationInsights,contextualInsight} from '../src/engine.mjs';import {readFile} from 'node:fs/promises';import {josa} from '../src/korean.mjs';
 import {resolveQuestionFocus,reconcileQuestionReading} from '../src/question-focus.mjs';
+import {deepReadingOffer,supportsDeepReading} from '../src/premium-config.mjs';
+import {createDeepReading} from '../premium/deep-reading-engine.mjs';
 test('all 78 cards support every reading position and orientation',()=>{assert.equal(cards.length,78);for(const c of cards)for(const [slug,r] of Object.entries(readings))for(let i=0;i<r.positions.length;i++)for(const reversed of [true,false]){const result=interpret(slug,{id:c.id,reversed},i);assert.ok(result.context.length>15);assert.ok(result.meaning.length>15);assert.ok(result.lens.length>15);}});
 test('question intent adapts to the specific concern while keeping the same cards',()=>{
  const picks=['major-1','major-8','cups-2','swords-8'].map(id=>({id,reversed:false}));
@@ -208,6 +210,22 @@ test('explicit refusal to reunite stays respected across final result, even for 
   if(slug==='reunion')assert.equal(reconcileQuestionReading(slug,{key:'return'},picks,result),result);
  }
 });
+test('Deep Reading offer is visible only as a safe pre-checkout product',async()=>{
+ const [app,css,build]=await Promise.all([
+  readFile('dist/src/app.mjs','utf8'),
+  readFile('dist/style.css','utf8'),
+  readFile('dist/deep-reading/index.html','utf8')
+ ]);
+ assert.ok(app.includes("track('deep_reading_interest'"));
+ assert.ok(app.includes('심층 리딩 열기'));
+ assert.ok(app.includes('checkoutReady'));
+ assert.ok(css.includes('.deep-reading-offer{'));
+ assert.ok(build.includes('심층 리딩'));
+ assert.ok(build.includes('4,900원'));
+ assert.ok(build.includes('결제 연결 준비 중'));
+ assert.ok(!build.includes('결제 완료'));
+});
+
 test('timing and GA4 copy remain consistent and include no raw question tracking',async()=>{
  const [app,css,guide,timingPage,jobPage,privacyPage,home]=await Promise.all([
   readFile('dist/src/app.mjs','utf8'),readFile('dist/style.css','utf8'),
@@ -235,6 +253,31 @@ test('shuffle produces unique complete deck with independent orientation',()=>{f
 test('unbiased sampling rejects overflow range',()=>{let calls=0;assert.equal(randomInt(22,{getRandomValues(a){a[0]=calls++===0?4294967295:23;}}),1);assert.equal(calls,2);});
 test('daily card survives reload, expires next day, rejects corrupt storage',()=>{let value=null;const s={getItem:()=>value,setItem:(_,v)=>value=v},c={id:'major-17',reversed:true};assert.equal(saveDaily(s,c,'2026-10-04'),true);assert.deepEqual(loadDaily(s,'2026-10-04'),c);assert.equal(loadDaily(s,'2026-10-05'),null);value='bad JSON';assert.equal(loadDaily(s),null);value=JSON.stringify({date:dateKey(),card:{id:'bad',reversed:true}});assert.equal(loadDaily(s),null);assert.equal(saveDaily(null,c),false);});
 test('the same Star card has distinct reunion feelings vs breakup turning point',()=>{assert.notEqual(interpret('reunion',{id:'major-17',reversed:false},1).context,interpret('breakup',{id:'major-17',reversed:false},3).context);});
+test('Deep Reading premium layer produces a richer deterministic report for relationship readings',()=>{
+ assert.equal(deepReadingOffer.price,4900);
+ assert.equal(deepReadingOffer.checkoutReady,false);
+ for(const slug of ['love','reunion','feelings','breakup'])assert.equal(supportsDeepReading(slug),true);
+ for(const slug of ['job','money','work','study','today'])assert.equal(supportsDeepReading(slug),false);
+ const scenarios={
+  love:{situation:'crush',question:'이 관계가 실제로 이어질까요?'},
+  reunion:{situation:'mid',question:'다시 만날 수 있을까요?'},
+  feelings:{situation:'crush',question:'그 사람이 나를 좋아할까요?'},
+  breakup:{situation:'post',question:'헤어진 뒤 이 관계를 어떻게 정리해야 할까요?'}
+ };
+ for(const [slug,input] of Object.entries(scenarios)){
+  const picks=readings[slug].positions.map((_,i)=>({id:['major-19','major-6','swords-8','cups-2','major-17'][i],reversed:i===2}));
+  const report=createDeepReading({slug,picks,...input});
+  assert.equal(report.product,'deep-reading');
+  assert.equal(report.readingName,readings[slug].name);
+  assert.ok(report.decisiveSummary.length>30);
+  assert.ok(report.evidence.length>=1);
+  assert.equal(report.closing.length,3);
+  assert.ok(report.actions.length>=1);
+  assert.ok(report.realityChecks.length>=3);
+  assert.ok(!/undefined|null|NaN/.test(JSON.stringify(report)));
+ }
+});
+
 test('post-breakup context gets its own headline insight and next action',()=>{
  const picks=readings.breakup.positions.map((_,i)=>({id:['major-13','cups-5','major-17','swords-6','major-21'][i],reversed:false}));
  const option=readingContexts.breakup.options.find(([key])=>key==='post');
