@@ -7171,3 +7171,39 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
   .merchant-info strong{display:inline}
   .merchant-info span:not(:first-child)::before{content:' · ';color:var(--muted)}
 }
+
+/* Compact merchant disclosure: keep review info visible without taking footer space. */
+.merchant-info{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:2px 7px;
+  padding-top:10px;
+  margin-top:16px;
+  line-height:1.45;
+}
+.merchant-info h3{
+  display:inline;
+  margin:0 4px 0 0;
+  font-size:9px;
+  white-space:nowrap;
+}
+.merchant-info p{
+  display:inline;
+  margin:0;
+  font-size:8.5px;
+  line-height:1.45;
+}
+.merchant-info p+ p::before{content:' · ';color:rgba(91,67,62,.25)}
+.merchant-info p span,
+.merchant-info p strong,
+.merchant-info p a{display:inline}
+.merchant-info p span+strong{margin-left:3px}
+.merchant-info p strong+span::before{content:' · ';margin:0 4px;color:rgba(91,67,62,.25)}
+@media(max-width:650px){
+  .merchant-info{gap:1px 5px;padding-top:9px;margin-top:13px}
+  .merchant-info p{display:inline;font-size:8px}
+  .merchant-info span,
+  .merchant-info strong{display:inline}
+  .merchant-info span:not(:first-child)::before{content:''}
+}
