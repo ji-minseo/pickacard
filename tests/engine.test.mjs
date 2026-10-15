@@ -694,6 +694,26 @@ test('all internal static links and artwork files exist',async()=>{assert.equal(
 import {spreadSignals} from '../src/engine.mjs';
 test('all spread positions and all semantic tags contribute',()=>{const picks=[0,6,16,18,19].map(n=>({id:`major-${n}`,reversed:true}));const profile=spreadSignals('reunion',picks);assert.equal(profile.positions.length,5);assert.equal(Object.values(profile.totals).reduce((a,b)=>a+b,0),15);for(let i=0;i<5;i++){const changed=picks.map(p=>({...p}));changed[i]={id:'cups-2',reversed:false};assert.notDeepEqual(spreadSignals('reunion',changed).totals,profile.totals);}});
 test('random five-card draws actually cover all suits and court ranks',()=>{const seen=new Set();for(let i=0;i<500;i++){const draw=shuffleDeck().slice(0,5);assert.equal(new Set(draw.map(p=>p.id)).size,5);draw.forEach(p=>seen.add(p.id));}assert.equal(seen.size,78);for(const suit of ['wands','cups','swords','pentacles'])for(const n of [11,12,13,14])assert.ok(seen.has(`${suit}-${n}`));});
-test('all indexable HTML pages have unique metadata and complete sitemap entries',async()=>{const {readdir}=await import('node:fs/promises');const sitemap=await readFile('dist/sitemap.xml','utf8');const titles=new Set(),descs=new Set(),canonical=new Set();let count=0;async function scan(dir){for(const f of await readdir(dir,{withFileTypes:true})){const path=`${dir}/${f.name}`;if(f.isDirectory())await scan(path);else if(f.name==='index.html'){const html=await readFile(path,'utf8');if(html.includes('name="robots" content="noindex"'))continue;const title=html.match(/<title>(.*?)<\/title>/)[1],desc=html.match(/name="description" content="(.*?)"/)[1],url=html.match(/rel="canonical" href="(.*?)"/)[1];assert.ok(!titles.has(title));assert.ok(!descs.has(desc));assert.ok(!canonical.has(url));titles.add(title);descs.add(desc);canonical.add(url);assert.equal((html.match(/<h1>/g)||[]).length,1);assert.ok(sitemap.includes(`<loc>${url}</loc>`));count++;}}}await scan('dist');assert.equal(count,14+Object.keys(readings).length+cards.length);assert.equal((sitemap.match(/<loc>/g)||[]).length,count);assert.ok((await readFile('dist/robots.txt','utf8')).includes('Sitemap:'));});
+test('all indexable HTML pages have unique metadata and complete sitemap entries',async()=>{const {readdir}=await import('node:fs/promises');const sitemap=await readFile('dist/sitemap.xml','utf8');const titles=new Set(),descs=new Set(),canonical=new Set();let count=0;async function scan(dir){for(const f of await readdir(dir,{withFileTypes:true})){const path=`${dir}/${f.name}`;if(f.isDirectory())await scan(path);else if(f.name==='index.html'){const html=await readFile(path,'utf8');if(html.includes('name="robots" content="noindex"'))continue;const title=html.match(/<title>(.*?)<\/title>/)[1],desc=html.match(/name="description" content="(.*?)"/)[1],url=html.match(/rel="canonical" href="(.*?)"/)[1];assert.ok(!titles.has(title));assert.ok(!descs.has(desc));assert.ok(!canonical.has(url));titles.add(title);descs.add(desc);canonical.add(url);assert.equal((html.match(/<h1>/g)||[]).length,1);assert.ok(sitemap.includes(`<loc>${url}</loc>`));count++;}}}await scan('dist');assert.equal(count,15+Object.keys(readings).length+cards.length);assert.equal((sitemap.match(/<loc>/g)||[]).length,count);assert.ok((await readFile('dist/robots.txt','utf8')).includes('Sitemap:'));});
+test('review legal pages and product are discoverable from the site footer',async()=>{
+ const [home,terms,privacy,refund,product,sitemap]=await Promise.all([
+  readFile('dist/index.html','utf8'),
+  readFile('dist/terms/index.html','utf8'),
+  readFile('dist/privacy/index.html','utf8'),
+  readFile('dist/refund/index.html','utf8'),
+  readFile('dist/deep-reading/index.html','utf8'),
+  readFile('dist/sitemap.xml','utf8')
+ ]);
+ for(const href of ['/deep-reading/','/terms/','/privacy/','/refund/'])assert.ok(home.includes(`href="${href}"`));
+ assert.ok(terms.includes('<h1>이용약관</h1>'));
+ assert.ok(privacy.includes('<h1>개인정보 안내</h1>'));
+ assert.ok(refund.includes('<h1>환불 및 청약철회 안내</h1>'));
+ assert.ok(product.includes('4,900원'));
+ assert.ok(refund.includes('name="robots" content="noindex"'));
+ assert.ok(!sitemap.includes('/refund/'));
+ assert.ok(sitemap.includes('/terms/'));
+ assert.ok(sitemap.includes('/deep-reading/'));
+});
+
 test('saved readings page is private and excluded from sitemap',async()=>{const html=await readFile('dist/my-readings/index.html','utf8'),sitemap=await readFile('dist/sitemap.xml','utf8');assert.ok(html.includes('name="robots" content="noindex"'));assert.ok(html.includes('data-saved-readings'));assert.ok(!sitemap.includes('/my-readings/'));assert.ok((await readFile('dist/privacy/index.html','utf8')).includes('최근 리딩 최대 10개'));});
 test('service copy uses full deck while educational major count is retained',async()=>{for(const path of ['dist/index.html','dist/about/index.html']){const html=await readFile(path,'utf8');assert.ok(html.includes('78'));assert.ok(!html.includes('22장의 카드를 섞'));assert.ok(!html.includes('메이저 아르카나 22장의 상징으로'));}assert.ok((await readFile('dist/guide/major-arcana/index.html','utf8')).includes('22장의 메이저 아르카나'));});
