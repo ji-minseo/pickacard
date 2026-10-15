@@ -7131,3 +7131,42 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
   .deep-reading-page-compare{gap:12px}
   .deep-reading-page-status{padding:20px 16px}
 }
+
+
+/* Merchant information for payment review and e-commerce disclosure. */
+.merchant-info{
+  margin-top:28px;
+  padding-top:20px;
+  border-top:1px solid var(--line);
+  color:var(--muted);
+}
+.merchant-info h3{
+  margin:0 0 10px;
+  color:var(--ink);
+  font-size:12px;
+  letter-spacing:.04em;
+}
+.merchant-info p{
+  display:flex;
+  flex-wrap:wrap;
+  gap:5px 9px;
+  margin:5px 0;
+  font-size:11px;
+  line-height:1.65;
+}
+.merchant-info span{color:var(--muted)}
+.merchant-info strong{
+  color:var(--ink);
+  font-weight:600;
+}
+.merchant-info a{
+  color:inherit;
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+@media(max-width:650px){
+  .merchant-info p{display:block}
+  .merchant-info span,
+  .merchant-info strong{display:inline}
+  .merchant-info span:not(:first-child)::before{content:' · ';color:var(--muted)}
+}
