@@ -7207,3 +7207,56 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
   .merchant-info strong{display:inline}
   .merchant-info span:not(:first-child)::before{content:''}
 }
+
+
+/* Home simplification — direct reading chooser, no hero. */
+.home-reading-start{
+  padding-top:52px;
+}
+.home-select-intro{
+  margin:0 0 44px;
+  padding-bottom:28px;
+  border-bottom:1px solid var(--line);
+}
+.home-select-intro .section-kicker{
+  display:block;
+  margin-bottom:10px;
+}
+.home-select-intro h1{
+  margin:0;
+  font-size:clamp(34px,4.8vw,48px);
+  font-weight:700;
+  line-height:1.08;
+  letter-spacing:-.035em;
+}
+.home-select-intro p{
+  margin:12px 0 0;
+  color:var(--muted);
+  font-size:14px;
+  line-height:1.7;
+}
+.home-two-column{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:16px!important;
+}
+.home-two-column .reading-tile{
+  min-height:238px;
+}
+.home-two-column .tile-top{
+  font-size:clamp(26px,2.7vw,34px);
+  font-weight:760;
+  letter-spacing:-.04em;
+}
+.home-two-column .tile-bottom{
+  font-size:14px;
+}
+.home-two-column .tile-link{
+  font-weight:700;
+}
+@media(max-width:680px){
+  .home-reading-start{padding-top:34px}
+  .home-select-intro{margin-bottom:34px;padding-bottom:22px}
+  .home-select-intro h1{font-size:34px}
+  .home-two-column{grid-template-columns:1fr!important}
+  .home-two-column .reading-tile{min-height:210px}
+}
