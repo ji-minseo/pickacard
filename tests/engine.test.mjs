@@ -726,3 +726,9 @@ test('review legal pages and product are discoverable from the site footer',asyn
 
 test('saved readings page is private and excluded from sitemap',async()=>{const html=await readFile('dist/my-readings/index.html','utf8'),sitemap=await readFile('dist/sitemap.xml','utf8');assert.ok(html.includes('name="robots" content="noindex"'));assert.ok(html.includes('data-saved-readings'));assert.ok(!sitemap.includes('/my-readings/'));assert.ok((await readFile('dist/privacy/index.html','utf8')).includes('최근 리딩 최대 10개'));});
 test('service copy uses full deck while educational major count is retained',async()=>{for(const path of ['dist/index.html','dist/about/index.html']){const html=await readFile(path,'utf8');assert.ok(html.includes('78'));assert.ok(!html.includes('22장의 카드를 섞'));assert.ok(!html.includes('메이저 아르카나 22장의 상징으로'));}assert.ok((await readFile('dist/guide/major-arcana/index.html','utf8')).includes('22장의 메이저 아르카나'));});
+
+test('Naver Search Advisor ownership verification appears in generated HTML head',async()=>{
+ const home=await readFile('dist/index.html','utf8');
+ assert.ok(home.includes('<meta name="naver-site-verification" content="5ef82d2c63cb89cc89cf9942d1b6ca83fb6b7348">'));
+ assert.ok(home.indexOf('<meta name="naver-site-verification" content="5ef82d2c63cb89cc89cf9942d1b6ca83fb6b7348">')<home.indexOf('</head>'));
+});
