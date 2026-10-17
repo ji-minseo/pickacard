@@ -7225,7 +7225,7 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
 .home-select-intro h1{
   margin:0;
   font-size:clamp(34px,4.8vw,48px);
-  font-weight:700;
+  font-weight:760;
   line-height:1.08;
   letter-spacing:-.035em;
 }
@@ -7259,4 +7259,8 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
   .home-select-intro h1{font-size:34px}
   .home-two-column{grid-template-columns:1fr!important}
   .home-two-column .reading-tile{min-height:210px}
+}
+
+.home-reading-start>.section-heading h2{
+  font-weight:620;
 }
