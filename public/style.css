@@ -7265,3 +7265,103 @@ html.motion-ready.entry-reveal-lock .scroll-reveal.is-visible{
   white-space:nowrap!important;
   border:0!important;
 }
+
+
+/* Pre-JS first-paint guard — reveal targets are hidden before app.mjs assigns classes. */
+html.motion-ready.entry-reveal-lock :is(
+  .section-heading,
+  .reading-tile,
+  .how,
+  .about,
+  .about-grid article,
+  .guide-teaser,
+  .spread-info .spread-head,
+  .spread-info li,
+  .reading-depth-head,
+  .reading-depth-grid article,
+  .reading-card-links,
+  .card-library-group-head,
+  .card-library-tile,
+  .card-meaning-overview .card-section-heading,
+  .card-meaning-grid article,
+  .card-topic-section .card-section-heading,
+  .card-topic-grid article,
+  .card-dictionary-cta,
+  .card-prev-next a,
+  .guide-visual,
+  .guide-article>section,
+  .guide-list>a,
+  .guide-next,
+  .faq-list>details,
+  .faq-guide-link,
+  .info-card,
+  .info-footer,
+  .saved-reading-item,
+  .saved-reading-empty,
+  .results-heading,
+  .reading-answer,
+  .reading-context-answer,
+  .reading-insights,
+  .card-summary,
+  .result-position,
+  .combination-reading,
+  .synthesis,
+  .related h2,
+  .related a,
+  .result-actions,
+  .result-tools-foot,
+  .home-info-card
+){
+  opacity:0!important;
+  translate:0 14px!important;
+  transition:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+  html.motion-ready.entry-reveal-lock :is(
+    .section-heading,
+    .reading-tile,
+    .how,
+    .about,
+    .about-grid article,
+    .guide-teaser,
+    .spread-info .spread-head,
+    .spread-info li,
+    .reading-depth-head,
+    .reading-depth-grid article,
+    .reading-card-links,
+    .card-library-group-head,
+    .card-library-tile,
+    .card-meaning-overview .card-section-heading,
+    .card-meaning-grid article,
+    .card-topic-section .card-section-heading,
+    .card-topic-grid article,
+    .card-dictionary-cta,
+    .card-prev-next a,
+    .guide-visual,
+    .guide-article>section,
+    .guide-list>a,
+    .guide-next,
+    .faq-list>details,
+    .faq-guide-link,
+    .info-card,
+    .info-footer,
+    .saved-reading-item,
+    .saved-reading-empty,
+    .results-heading,
+    .reading-answer,
+    .reading-context-answer,
+    .reading-insights,
+    .card-summary,
+    .result-position,
+    .combination-reading,
+    .synthesis,
+    .related h2,
+    .related a,
+    .result-actions,
+    .result-tools-foot,
+    .home-info-card
+  ){
+    opacity:1!important;
+    translate:none!important;
+  }
+}
