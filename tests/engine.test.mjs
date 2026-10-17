@@ -534,6 +534,8 @@ test('sitewide hover feedback and scroll reveal interactions are wired',async()=
  const css=await readFile('dist/style.css','utf8');
  assert.ok(css.includes('.scroll-reveal{'));
  assert.ok(css.includes('.scroll-reveal.is-visible'));
+ assert.ok(css.includes('Pre-JS first-paint guard'));
+ assert.ok(css.includes('html.motion-ready.entry-reveal-lock :is('));
  assert.ok(css.includes('a[href]:not(.button):not(.reading-tile):not(.card-library-tile):hover'));
  assert.ok(css.includes('.button.secondary:not(:disabled):hover'));
  assert.ok(css.includes('.count-options label:hover span'));
