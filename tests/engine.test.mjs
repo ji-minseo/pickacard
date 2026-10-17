@@ -588,16 +588,15 @@ test('today reading and selected guides use real tarot visuals',async()=>{
  const questions=await readFile('dist/guide/better-questions/index.html','utf8');
  assert.ok(questions.includes('class="guide-visual question-comparison"'));
 });
-test('home about strip uses tarot artwork instead of emoji badges',async()=>{
+test('home opens directly into the two-column reading chooser',async()=>{
  const home=await readFile('dist/index.html','utf8');
- const start=home.indexOf('<section class="about">'),end=home.indexOf('</section>',start);
- const about=home.slice(start,end);
- assert.ok(about.includes('/artwork/card-back.svg'));
- assert.ok(about.includes('/artwork/lovers-small.webp'));
- assert.ok(about.includes('/artwork/sun-small.webp'));
- assert.ok(!about.includes('🃏'));
- assert.ok(!about.includes('💗'));
- assert.ok(!about.includes('↕️'));
+ assert.ok(home.includes('class="readings-section home-reading-start"'));
+ assert.ok(home.includes('class="primary-grid home-two-column"'));
+ assert.ok(home.includes('class="secondary-grid home-two-column"'));
+ assert.ok(home.includes('조금 더 깊이 읽고 싶다면'));
+ assert.ok(home.includes('자주 묻는 질문'));
+ assert.ok(!home.includes('class="home-intro'));
+ assert.ok(!home.includes('<section class="about">'));
 });
 test('service hierarchy exposes cards, saved readings, branded favicon and dictionary search',async()=>{
  const home=await readFile('dist/index.html','utf8');
